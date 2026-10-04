@@ -33,7 +33,7 @@
 .identity-controls.social-open { transform: none; }
 .page-about .identity-controls.social-open { transform: none; }
 
-.carousel-depth { overflow: hidden; touch-action: none; isolation: isolate; z-index: 1; perspective: 1500px; perspective-origin: 70.521% 50%; }
+.carousel-depth { overflow: clip; touch-action: none; isolation: isolate; z-index: 1; perspective: 1500px; perspective-origin: 70.521% 50%; }
 .stack-card {
   position: absolute;
   left: 70.521%;

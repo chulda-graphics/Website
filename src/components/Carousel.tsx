@@ -148,7 +148,10 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
         <ProjectArtwork project={project} index={index % count}/><div className="stack-shade"/>
       </a>;
     })}
-    <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span/></button>)}</div>
+    <div className="pagination" role="group" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}>
+      <span className="pagination-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <span className="pagination-label" aria-hidden="true">{project.title}</span>
+    </button>)}</div>
     <span className="sr-only" aria-live="polite">{projects[selected].title}, {selected + 1} of {count}</span>
   </main>;
 }
