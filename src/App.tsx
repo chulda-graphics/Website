@@ -93,6 +93,11 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   const [social, setSocial] = useState(about);
   const [status, setStatus] = useState('');
   useEffect(() => { setSocial(about); setStatus(''); }, [about]);
+  useEffect(() => {
+    if (status !== 'Email copied') return;
+    const timeout = window.setTimeout(() => setStatus(''), 4000);
+    return () => window.clearTimeout(timeout);
+  }, [status]);
   async function copyEmail() {
     if (!profile.email) { setStatus('Contact details coming soon'); return; }
     setStatus(profile.email);
@@ -110,7 +115,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
         !social && <Control label="Open About Page" onClick={() => navigate('/about')}><Icon name="person" /></Control>}
       {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
       {social && <>
-        <Control label="Copy email" onClick={copyEmail}><Icon name="mail" /></Control>
+        <Control label="Copy email" className={status === 'Email copied' ? 'control--success' : ''} onClick={copyEmail}><Icon name={status === 'Email copied' ? 'check' : 'mail'} /></Control>
         <Control label="X (Twitter)" onClick={() => openSocial(profile.social.x)}><Icon name="x" /></Control>
         <Control label="LinkedIn" onClick={() => openSocial(profile.social.linkedin)}><Icon name="linkedin" /></Control>
       </>}

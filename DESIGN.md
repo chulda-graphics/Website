@@ -54,3 +54,7 @@ Reference: https://www.zeynapp.co.uk/ — inspected on October 4, 2026. Adapt it
 ## Next-project preview
 
 Reference: https://pensatori-irrazionali.com/ — inspected on October 5, 2026. Its case studies end with an image-led handoff to the next project. Adapt that concept into a compact thumbnail and title attached to the existing next arrow, visible on desktop hover or keyboard focus. Keep the control icon-only at rest. The preview is pointer-reachable, dismissible with Escape, and uses a local poster image without starting video or sound. It sits above the mobile dock for keyboard users and disables transition animation for reduced motion. Preserve the current quiet layout rather than adding oversized marquees or automatic scroll-to-next navigation.
+
+## Tactile control feedback
+
+Reference: https://tryclico.com/ — inspected on October 5, 2026. Its pale layered navigation and inset control treatment fit the existing dock. Refine hover feedback through border and shadow changes; pressing a control uses an inset shadow without scaling its hit area or icon. Successful email copying shows a Phosphor checkmark and a compact frosted confirmation for four seconds. Clipboard failures continue to display the address instead of falsely reporting success. The confirmation sits above the mobile dock and wraps within the viewport. Preserve the current typeface and page composition.
