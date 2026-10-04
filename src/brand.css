@@ -23,3 +23,8 @@ html { scroll-behavior: auto; }
 @media (max-width: 700px) {
   body > .identity-controls.social-open { transform: translateX(-50%); }
 }
+
+/* Match the reference: the desktop globe stays centered beside the scrolling biography. */
+@media (min-width: 701px) {
+  .globe-link { position: fixed; z-index: 20; }
+}

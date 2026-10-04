@@ -63,10 +63,10 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
 
 function About({ navigate }: { navigate: (route: string) => void }) {
   return <main className="about-view">
-    <button className="globe-link" aria-label="Open the travel gallery" onClick={() => navigate('/travel')}>
+    <ViewportLayer when="desktop"><button className="globe-link" aria-label="Open the travel gallery" onClick={() => navigate('/travel')}>
       <Suspense fallback={<div className="model"/>}><Model src={assets.globe}/></Suspense>
       <span>Click to travel</span>
-    </button>
+    </button></ViewportLayer>
     <section className="biography" aria-label="About">
       <p><strong>{profile.introductionLead}</strong> {profile.introduction}</p>
       <p>{profile.biography}</p>

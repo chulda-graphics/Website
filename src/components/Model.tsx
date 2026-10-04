@@ -3,6 +3,7 @@ import type { FlightState } from './flight';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { assets } from '../content';
 import { addTerrainRelief } from './terrain';
 
 export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'globe' | 'cursor'; flight?: RefObject<FlightState> }) {
@@ -28,7 +29,14 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     let model: THREE.Group | undefined;
     const cursorFrame = new THREE.Group(); scene.add(cursorFrame);
     let orbitCursor: THREE.Group | undefined;
-    let orbitAngle = 0;
+    let orbitAngle = -Math.PI / 2;
+    function positionOrbitCursor() {
+      if (!orbitCursor) return;
+      orbitCursor.position.set(Math.sin(orbitAngle) * 1.2, Math.cos(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
+      // Keep the pointer's face readable; its tip follows the projected orbit tangent.
+      const tangent = Math.atan2(-Math.sin(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
+      orbitCursor.rotation.set(.12, -.28, tangent - Math.atan2(1.05, -.72));
+    }
     let pointer = 0;
     let disposed = false;
     function disposeObject(object: THREE.Object3D) {
@@ -60,11 +68,17 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       cursorFrame.add(group);
       if (kind === 'cursor') cursorFrame.rotation.y = -.28;
     }, undefined, () => { if (!disposed) setFailed(true); });
-    if (kind === 'globe') new GLTFLoader().load('/assets/models/cursor.glb', gltf => {
+    if (kind === 'globe') loader.load(assets.cursor, gltf => {
       if (disposed) { disposeObject(gltf.scene); return; }
-      orbitCursor = gltf.scene;
-      orbitCursor.scale.setScalar(.055);
+      const cursor = gltf.scene;
+      const bounds = new THREE.Box3().setFromObject(cursor);
+      const size = bounds.getSize(new THREE.Vector3());
+      cursor.position.sub(bounds.getCenter(new THREE.Vector3()));
+      const normalized = new THREE.Group(); normalized.add(cursor);
+      normalized.scale.setScalar(.28 / Math.max(size.x, size.y, size.z));
+      orbitCursor = new THREE.Group(); orbitCursor.add(normalized);
       scene.add(orbitCursor);
+      positionOrbitCursor();
     });
     const move = (event: PointerEvent) => {
       const box = mount.getBoundingClientRect();
@@ -86,10 +100,7 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
         if (kind === 'globe') {
           model.rotation.y += delta * (.045 + pointer * .15);
           orbitAngle += delta * .55;
-          if (orbitCursor) {
-            orbitCursor.position.set(Math.sin(orbitAngle) * 1.2, Math.cos(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
-            orbitCursor.rotation.set(.2, Math.PI * 1.5 + orbitAngle, -.15);
-          }
+          positionOrbitCursor();
         }
         else {
           const state = flight?.current;
