@@ -120,7 +120,6 @@ function About({ navigate }: { navigate: (route: string) => void }) {
 function ProjectView({ slug, navigate }: { slug: string; navigate: (route: string) => void }) {
   const project = projects.find(item => item.slug === slug);
   const [info, setInfo] = useState(false);
-  const [message, setMessage] = useState('');
   const detail = useRef<HTMLDivElement>(null);
   const switching = useRef<Animation[]>([]);
   const switchRevision = useRef(0);
@@ -150,10 +149,9 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
         <Control label="Toggle Project Info" active={info} expanded={info} onClick={toggleInfo}><Icon name="info"/></Control>
-        <Control label="Open Project External Link" onClick={() => project.url ? window.open(project.url, '_blank', 'noopener,noreferrer') : setMessage('Project link coming soon')}><Icon name="external"/></Control>
-      </nav></ViewportLayer><ViewportLayer when="mobile"><span className="project-status" role="status">{message}</span></ViewportLayer>
+        <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
+      </nav></ViewportLayer>
     </header></ViewportLayer>
-    <ViewportLayer><Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control></ViewportLayer>
     <div ref={detail} className={`project-detail ${info ? 'show-info' : ''}`}>
       {!info && project.video ? <ProjectVideo key={project.slug} project={project}/> : project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
         {info ? <div className="project-copy project-copy--animated">
