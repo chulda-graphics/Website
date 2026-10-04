@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { AnimatePresence } from 'motion/react';
 import { EntryScreen, hasEntered, rememberEntry } from './components/EntryScreen';
@@ -9,6 +9,7 @@ import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
 import ScrollFloat from './components/ScrollFloat';
 import { ProjectArtwork } from './components/ProjectArtwork';
+import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
 
@@ -16,17 +17,51 @@ const normalizePath = (path: string) => path.replace(/\/+$/, '') || '/';
 
 function useRoute() {
   const [path, setPath] = useState(() => normalizePath(location.pathname));
-  useEffect(() => {
-    const pop = () => setPath(normalizePath(location.pathname));
-    addEventListener('popstate', pop);
-    return () => removeEventListener('popstate', pop);
-  }, []);
-  const navigate = (destination: string) => {
-    const next = normalizePath(destination);
-    if (next === normalizePath(location.pathname)) return;
-    history.pushState({}, '', next);
+  const currentPath = useRef(path);
+  const previousPath = useRef<string | null>(null);
+  const animations = useRef<Animation[]>([]);
+  const revision = useRef(0);
+  const pendingPath = useRef<string | null>(null);
+  const stop = () => { animations.current.forEach(animation => animation.cancel()); animations.current = []; };
+  const commit = (next: string) => {
+    previousPath.current = currentPath.current;
+    currentPath.current = next;
+    pendingPath.current = null;
     flushSync(() => setPath(next));
     window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  useEffect(() => {
+    const pop = () => {
+      revision.current++; stop();
+      commit(normalizePath(location.pathname));
+    };
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const motionChange = () => { if (reduced.matches) animations.current.forEach(animation => animation.finish()); };
+    reduced.addEventListener('change', motionChange);
+    addEventListener('popstate', pop);
+    return () => { revision.current++; stop(); removeEventListener('popstate', pop); reduced.removeEventListener('change', motionChange); };
+  }, []);
+  useLayoutEffect(() => {
+    stop();
+    const keepIdentity = [previousPath.current, path].every(value => value === '/' || value === '/about');
+    animations.current = enterPage(pageElements(keepIdentity), matchMedia('(prefers-reduced-motion: reduce)').matches);
+    return stop;
+  }, [path]);
+  const navigate = async (destination: string) => {
+    const next = normalizePath(destination);
+    if (next === pendingPath.current) return;
+    const request = ++revision.current;
+    pendingPath.current = null;
+    if (next === currentPath.current) { stop(); return; }
+    pendingPath.current = next;
+    const keepIdentity = [currentPath.current, next].every(value => value === '/' || value === '/about');
+    const leaving = leavePage(pageElements(keepIdentity), matchMedia('(prefers-reduced-motion: reduce)').matches);
+    stop();
+    animations.current = leaving;
+    await settled(animations.current);
+    if (request !== revision.current) return;
+    history.pushState({}, '', next);
+    commit(next);
   };
   return { path, navigate };
 }
@@ -85,17 +120,40 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   const project = projects.find(item => item.slug === slug);
   const [info, setInfo] = useState(false);
   const [message, setMessage] = useState('');
+  const detail = useRef<HTMLDivElement>(null);
+  const switching = useRef<Animation[]>([]);
+  const switchRevision = useRef(0);
+  const desiredInfo = useRef(false);
+  useEffect(() => () => { switchRevision.current++; switching.current.forEach(animation => animation.cancel()); }, []);
+  async function toggleInfo() {
+    const request = ++switchRevision.current;
+    desiredInfo.current = !desiredInfo.current;
+    const opacity = detail.current ? getComputedStyle(detail.current).opacity : '1';
+    switching.current.forEach(animation => animation.cancel());
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    switching.current = reduced || !detail.current ? [] : [detail.current.animate(
+      [{ opacity }, { opacity: 0 }],
+      { duration: 120, easing: 'ease-out', fill: 'forwards' },
+    )];
+    await settled(switching.current);
+    if (request !== switchRevision.current) return;
+    flushSync(() => setInfo(desiredInfo.current));
+    switching.current.forEach(animation => animation.cancel());
+    switching.current = reduced || !detail.current ? [] : [detail.current.animate(
+      [{ opacity: 0 }, { opacity: 1 }], { duration: 320, easing: 'ease-out' },
+    )];
+  }
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
   return <main className="project-view">
     <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
-        <Control label="Toggle Project Info" active={info} expanded={info} onClick={() => setInfo(!info)}><Icon name="info"/></Control>
+        <Control label="Toggle Project Info" active={info} expanded={info} onClick={toggleInfo}><Icon name="info"/></Control>
         <Control label="Open Project External Link" onClick={() => project.url ? window.open(project.url, '_blank', 'noopener,noreferrer') : setMessage('Project link coming soon')}><Icon name="external"/></Control>
       </nav></ViewportLayer><ViewportLayer when="mobile"><span className="project-status" role="status">{message}</span></ViewportLayer>
     </header></ViewportLayer>
     <ViewportLayer><Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control></ViewportLayer>
-    <div className={`project-detail ${info ? 'show-info' : ''}`}>
+    <div ref={detail} className={`project-detail ${info ? 'show-info' : ''}`}>
       {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
         {info ? <div className="project-copy project-copy--animated">
           <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.title}</ScrollFloat>

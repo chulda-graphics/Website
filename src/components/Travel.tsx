@@ -66,7 +66,7 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     <h1 className="sr-only">Travel gallery</h1>
     <div className="travel-scene" ref={host} aria-hidden="true">
       {travelPhotos.map((photo, index) => <div key={photo.src} className="flight-picture" style={{ '--photo-width': photo.width > photo.height ? 340 : 225, aspectRatio: `${photo.width} / ${photo.height}` } as CSSProperties}>
-        <img src={photo.src} alt="" width={photo.width} height={photo.height} decoding="async" draggable={false} fetchPriority={index < 5 ? 'high' : 'low'}/>
+        <img src={photo.src} alt="" width={photo.width} height={photo.height} decoding="async" draggable={false} fetchPriority={index < 5 ? 'high' : 'low'} onLoad={event => event.currentTarget.classList.add('is-loaded')}/>
       </div>)}
     </div>
     <button className="travel-return" aria-label="Click anywhere to return to the about page">

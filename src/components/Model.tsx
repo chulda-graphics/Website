@@ -18,6 +18,7 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.opacity = '0';
     mount.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, .1, 100);
@@ -110,7 +111,11 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
         }
       }
       previous = now;
-      if (dirty || moving) { renderer.render(scene, camera); dirty = false; }
+      if (dirty || moving) {
+        renderer.render(scene, camera);
+        if (model) renderer.domElement.style.opacity = '1';
+        dirty = false;
+      }
       if (moving) schedule();
     }
     invalidate();

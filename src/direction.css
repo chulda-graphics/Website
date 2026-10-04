@@ -4,8 +4,13 @@
 .entry-identity p { font-size: 15px; margin-top: 8px; font-weight: 450; }
 .slide-commit__icon { display: flex; align-items: center; justify-content: center; }
 .slide-commit__label { font-weight: 550; font-size: 13px; }
-.app { animation: studio-arrive .95s cubic-bezier(.22,1,.36,1) both; }
-@keyframes studio-arrive { from { opacity: 0; } to { opacity: 1; } }
+/* Route motion is coordinated with viewport portals in pageMotion.ts. */
+.app, .app.page-about, .project-copy { animation: none; }
+.model canvas { transition: opacity .45s ease-out; }
+.flight-picture img { opacity: 0; transition: opacity .4s ease-out; }
+.flight-picture img.is-loaded { opacity: 1; }
+.control { transition: background-color .22s ease, color .22s ease, border-radius .3s ease, transform .2s cubic-bezier(.22,1,.36,1); }
+.social-open .control { animation-duration: .28s; }
 .identity h1, .project-identity h1 { font-weight: 550; letter-spacing: -.035em; }
 .identity p, .project-category { font-weight: 450; }
 .project-art-title { font-weight: 450; }

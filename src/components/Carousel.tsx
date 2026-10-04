@@ -36,8 +36,9 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
         const amount = Math.abs(distance);
         const near = Math.min(amount, 1);
         const y = Math.sign(distance) * (near * height * .4 + Math.max(0, amount - 1) * 35 * unit);
-        const rotation = Math.sign(distance) * near * 98;
-        const scale = 1 - .2 * near;
+        const turn = near * near * (3 - 2 * near);
+        const rotation = Math.sign(distance) * turn * 98;
+        const scale = 1 - .2 * turn;
         const visible = amount < 3.6;
         cards[i].style.visibility = visible ? 'visible' : 'hidden';
         cards[i].style.transform = `translate(-50%, -50%) translateY(${y}px) scale(${scale}) rotateX(${rotation}deg)`;
@@ -57,7 +58,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       lastTime = time;
       if (reduce.matches) { position = target; velocity = 0; }
       else {
-        velocity += ((target - position) * 155 - velocity * 25) * dt;
+        velocity += ((target - position) * 130 - velocity * 23) * dt;
         position += velocity * dt;
       }
       paint();
