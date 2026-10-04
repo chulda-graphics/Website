@@ -24,9 +24,10 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 - `src/content.ts`: identity, contact details, four placeholder projects, and local asset paths.
 - `src/App.tsx`: routing, shared card transitions, project information, and About.
 - `src/components/Carousel.tsx`: continuous card stack and gesture controls.
-- `src/components/Travel.tsx`: scroll-driven flight gallery.
+- `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
+- `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
 - `src/components/Model.tsx`: lazy-loaded Three.js viewer for locally exported GLBs.
-- `src/styles.css`: measured layout, responsive behavior, and reduced-motion handling.
+- `src/styles.css`, `src/refinements.css`, `src/scale.css`: measured layout, responsive behavior, and reduced-motion handling. Current scale is 1× to match the reference.
 - `assets/blender/`: editable `.blend` sources and provenance.
 - `public/assets/models/`: browser-ready GLBs.
 - `scripts/`: repeatable local Blender build scripts.

@@ -1,12 +1,12 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { assets, projects } from '../content';
-import { ProjectArtwork } from './ProjectArtwork';
+import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { assets } from '../content';
+import { travelPhotos } from '../travelPhotos';
 import { accelerateFlight, advanceFlight, createFlight } from './flight';
 
 const Model = lazy(() => import('./Model').then(module => ({ default: module.Model })));
-const codes = ['BKK','TPE','DPS','GMP'];
-const positions = [[-330, 60], [235,-90], [-100,-200], [160,140], [330,-40]];
-const frames = Array.from({ length: 20 }, (_, index) => index);
+const positions = [[-330,100], [260,0], [-30,-150], [-175,-155], [150,-220], [400,100], [-420,-100]];
+const spacing = 560;
+const wrap = (value: number, total: number) => (value % total + total) % total;
 
 export function Travel({ navigate }: { navigate: (route: string) => void }) {
   const host = useRef<HTMLDivElement>(null);
@@ -48,15 +48,15 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       motion.pitch = reduced.matches ? 0 : smoothY * .05 + Math.min(1, (motion.speed - 95) / 1000) * .035;
       mount.dataset.flightDistance = progress.toFixed(2);
       mount.dataset.flightSpeed = motion.speed.toFixed(2);
-      const nextPlace = ((Math.floor((progress + 700) / 2100) % codes.length) + codes.length) % codes.length;
+      const nextPlace = wrap(Math.floor((progress + spacing / 2) / spacing), travelPhotos.length);
       if (nextPlace !== lastPlace) { lastPlace = nextPlace; setPlace(nextPlace); }
       const factor = width < 700 ? .47 : width / 1440;
       for (let index = 0; index < pictures.length; index++) {
-        const z = ((index * 420 - progress + 700) % 8400 + 8400) % 8400 - 700;
+        const z = wrap(index * spacing - progress + 510, travelPhotos.length * spacing) - 510;
         const location = positions[index % positions.length];
         pictures[index].style.transform = `translate(-50%, -50%) translate3d(${(location[0] + smoothX * 22) * factor}px, ${(location[1] + smoothY * 10) * factor}px, ${-z * factor}px)`;
-        pictures[index].style.opacity = String(z > 2700 ? 0 : z > 1700 ? 1 - (z - 1700) / 1000 : z < -500 ? 1 - (-z - 500) / 200 : 1);
-        pictures[index].style.visibility = z > 2700 || z < -695 ? 'hidden' : 'visible';
+        pictures[index].style.opacity = String(Math.max(0, z > 1800 ? 1 - (z - 1800) / 1100 : z < -80 ? 1 - (-z - 80) / 430 : 1));
+        pictures[index].style.visibility = z > 2900 || z < -505 ? 'hidden' : 'visible';
       }
       const offsetX = (smoothX * 95 + Math.sin(elapsed * .65) * 3) * factor;
       const offsetY = (smoothY * 32 + Math.sin(elapsed * 1.1) * 2) * factor;
@@ -83,7 +83,9 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     onPointerCancel={() => { gesture.current.moved = true; }}
     onClick={event => { if (gesture.current.moved && event.detail !== 0) { event.preventDefault(); return; } navigate('/about'); }}>
     <div className="travel-scene" ref={host} aria-hidden="true">
-      {frames.map(index => <div key={index} className="flight-picture"><ProjectArtwork project={projects[index % projects.length]} index={index}/></div>)}
+      {travelPhotos.map((photo, index) => <div key={photo.src} className="flight-picture" style={{ '--photo-width': photo.width > photo.height ? 340 : 225, aspectRatio: `${photo.width} / ${photo.height}` } as CSSProperties}>
+        <img src={photo.src} alt="" width={photo.width} height={photo.height} decoding="async" draggable={false} fetchPriority={index < 5 ? 'high' : 'low'}/>
+      </div>)}
     </div>
     <svg className="flight-trails" aria-hidden="true">
       <defs><linearGradient id="flight-trail-fade" x1="0" y1="0" x2="0" y2="1">
@@ -95,10 +97,10 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     </svg>
     <div className="aircraft" ref={aircraft}><Suspense fallback={null}><Model src={assets.aircraft} kind="aircraft" flight={flight}/></Suspense></div>
     <button className="travel-return" aria-label="Click anywhere to return to the about page">
-      <span className="departure-code" aria-hidden="true">{[...codes[place]].map((letter,index) => <i key={index}><span key={`${place}-${letter}`}>{letter}</span></i>)}</span>
+      <span className="departure-code" aria-hidden="true">{[...travelPhotos[place].city].map((letter,index) => <i key={index}><span key={`${travelPhotos[place].city}-${letter}`}>{letter}</span></i>)}</span>
       <span>Click anywhere to return</span>
     </button>
     <span className="travel-drag-hint"><span className="scroll-wheel" aria-hidden="true"><i/></span><span>Scroll to fly faster</span></span>
-    <span className="sr-only" aria-live="polite">{codes[place]} gallery</span>
+    <span className="sr-only" aria-live="polite">{travelPhotos[place].city} gallery</span>
   </main>;
 }

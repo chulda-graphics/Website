@@ -3,6 +3,7 @@ import type { FlightState } from './flight';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { addTerrainRelief } from './terrain';
 
 export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'globe' | 'aircraft'; flight?: RefObject<FlightState> }) {
   const host = useRef<HTMLDivElement>(null);
@@ -44,6 +45,12 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     loader.load(src, gltf => {
       if (disposed) { disposeObject(gltf.scene); return; }
       model = gltf.scene;
+      if (kind === 'globe') model.traverse(child => {
+        if (child instanceof THREE.Mesh && child.name.includes('ContinentalRelief') && child.material instanceof THREE.MeshStandardMaterial) {
+          child.material = child.material.clone();
+          addTerrainRelief(child.material);
+        }
+      });
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());

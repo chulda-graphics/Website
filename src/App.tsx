@@ -65,7 +65,7 @@ function About({ navigate }: { navigate: (route: string) => void }) {
       <span>Click to travel</span>
     </button>
     <section className="biography" aria-label="About">
-      <p><strong>{profile.introduction}</strong></p>
+      <p><strong>{profile.introductionLead}</strong> {profile.introduction}</p>
       <p>{profile.biography}</p>
       <div className="recognitions"><h2>Selected disciplines:</h2><ul><li>Digital design</li><li>Art direction</li><li>Brand experiences</li><li>Motion & interaction</li></ul></div>
       <p>{profile.availability}</p>

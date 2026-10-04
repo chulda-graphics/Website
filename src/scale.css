@@ -1,6 +1,6 @@
 /* One scale for the typography, controls, artwork and 3D canvases. */
 :root {
-  --ui-scale: 1.5;
+  --ui-scale: 1;
   --unit: calc(100vw / 1440 * var(--ui-scale));
   --fixed-unit: calc(1px * var(--ui-scale));
   font-size: calc(16 * var(--fixed-unit));
@@ -8,6 +8,9 @@
 body { overflow-x: clip; }
 .about-view { position: relative; overflow-x: clip; }
 
+.identity p { margin-top: calc(2.5 * var(--unit)); }
+.identity-controls { margin-top: calc(55 * var(--unit)); }
+.biography { padding-top: calc(50svh + 267.75 * var(--unit)); }
 .identity-text { width: calc(400 * var(--unit)); }
 .contact-status, .project-status { font-size: calc(12 * var(--unit)); }
 .model-fallback { font-size: calc(14 * var(--unit)); }
@@ -16,8 +19,8 @@ body { overflow-x: clip; }
 .pagination button span { width: calc(2 * var(--unit)); height: calc(2 * var(--unit)); }
 .recognitions h2, .next-project { font-size: calc(14 * var(--unit)); }
 .next-project span { font-size: calc(24 * var(--unit)); }
-.recognitions { margin: calc(90 * var(--unit)) 0; }
-.biography p { margin-bottom: calc(28 * var(--unit)); }
+.recognitions { margin: calc(100 * var(--unit)) 0; }
+.biography p { margin-bottom: calc(24 * var(--unit)); }
 .project-status { margin-top: calc(18 * var(--unit)); }
 .project-copy { min-height: 100%; height: auto; gap: calc(40 * var(--unit)); }
 .project-copy p { max-width: none; }
@@ -29,7 +32,7 @@ body { overflow-x: clip; }
 .mock-kicker { font-size: calc(5 * var(--fixed-unit)); }
 .mock-title { font-size: calc(19 * var(--fixed-unit)); }
 .mock-panel span { font-size: calc(48 * var(--fixed-unit)); }
-.artwork-expanded .mock-title { font-size: clamp(36px, 5.25vw, 90px); }
+.artwork-expanded .mock-title { font-size: clamp(24px, 3.5vw, 60px); }
 .artwork-expanded .mock-kicker { font-size: calc(9 * var(--fixed-unit)); }
 .artwork-expanded .mock-nav, .artwork-expanded .mock-footer { font-size: calc(8 * var(--fixed-unit)); }
 .artwork-expanded .mock-panel span { font-size: calc(90 * var(--fixed-unit)); }
@@ -37,11 +40,14 @@ body { overflow-x: clip; }
 
 .travel-view { cursor: pointer; }
 .travel-scene { cursor: inherit; }
+.travel-scene { perspective: calc(780 * var(--unit)); }
+.travel-scene .flight-picture { width: calc(var(--photo-width) * var(--unit)); height: auto; }
+.travel-scene .flight-picture img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .flight-trails { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
 .flight-trails path { fill: none; stroke: url(#flight-trail-fade); stroke-width: calc(1.5 * var(--unit)); stroke-linecap: round; }
 .aircraft { z-index: 3; }
-.travel-return { white-space: nowrap; color: #979b9b; }
-.travel-return > span:last-child { padding: calc(3 * var(--unit)) calc(7 * var(--unit)); background: #ffffffdb; border-radius: calc(5 * var(--unit)); }
+.travel-return { white-space: nowrap; color: #a5a5a2; font-size: calc(14 * var(--unit)); gap: calc(19 * var(--unit)); }
+.travel-return > span:last-child { text-shadow: 0 1px 6px white, 0 0 12px white; }
 .travel-drag-hint {
   z-index: 10;
   left: 50%; right: auto; bottom: calc(20 * var(--unit));
@@ -63,12 +69,13 @@ body { overflow-x: clip; }
   }
   .identity h1, .identity p, .project-identity h1, .project-category { font-size: calc(23 * var(--unit)); }
   .identity-text { width: 100%; }
+  .identity-controls { margin-top: 0; }
   .identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open { gap: calc(4 * var(--unit)); }
   .control { border-radius: calc(19 * var(--unit)); }
   .control svg { width: calc(16 * var(--unit)); height: calc(16 * var(--unit)); }
   .project-close { width: calc(45 * var(--unit)); height: calc(45 * var(--unit)); }
   .project-close svg { width: calc(14 * var(--unit)); height: calc(14 * var(--unit)); }
-  .project-identity { padding-top: 110px; }
+  .project-identity { padding-top: 28px; }
   .project-status { bottom: calc(110 * var(--unit)); }
   .contact-status { top: auto; bottom: calc(75 * var(--unit)); }
   .project-art-title { left: calc(30 * var(--unit)); bottom: calc(28 * var(--unit)); font-size: calc(16 * var(--unit)); }
@@ -82,14 +89,16 @@ body { overflow-x: clip; }
   .flight-picture { width: calc(220 * var(--unit)); height: calc(150 * var(--unit)); }
   .flight-picture:nth-child(5n+3) { width: calc(130 * var(--unit)); height: calc(195 * var(--unit)); }
   .aircraft { width: calc(190 * var(--unit)); height: calc(130 * var(--unit)); left: calc(50% - 95 * var(--unit)); top: calc(58% - 65 * var(--unit)); }
-  .travel-return { bottom: 13%; }
+  .travel-return { bottom: 12%; }
+  .travel-scene { perspective: 366.6px; }
+  .travel-scene .flight-picture { width: calc(var(--photo-width) * .65px); height: auto; }
   .travel-drag-hint { bottom: 24px; left: 50%; right: auto; }
   .artwork-expanded .mock-title { font-size: calc(30 * var(--unit)); }
   .artwork-expanded .mock-panel span { font-size: calc(70 * var(--unit)); }
   .artwork-expanded .mock-nav, .artwork-expanded .mock-footer { font-size: calc(6 * var(--unit)); }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 280px) {
   .identity-controls.social-open { display: grid; grid-template-columns: repeat(2, var(--control)); }
   .identity-controls.social-open .contact-status { bottom: calc(2 * var(--control) + 18px); }
 }

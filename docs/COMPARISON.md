@@ -85,3 +85,15 @@ The owner's subsequent request intentionally enlarges the reference proportions.
 The faint, clipped WebGL lines were replaced with viewport-sized SVG contrails, anchored to the aircraft's wingtips and curved with steering. Their length responds to flight speed. A persistent animated scroll indicator now says “Scroll to fly faster” at the bottom. “Click anywhere to return” returns to About from the background, artwork, aircraft, or button; drags beyond 8 px accelerate without returning. The return button remains keyboard accessible.
 
 Verified desktop dimensions, visible trails, persistent hint, background return, drag acceleration without leaving, mobile control fit, project text fit and the existing motion checks. Screenshots are saved alongside the repository in `outputs/scale-and-flight/`. No paid generation was used.
+
+## Latest reference-matching pass
+
+The subsequent request to make the site look like the original supersedes the 1.5× enlargement. Restored `--ui-scale: 1`, retained persistent flight instructions and click-anywhere return, and compared the live pages at equal viewport sizes.
+
+At 1135 × 853, both reference and local heading sizes are 25.2222 px. Both active cards measure 264.039 × 271.133 px, with top 290.934 px; the left edge differs by 0.012 px. The About introduction starts at 637.54 px locally versus 637.875 px in the reference. Its spacing now follows the navigation position rather than subtracting a fixed amount from the viewport height. Added the small separation between name and role, and matched dark introductory text followed by gray body text.
+
+Replaced travel project mockups with 23 photographs observed on the reference site's public travel page. The browser asset exporter failed; direct public image downloads succeeded. Provenance is recorded in `public/assets/travel/SOURCE.md`. These are reference photographs, not the owner's travel history. Personal project media remain placeholders.
+
+Travel images retain their natural landscape/portrait proportions, recede with a shorter perspective distance, and use greater depth spacing and earlier near-camera fades. This reduces overlap around the plane and return controls. Airport codes follow the current image group. The existing locally modeled globe now has procedural surface detail on land only; it remains an approximation of the reference's terrain. No new 3D or image generation service was used.
+
+Verified all 23 photographs load, the globe shader has no browser errors, and production build and flight physics checks pass. Final screenshots are in `outputs/reference-match/` alongside this repository.

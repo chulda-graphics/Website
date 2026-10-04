@@ -4,8 +4,9 @@ export const profile = {
   title: 'Designer',
   email: '',
   social: { x: '', linkedin: '' },
-  introduction: 'Designer, creating thoughtful digital experiences.',
-  biography: 'More about my practice, background, and approach will be added here.',
+  introductionLead: 'Designer,',
+  introduction: 'creating thoughtful digital experiences that bring together clear ideas, considered details, and interfaces that feel natural.',
+  biography: 'More about my practice, background, and approach will be added here, along with selected collaborations and the thinking behind the work.',
   availability: 'For new projects and collaborations, get in touch.',
 };
 
