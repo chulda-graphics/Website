@@ -7,7 +7,6 @@ import { Travel } from './components/Travel';
 import { assets, profile, projects } from './content';
 import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
-import ScrollFloat from './components/ScrollFloat';
 import { ProjectArtwork } from './components/ProjectArtwork';
 import { ProjectVideo } from './components/ProjectVideo';
 import { useEditorialReveal } from './components/useEditorialReveal';
@@ -168,12 +167,12 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     <div className="project-detail">
       {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
       {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-description" aria-label={section.title}>
-        <div className="project-copy project-copy--animated">
+        <div className="project-copy">
           <div className="project-copy-heading">
-            <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.title}</ScrollFloat>
+            <h2>{section.title}</h2>
             {sectionIndex === 0 && project.video && project.duration && <span className="project-runtime"><span>Running time</span><span>{project.duration}</span></span>}
           </div>
-          <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.body}</ScrollFloat>
+          <p>{section.body}</p>
         </div>
       </section>)}
       {!!project.stills?.length && <section ref={stills} className="project-stills" aria-labelledby="project-stills-title">
