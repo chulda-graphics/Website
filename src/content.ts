@@ -1,10 +1,10 @@
 /** Replace content here without editing the layout or interaction components. */
 export const profile = {
-  name: 'Chulda Graphics',
-  title: 'Designer',
+  name: 'Dhrex Cañezo',
+  title: 'Motion Designer',
   email: '',
   social: { x: '', linkedin: '' },
-  introductionLead: 'Designer,',
+  introductionLead: 'Motion Designer,',
   introduction: 'creating thoughtful digital experiences that bring together clear ideas, considered details, and interfaces that feel natural.',
   biography: 'More about my practice, background, and approach will be added here, along with selected collaborations and the thinking behind the work.',
   availability: 'For new projects and collaborations, get in touch.',

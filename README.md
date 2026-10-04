@@ -1,4 +1,4 @@
-# Chulda Graphics portfolio
+# Dhrex Cañezo portfolio
 
 Portfolio with the original reference-style composition and vertical project stack, restored at the owner's request. Rethink Sans, the refined entry slider, and the flying-photo experience remain. The cursors around the globe and in travel have been removed. See [DIRECTION.md](docs/DIRECTION.md) for the current state and [AUDIT.md](docs/AUDIT.md) for usability fixes.
 
