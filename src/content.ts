@@ -53,7 +53,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'project-05', title: 'Demo Reel 2026', category: 'Selected Work',
-    color: '#f6f6f6', accent: '#eeeeee', cover: '/assets/projects/reel.jpg', coverTone: 'light', duration: '0:38',
+    color: '#171717', accent: '#eeeeee', cover: '/assets/projects/reel.jpg', duration: '0:38',
     video: `${videoHost}/Video%20Demo%20Reel%202026.mp4`,
     sections: [{ title: 'Overview', body: 'A selection of graphic design, motion graphics, video editing, brand identity, and AI-assisted design, brought together in one reel.' }],
   },
