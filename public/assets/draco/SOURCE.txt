@@ -1,0 +1,4 @@
+Google Draco glTF decoder, copied from the installed three npm package.
+https://github.com/google/draco
+Apache License 2.0: https://github.com/google/draco/blob/main/LICENSE
+Used locally to decode the compressed Blender-exported globe. No remote decoder or generation service is contacted.

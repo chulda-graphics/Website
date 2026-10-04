@@ -1,0 +1,9 @@
+{
+  "kind": "globe-relief-v3",
+  "stage": "geographic-relief",
+  "source": "local Higgsfield use Blender MCP",
+  "creditsUsed": 0,
+  "preview": "work/previews/globe-relief-v3.png",
+  "compression": "Draco",
+  "exportBytes": 230940
+}

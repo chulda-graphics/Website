@@ -1,6 +1,6 @@
 # Chulda Graphics portfolio
 
-Foundation checkpoint for a recreation of [gabrielbeaugonin.com](https://www.gabrielbeaugonin.com/), with replaceable project content. **This is not the completed exact recreation.** See [FOUNDATION.md](docs/FOUNDATION.md) for observed measurements, validation, and remaining fidelity work.
+Portfolio recreation in progress, based on [gabrielbeaugonin.com](https://www.gabrielbeaugonin.com/), with replaceable project content. **This is not yet a complete exact match.** See [COMPARISON.md](docs/COMPARISON.md) for measured improvements, verification, and remaining differences. The original foundation checkpoint is documented in [FOUNDATION.md](docs/FOUNDATION.md).
 
 ## Run
 
@@ -22,7 +22,9 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 ## Content and structure
 
 - `src/content.ts`: identity, contact details, four placeholder projects, and local asset paths.
-- `src/App.tsx`: routes, project carousel, project information panels, About, and travel.
+- `src/App.tsx`: routing, shared card transitions, project information, and About.
+- `src/components/Carousel.tsx`: continuous card stack and gesture controls.
+- `src/components/Travel.tsx`: scroll-driven flight gallery.
 - `src/components/Model.tsx`: lazy-loaded Three.js viewer for locally exported GLBs.
 - `src/styles.css`: measured layout, responsive behavior, and reduced-motion handling.
 - `assets/blender/`: editable `.blend` sources and provenance.
@@ -42,11 +44,12 @@ export HIGGSFIELD_BLENDER_SERVER="/absolute/path/to/fnf-blender-mcp/dist/index.j
 export BLENDER_EXECUTABLE="/Applications/Blender.app/Contents/MacOS/Blender"
 node scripts/blender-local.mjs globe
 node scripts/blender-local.mjs aircraft
+node scripts/blender-local.mjs globe-relief-v4
 ```
 
 The build refuses to overwrite existing models or Blender files. Inspect and save a new revision before rebuilding. Each execution uses a separate background Blender session and does not modify unsaved work in the desktop application.
 
-The current 3D files are **foundation blockouts**. The globe has no continental relief yet; the aircraft needs its final shape, detail, and materials. The browser provides the idle rotation and aircraft banking.
+The current globe is `globe-relief-v3.blend`, with geographic land relief and an editable mesh-reduction modifier. Its Draco-compressed GLB is about 231 KB. The aircraft remains a simplified local model. The browser provides globe rotation, the orbiting aircraft, and travel banking. The original smooth-sphere blockout is retained for reference.
 
 ## Sound
 

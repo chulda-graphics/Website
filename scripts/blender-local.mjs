@@ -9,7 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const server = process.env.HIGGSFIELD_BLENDER_SERVER;
 const blender = process.env.BLENDER_EXECUTABLE;
 const kind = process.argv[2];
-if (!server || !blender || !['globe', 'aircraft'].includes(kind)) {
+if (!server || !blender || !/^(globe|aircraft|globe-relief(?:-v[0-9]+)?)$/.test(kind)) {
   throw new Error('Set HIGGSFIELD_BLENDER_SERVER and BLENDER_EXECUTABLE, then run: node scripts/blender-local.mjs globe|aircraft');
 }
 const child = spawn(process.execPath, [server], { env: { ...process.env, BLENDER_EXECUTABLE: blender }, stdio: ['pipe','pipe','inherit'] });
@@ -54,22 +54,22 @@ try {
   await call('bl_get_scene_summary');
   // A new MCP connection owns an independent factory scene. Existing desktop files are untouched.
   await call('bl_delete_object', { name: 'Cube' });
-  if (kind === 'globe') {
+  if (kind.startsWith('globe')) {
     await call('bl_add_primitive', { kind: 'uv_sphere', name: 'Globe_Ocean', location: [0,0,0] });
     await call('bl_set_material', { object: 'Globe_Ocean', material_name: 'Porcelain', color: [.82,.81,.77,1], roughness: .9 });
   }
-  const source = await readFile(resolve(root, `scripts/${kind}.py`), 'utf8');
-  await call('bl_execute', { code: source });
+  const source = await readFile(resolve(root, `scripts/${kind.startsWith('globe-relief') ? 'globe-relief' : kind}.py`), 'utf8');
+  await call('bl_execute', { code: `ASSET_ROOT = ${JSON.stringify(root)}\n` + source });
   await call('bl_execute', { code: `
 import bpy
 from mathutils import Vector
 scene = bpy.context.scene
 camera = scene.camera
 camera.name = 'CAM_asset_review'
-camera.location = (0, -5.2, ${kind === 'globe' ? '.2' : '1.1'})
+camera.location = (0, -5.2, ${kind.startsWith('globe') ? '.2' : '1.1'})
 camera.rotation_euler = (Vector((0,0,0)) - camera.location).to_track_quat('-Z','Y').to_euler()
 camera.data.type = 'ORTHO'
-camera.data.ortho_scale = ${kind === 'globe' ? '3' : '3.8'}
+camera.data.ortho_scale = ${kind.startsWith('globe') ? '3' : '3.8'}
 key = bpy.data.objects.get('Light')
 key.name = 'LGT_key'
 key.data.type = 'AREA'
@@ -101,13 +101,13 @@ if os.path.exists(target):
 bpy.ops.object.select_all(action='DESELECT')
 for obj in bpy.context.scene.objects:
     if obj.type == 'MESH': obj.select_set(True)
-bpy.ops.export_scene.gltf(filepath=target, export_format='GLB', use_selection=True, export_apply=True)
+bpy.ops.export_scene.gltf(filepath=target, export_format='GLB', use_selection=True, export_apply=True, export_draco_mesh_compression_enable=${kind.startsWith('globe-relief') ? 'True' : 'False'}, export_draco_mesh_compression_level=6)
 result = {'path':target,'bytes':os.path.getsize(target)}
 ` });
   await call('bl_save_project', { path: resolve(root, `assets/blender/${kind}.blend`) });
   const preview = resolve(root, `work/previews/${kind}.png`);
   await call('bl_render', { output_path: preview, resolution: [512,512], engine: 'CYCLES', samples: 16 });
-  await writeFile(resolve(root, `assets/blender/${kind}.build.json`), JSON.stringify({ kind, stage: 'foundation-blockout', source: 'local Higgsfield use Blender MCP', creditsUsed: 0, preview: `work/previews/${kind}.png` }, null, 2) + '\n');
+  await writeFile(resolve(root, `assets/blender/${kind}.build.json`), JSON.stringify({ kind, stage: kind.startsWith('globe-relief') ? 'geographic-relief' : 'foundation-blockout', source: 'local Higgsfield use Blender MCP', creditsUsed: 0, preview: `work/previews/${kind}.png` }, null, 2) + '\n');
 } finally {
   child.stdin.end();
 }

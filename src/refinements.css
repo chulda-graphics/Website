@@ -1,0 +1,138 @@
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/assets/fonts/suisseintl-book.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  font-family: 'Suisse Intl', Arial, sans-serif;
+  --unit: calc(100vw / 1440);
+  --control: calc(54 * var(--unit));
+  --card-width: calc(335 * var(--unit));
+  --card-height: calc(344 * var(--unit));
+  --curve: cubic-bezier(.22, .68, 0, 1.01);
+}
+
+.identity {
+  z-index: 30;
+  top: calc(50svh - 87.75 * var(--unit));
+  left: 17.84722%;
+}
+.identity h1, .identity p, .project-identity h1, .project-category {
+  font-size: calc(32 * var(--unit));
+  line-height: 1;
+  letter-spacing: 0;
+}
+.identity p, .project-category { color: #9d9d9a; }
+.identity-controls {
+  transform: none;
+  gap: calc(4 * var(--unit));
+  margin-top: calc(57.5 * var(--unit));
+}
+.control {
+  border-radius: calc(15 * var(--unit));
+  transition: background-color .25s, color .25s, border-radius .45s, transform .45s var(--curve);
+}
+.control svg { width: calc(16 * var(--unit)); height: calc(16 * var(--unit)); }
+.control:hover { transform: scale(1.025); }
+.control.active { border-radius: 50%; }
+.identity-controls.social-open { transform: translateX(calc(-58 * var(--unit))); }
+
+.carousel-depth { overflow: hidden; touch-action: none; isolation: isolate; z-index: 1; }
+.stack-card {
+  position: absolute;
+  left: 70.521%;
+  top: 50%;
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: calc(35 * var(--unit));
+  overflow: hidden;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  transform-origin: 50% 50%;
+}
+.stack-shade { position: absolute; inset: 0; background: #eaeaea; pointer-events: none; }
+.stack-edge { position: absolute; left: 52%; right: 14%; height: 14svh; z-index: 20; pointer-events: none; }
+.stack-edge-top { top: 0; background: linear-gradient(var(--paper), #f6f6f600); }
+.stack-edge-bottom { bottom: 0; background: linear-gradient(#f6f6f600, var(--paper)); }
+.project-art-title { left: calc(30 * var(--unit)); bottom: calc(28 * var(--unit)); font-size: calc(16 * var(--unit)); letter-spacing: 0; }
+.pagination { z-index: 30; right: 4.77%; }
+.pagination button { width: 24px; height: calc(12 * var(--unit)); }
+.pagination button span { width: 2px; height: 2px; }
+.placeholder-layout { top: 28%; height: 44%; }
+.mock-content { overflow: hidden; }
+.mock-panel { animation: placeholder-drift 8s ease-in-out infinite alternate; }
+@keyframes placeholder-drift { from { transform: translateY(3%); } to { transform: translateY(-3%); } }
+
+.project-identity { left: 17.84722%; top: calc(50svh - 150 * var(--unit)); }
+.project-identity nav { margin-top: calc(184 * var(--unit)); gap: calc(4 * var(--unit)); }
+.project-close { left: calc(50% - 64 * var(--unit)); top: calc(50svh - 27 * var(--unit)); }
+.project-detail { padding: calc(20 * var(--unit)) calc(20 * var(--unit)) calc(20 * var(--unit)) calc(10 * var(--unit)); }
+.project-slide { height: auto; aspect-ratio: 335 / 344; min-height: 0; border-radius: calc(70 * var(--unit)); margin-bottom: calc(20 * var(--unit)); animation: none; }
+.project-slide:nth-child(n+2) { aspect-ratio: 1; }
+.project-copy { padding: calc(60 * var(--unit)); }
+.project-copy p { font-size: calc(24 * var(--unit)); line-height: 1.24; letter-spacing: 0; }
+.project-copy h2 { font-size: calc(14 * var(--unit)); }
+.project-copy { animation: copy-reveal .75s var(--curve); }
+@keyframes copy-reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.globe-link { left: calc(79.2% - 200 * var(--unit)); top: calc(50svh - 200 * var(--unit)); width: calc(400 * var(--unit)); height: calc(400 * var(--unit)); }
+.globe-link .model { height: 100%; }
+.globe-link > span { bottom: calc(48 * var(--unit)); font-size: calc(14 * var(--unit)); }
+.biography { padding-top: calc(100svh - 180 * var(--unit)); max-width: calc(571 * var(--unit)); font-size: calc(24 * var(--unit)); letter-spacing: 0; }
+.page-about { animation: none; }
+
+::view-transition-group(project-media), ::view-transition-group(identity) { animation-duration: .95s; animation-timing-function: var(--curve); }
+::view-transition-image-pair(project-media) { isolation: auto; }
+::view-transition-old(project-media), ::view-transition-new(project-media) { height: 100%; object-fit: fill; animation-duration: .65s; mix-blend-mode: normal; }
+::view-transition-old(root) { animation: root-out .3s ease both; }
+::view-transition-new(root) { animation: root-in .7s ease both; }
+@keyframes root-out { to { opacity: 0; } }
+@keyframes root-in { from { opacity: 0; } }
+
+.travel-scene { perspective: 1100px; transform-style: preserve-3d; transition: none; }
+.flight-picture { position: absolute; left: 50%; top: 50%; width: 340px; height: 225px; overflow: hidden; backface-visibility: hidden; }
+.flight-picture .artwork { height: 100%; }
+.flight-picture .project-art-title { font-size: 12px; bottom: 16px; left: 16px; }
+.flight-picture .placeholder-layout { top: 18%; height: 64%; }
+.flight-picture img { width: 100%; height: 100%; object-fit: cover; }
+.travel-return { z-index: 10; }
+.departure-code i { overflow: hidden; }
+.departure-code i span { animation: flap .55s ease both; }
+@keyframes flap { 0% { transform: translateY(-110%); } 55% { transform: translateY(12%); } 100% { transform: none; } }
+.aircraft { pointer-events: none; }
+.travel-view { touch-action: none; perspective: none; }
+.travel-drag-hint { position: absolute; right: 30px; bottom: 30px; font-size: 12px; color: #bbb; opacity: 0; animation: hint-away 6s both; }
+@keyframes hint-away { 10%, 60% { opacity: 1; } 100% { opacity: 0; } }
+
+@media (max-width: 700px) {
+  :root { --unit: 1px; --control: 60px; --card-width: 72vw; --card-height: 72vw; }
+  .identity { top: 24px; left: 0; }
+  .identity h1, .identity p, .project-identity h1, .project-category { font-size: 23px; line-height: 1.05; }
+  .identity-controls, .identity-controls.social-open { margin: 0; gap: 4px; transform: translateX(-50%); }
+  .control { border-radius: 19px; }
+  .control svg { width: 16px; height: 16px; }
+  .stack-card { left: 50%; border-radius: 30px; }
+  .stack-edge { left: 10%; right: 10%; height: 20svh; }
+  .project-art-title { left: 30px; bottom: 28px; font-size: 16px; }
+  .project-identity { left: auto; top: auto; }
+  .project-identity nav { margin-top: 0; }
+  .project-close { top: 23px; left: 15px; }
+  .project-detail { padding: 0 12px 120px; }
+  .project-slide { min-height: 400px; height: 72svh; border-radius: 36px; margin-bottom: 12px; }
+  .project-copy { padding: 32px 32px 110px; }
+  .project-copy p { font-size: 22px; }
+  .project-copy h2 { font-size: 14px; }
+  .globe-link { left: calc(50% - 160px); top: 140px; width: 320px; height: 320px; }
+  .globe-link > span { bottom: 10px; font-size: 14px; }
+  .biography { padding-top: 500px; max-width: none; font-size: 22px; }
+  .flight-picture { width: 220px; height: 150px; }
+  .travel-drag-hint { bottom: 28px; left: 0; right: 0; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: .001ms !important; }
+  .mock-panel, .departure-code i span, .travel-drag-hint { animation: none; }
+}

@@ -37,7 +37,7 @@ export const projects: Project[] = [
 
 // These paths are exported from the editable local Blender source.
 export const assets = {
-  globe: '/assets/models/globe.glb',
+  globe: '/assets/models/globe-relief-v3.glb',
   aircraft: '/assets/models/aircraft.glb',
 };
 
