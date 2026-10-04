@@ -37,17 +37,35 @@ loop.destroy(); loop.invalidate(); loop.setActive(true);
 assert.equal(queued.size, 0, 'Unmounted scenes cannot restart');
 
 const { projects, assets } = await loadTS('../src/content.ts');
-const { travelPhotos } = await loadTS('../src/travelPhotos.ts');
+const { workFrames } = await loadTS('../src/workFrames.ts');
 assert.equal(new Set(projects.map(project => project.slug)).size, projects.length, 'Project routes must be unique');
 assert.ok(projects.length > 0);
 for (const project of projects) {
   assert.match(project.slug, /^[a-z0-9-]+$/);
   assert.ok(project.sections.length > 0);
 }
-const sources = [...Object.values(assets), ...projects.flatMap(project => project.cover ? [project.cover] : []), ...travelPhotos.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'];
+const sources = [...Object.values(assets), ...projects.flatMap(project => project.cover ? [project.cover] : []), ...workFrames.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'];
 for (const src of sources) {
   assert.ok(src.startsWith('/assets/'), `Asset must be local: ${src}`);
   assert.ok((await stat(new URL(`../public${src}`, import.meta.url))).size > 0, `Missing or empty asset: ${src}`);
 }
-for (const photo of travelPhotos) assert.ok(photo.width > 0 && photo.height > 0, 'Photos need intrinsic dimensions');
+for (const photo of workFrames) assert.ok(photo.width > 0 && photo.height > 0, 'Photos need intrinsic dimensions');
 console.log(`Site checks passed: frame suspension/resumption, reduced-motion scheduling, route uniqueness, ${sources.length} local assets.`);
+
+const { createPlacement, flightDepth, shuffleFrames } = await loadTS('../src/components/flightLayout.ts');
+const shuffled = shuffleFrames(workFrames, () => .25);
+assert.equal(new Set(shuffled.map(frame => frame.src)).size, workFrames.length, 'Shuffle must keep every work screenshot exactly once');
+assert.notDeepEqual(shuffled, workFrames, 'Entry order should be shuffled');
+for (let i = 0; i < 20; i++) {
+  const placement = createPlacement(i);
+  assert.ok(Math.abs(placement.x) >= 140 && Math.abs(placement.x) <= 400);
+  assert.ok(Math.abs(placement.y) >= 60 && Math.abs(placement.y) <= 220);
+  assert.ok(placement.width >= 280 && placement.width <= 380);
+}
+const total = workFrames.length * 560;
+const before = flightDepth(0, 509, total), after = flightDepth(0, 511, total);
+assert.equal(before.cycle, 0);
+assert.equal(after.cycle, -1);
+assert.ok(before.z < -505 && after.z > 2900, 'Placement changes occur between invisible ends of the flight path');
+assert.equal(flightDepth(0, total + 511, total).z, after.z, 'Gallery loops continuously');
+console.log('Work gallery checks passed: complete shuffle, bounded placement, invisible recycling, repeated loops.');

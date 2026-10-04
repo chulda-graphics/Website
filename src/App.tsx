@@ -104,9 +104,9 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
 
 function About({ navigate }: { navigate: (route: string) => void }) {
   return <main className="about-view">
-    <ViewportLayer when="desktop"><button className="globe-link" aria-label="Open the travel gallery" onClick={() => navigate('/travel')}>
+    <ViewportLayer when="desktop"><button className="globe-link" aria-label="Explore my world" onClick={() => navigate('/travel')}>
       <Suspense fallback={<div className="model"/>}><Model src={assets.globe}/></Suspense>
-      <span>Click to travel</span>
+      <span>click my world</span>
     </button></ViewportLayer>
     <section className="biography" aria-label="About">
       <p><strong>{profile.introductionLead}</strong> {profile.introduction}</p>
@@ -176,7 +176,7 @@ function Portfolio() {
     if (index >= 0) setSelected(index);
   }, [projectSlug]);
   useEffect(() => {
-    document.title = `${profile.name} — ${home ? profile.title : about ? 'About' : travel ? 'Travel' : projects.find(project => project.slug === projectSlug)?.title ?? 'Not found'}`;
+    document.title = `${profile.name} — ${home ? profile.title : about ? 'About' : travel ? 'My world' : projects.find(project => project.slug === projectSlug)?.title ?? 'Not found'}`;
     document.body.dataset.page = home ? 'home' : about ? 'about' : travel ? 'travel' : 'project';
   }, [path, home, about, travel, projectSlug]);
   useEffect(() => {

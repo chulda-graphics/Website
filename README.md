@@ -33,7 +33,7 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 - `src/components/Carousel.tsx`: vertical project stack with wheel, vertical drag, arrow-key, and dot controls.
 - `src/components/ProjectVideo.tsx`: click-to-play native video controls, muted by default, inline playback, and retry feedback. Videos stream from the owner-supplied R2 URLs. Poster frame provenance is in `public/assets/projects/SOURCE.md`.
 - `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
-- `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
+- `src/workFrames.ts`: 20 screenshots from the five supplied videos. They shuffle on entry and get new positions/sizes when they recycle offscreen. Source frame timestamps are listed in `public/assets/work-frames/SOURCE.md`.
 - `src/components/Model.tsx`: lazy-loaded Three.js viewer for locally exported GLBs.
 - `src/styles.css`, `src/refinements.css`, `src/scale.css`: measured layout, responsive behavior, and reduced-motion handling. The current composition and typography overrides are in `src/direction.css`.
 - `assets/blender/`: editable `.blend` sources and provenance.
@@ -70,4 +70,4 @@ The supplied Botanica folder was found and is available for later sound selectio
 - Do not use Higgsfield credit-consuming generations.
 - Preserve the restored reference-style layout with the requested typography, opening slider, and cursor flight refinements.
 - The five supplied videos are live project content; biography and contact details are still placeholders.
-- Travel photographs remain reference assets and should be replaced with owner-provided imagery before launch.
+- The world gallery uses screenshots from the owner-supplied videos. Legacy reference travel assets are unused.
