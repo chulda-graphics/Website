@@ -10,6 +10,7 @@ import { Icon } from './components/Icon';
 import ScrollFloat from './components/ScrollFloat';
 import { ProjectArtwork } from './components/ProjectArtwork';
 import { ProjectVideo } from './components/ProjectVideo';
+import { useEditorialReveal } from './components/useEditorialReveal';
 import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
@@ -104,12 +105,14 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
 }
 
 function About({ navigate }: { navigate: (route: string) => void }) {
+  const biography = useRef<HTMLElement>(null);
+  useEditorialReveal(biography);
   return <main className="about-view">
     <ViewportLayer when="desktop"><button className="globe-link" aria-label="Explore my world" onClick={() => navigate('/travel')}>
       <Suspense fallback={<div className="model"/>}><Model src={assets.globe}/></Suspense>
       <span>Click my world</span>
     </button></ViewportLayer>
-    <section className="biography" aria-label="About">
+    <section className="biography" aria-label="About" ref={biography}>
       <p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
       <p>{profile.biography}</p>
       <div className="recognitions"><h2>Selected disciplines:</h2><ul><li>Motion design</li><li>Graphic design</li><li>Brand identity</li><li>Art direction</li></ul></div>

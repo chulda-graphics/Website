@@ -27,3 +27,23 @@
 
 /* The Phosphor left caret's ink sits 8 units left of its 256-unit viewBox center. */
 .control svg[data-icon="back"] { translate: 3.125% 0; }
+
+/* Restrained editorial interaction: stationary controls, motion inside the frame. */
+@media (hover: hover) and (pointer: fine) {
+  .control:not(.active):hover { background-color: #e9e9e7; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .control:is(:focus-visible) svg[data-icon="next"] { animation: arrow-forward .38s cubic-bezier(.22,1,.36,1); }
+  .stack-card[aria-hidden="false"]:focus-visible .artwork--video > img { transform: scale(1.035); }
+  .artwork--video > img { transition: transform .7s cubic-bezier(.22,1,.36,1); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .control:hover svg[data-icon="next"] { animation: arrow-forward .38s cubic-bezier(.22,1,.36,1); }
+  .stack-card[aria-hidden="false"]:hover .artwork--video > img { transform: scale(1.035); }
+}
+@keyframes arrow-forward {
+  0% { transform: translateX(0); opacity: 1; }
+  45% { transform: translateX(7px); opacity: 0; }
+  46% { transform: translateX(-7px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
