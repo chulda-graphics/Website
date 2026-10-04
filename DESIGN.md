@@ -50,3 +50,7 @@ Reference: https://noahlesage.com/ (Ringer Studio) — inspected on October 4, 2
 ## Selective color emphasis
 
 Reference: https://www.zeynapp.co.uk/ — inspected on October 4, 2026. Adapt its selective color emphasis and small supporting project labels using the existing blue: highlight the supplied “Motion Designer” introduction and the overview heading, with the known video duration alongside it. The duration appears only in the first overview, and the heading row wraps on narrow screens. Keep Rethink Sans, current scale, and the light dock; the reference’s magenta, condensed all-caps typography, and full-screen menu are not part of this direction.
+
+## Next-project preview
+
+Reference: https://pensatori-irrazionali.com/ — inspected on October 5, 2026. Its case studies end with an image-led handoff to the next project. Adapt that concept into a compact thumbnail and title attached to the existing next arrow, visible on desktop hover or keyboard focus. Keep the control icon-only at rest. The preview is pointer-reachable, dismissible with Escape, and uses a local poster image without starting video or sound. It sits above the mobile dock for keyboard users and disables transition animation for reduced motion. Preserve the current quiet layout rather than adding oversized marquees or automatic scroll-to-next navigation.

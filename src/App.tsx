@@ -68,10 +68,25 @@ function useRoute() {
   return { path, navigate };
 }
 
-function Control({ label, active, onClick, children, className = '', disabled = false, expanded }: {
-  label: string; active?: boolean; onClick: () => void; children: ReactNode; className?: string; disabled?: boolean; expanded?: boolean;
+function Control({ label, active, onClick, children, className = '', disabled = false, expanded, preview }: {
+  label: string; active?: boolean; onClick: () => void; children: ReactNode; className?: string; disabled?: boolean; expanded?: boolean; preview?: { src: string; title: string };
 }) {
-  return <button className={`control ${active ? 'active' : ''} ${className}`} aria-label={label} title={label} onClick={onClick} disabled={disabled} aria-expanded={expanded}>{children}</button>;
+  const [previewDismissed, setPreviewDismissed] = useState(false);
+  return <button className={`control ${active ? 'active' : ''} ${preview ? 'control--preview' : ''} ${className}`} aria-label={label} title={preview ? undefined : label} onClick={onClick} disabled={disabled} aria-expanded={expanded}
+    data-preview-dismissed={previewDismissed || undefined}
+    onPointerEnter={() => setPreviewDismissed(false)} onFocus={() => setPreviewDismissed(false)}
+    onKeyDown={event => {
+      if (preview && !previewDismissed && event.key === 'Escape') {
+        event.stopPropagation();
+        setPreviewDismissed(true);
+      }
+    }}>
+    {children}
+    {preview && <span className="control-preview" aria-hidden="true">
+      <img src={preview.src} alt="" width={320} height={180} decoding="async" draggable={false}/>
+      <span>{preview.title}</span>
+    </span>}
+  </button>;
 }
 
 function Identity({ about, navigate }: { about: boolean; navigate: (route: string) => void }) {
@@ -141,7 +156,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
       <div className="project-index"><span className="sr-only">Project {index + 1} of {projects.length}</span><span aria-hidden="true">Selected work</span><span aria-hidden="true">{String(index + 1).padStart(2, '0')} <span className="project-index-divider">/</span> {String(projects.length).padStart(2, '0')}</span></div>
       <h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
-        <Control label={`Next project: ${nextProject.title}`} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
+        <Control label={`Next project: ${nextProject.title}`} preview={nextProject.cover ? { src: nextProject.cover, title: nextProject.title } : undefined} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
         <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
       </nav></ViewportLayer>
     </header></ViewportLayer>
