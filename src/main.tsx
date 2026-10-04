@@ -9,5 +9,6 @@ import './brand.css';
 import './audit-fixes.css';
 import './direction.css';
 import './projects.css';
+import './desktop-theme.css';
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

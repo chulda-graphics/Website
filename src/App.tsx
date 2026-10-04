@@ -113,9 +113,14 @@ function About({ navigate }: { navigate: (route: string) => void }) {
       <span>Click my world</span>
     </button></ViewportLayer>
     <section className="biography" aria-label="About" ref={biography}>
-      <p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
-      <p>{profile.biography}</p>
-      <div className="recognitions"><h2>Selected disciplines:</h2><ul><li>Motion design</li><li>Graphic design</li><li>Brand identity</li><li>Art direction</li></ul></div>
+      <div className="biography-window">
+        <div className="window-titlebar"><span className="window-lights" aria-hidden="true"><i/><i/><i/></span><span>About me</span></div>
+        <div className="biography-content">
+          <p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
+          <p>{profile.biography}</p>
+          <div className="recognitions"><h2>Selected disciplines:</h2><ul><li>Motion design</li><li>Graphic design</li><li>Brand identity</li><li>Art direction</li></ul></div>
+        </div>
+      </div>
     </section>
   </main>;
 }
