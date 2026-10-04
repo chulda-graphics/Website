@@ -46,3 +46,7 @@ Still images use the existing one-time editorial reveal (18px vertical travel an
 ## Gallery navigation
 
 Reference: https://noahlesage.com/ (Ringer Studio) — inspected on October 4, 2026. Its gallery pairs a dominant image with a clear project selector. Adapt this as a compact numbered index alongside the existing card carousel: 44px targets, a faint blue current-project marker, and project-name labels on mouse hover or keyboard focus. Keep touch browsing uncluttered and preserve wheel, drag, and keyboard navigation. Do not adopt its oversized masthead, custom cursor, or full-screen rectangular gallery.
+
+## Selective color emphasis
+
+Reference: https://www.zeynapp.co.uk/ — inspected on October 4, 2026. Adapt its selective color emphasis and small supporting project labels using the existing blue: highlight the supplied “Motion Designer” introduction and the overview heading, with the known video duration alongside it. The duration appears only in the first overview, and the heading row wraps on narrow screens. Keep Rethink Sans, current scale, and the light dock; the reference’s magenta, condensed all-caps typography, and full-screen menu are not part of this direction.

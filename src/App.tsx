@@ -147,9 +147,12 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     </header></ViewportLayer>
     <div className="project-detail">
       {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
-      {project.sections.map(section => <section key={section.title} className="project-description" aria-label={section.title}>
+      {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-description" aria-label={section.title}>
         <div className="project-copy project-copy--animated">
-          <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.title}</ScrollFloat>
+          <div className="project-copy-heading">
+            <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.title}</ScrollFloat>
+            {sectionIndex === 0 && project.video && project.duration && <span className="project-runtime"><span>Running time</span><span>{project.duration}</span></span>}
+          </div>
           <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.body}</ScrollFloat>
         </div>
       </section>)}
