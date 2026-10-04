@@ -72,3 +72,17 @@
   .control { border-radius: 14px; }
   .project-art-title { left: 16px; bottom: 14px; font-size: 14px; }
 }
+
+/* Align the biography with the identity at the intermediate desktop breakpoint. */
+@media (min-width: 701px) and (max-width: 1100px) {
+  .biography { margin-left: 17.84722vw; }
+}
+
+/* Short landscape: place contact feedback beside the dock, clear of the card title. */
+@media (min-width: 480px) and (max-width: 700px) and (max-height: 400px) {
+  .contact-status {
+    left: calc(100% + 12px); top: 50%; bottom: auto;
+    transform: translateY(-50%); width: min(160px, calc(50vw - 120px));
+    text-align: left;
+  }
+}

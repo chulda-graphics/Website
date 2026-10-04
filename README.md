@@ -15,6 +15,8 @@ npm run dev
 npm run check
 npm run build
 npm run preview
+npm run test:flight
+npm run test:site
 ```
 
 The production output is `dist/`. The host must rewrite unknown routes to `index.html` to support direct links to `/about`, `/travel`, and `/project/:slug`. No hosting provider or public deployment is configured at this checkpoint.

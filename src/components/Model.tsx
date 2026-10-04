@@ -28,6 +28,7 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     const key = new THREE.DirectionalLight(0xffffff, 2.4);
     key.position.set(-3, 4, 5); scene.add(key);
     let model: THREE.Group | undefined;
+    const replacedMaterials = new Set<THREE.Material>();
     const cursorFrame = new THREE.Group(); scene.add(cursorFrame);
     let pointer = 0;
     let disposed = false;
@@ -58,6 +59,7 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       model = gltf.scene;
       if (kind === 'globe') model.traverse(child => {
         if (child instanceof THREE.Mesh && child.name.includes('ContinentalRelief') && child.material instanceof THREE.MeshStandardMaterial) {
+          replacedMaterials.add(child.material);
           child.material = child.material.clone();
           addTerrainRelief(child.material);
         }
@@ -126,8 +128,9 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       renderer.domElement.removeEventListener('webglcontextlost', loseContext);
       renderer.domElement.removeEventListener('webglcontextrestored', restoreContext);
       if (model) disposeObject(model);
+      replacedMaterials.forEach(material => material.dispose());
       mount.removeEventListener('pointermove', move); mount.removeEventListener('pointerleave', leave);
-      draco.dispose(); renderer.dispose(); renderer.domElement.remove();
+      draco.dispose(); renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove();
     };
   }, [src, kind, flight]);
   return <div className={`model model-${kind}`} ref={host} aria-hidden="true">{failed && <span className="model-fallback">{kind === 'globe' ? 'Explore' : 'Travel'}</span>}</div>;
