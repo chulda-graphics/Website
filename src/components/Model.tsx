@@ -26,26 +26,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     key.position.set(-3, 4, 5); scene.add(key);
     let model: THREE.Group | undefined;
     const airframe = new THREE.Group(); scene.add(airframe);
-    const trails: THREE.Line[] = [];
-    if (kind === 'aircraft') {
-      for (const side of [-1, 1]) {
-        const points = new Float32Array(32 * 3);
-        const colors = new Float32Array(32 * 3);
-        for (let i = 0; i < 32; i++) {
-          points[i * 3] = side * .96;
-          points[i * 3 + 1] = -.03 - i / 31 * .14;
-          points[i * 3 + 2] = .05 + i / 31 * 2.2;
-          const shade = .72 + .28 * i / 31;
-          colors.fill(shade, i * 3, i * 3 + 3);
-        }
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        const trail = new THREE.Line(geometry, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .3, depthWrite: false }));
-        trail.userData.side = side;
-        airframe.add(trail); trails.push(trail);
-      }
-    }
     let orbitAircraft: THREE.Group | undefined;
     let orbitAngle = 0;
     let pointer = 0;
@@ -107,14 +87,7 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
           const state = flight?.current;
           airframe.rotation.z = state?.bank ?? Math.sin(now / 1600) * .04;
           airframe.rotation.x = state?.pitch ?? 0;
-          for (const trail of trails) {
-            const positions = trail.geometry.getAttribute('position') as THREE.BufferAttribute;
-            for (let i = 0; i < positions.count; i++) {
-              const t = i / (positions.count - 1);
-              positions.setX(i, trail.userData.side * .96 + airframe.rotation.z * t * t * 2);
-            }
-            positions.needsUpdate = true;
-          }
+
         }
       }
       previous = now; renderer.render(scene, camera); frame = requestAnimationFrame(draw);
@@ -124,7 +97,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       disposed = true; cancelAnimationFrame(frame); observer.disconnect();
       if (model) disposeObject(model);
       if (orbitAircraft) disposeObject(orbitAircraft);
-      for (const trail of trails) { trail.geometry.dispose(); (trail.material as THREE.Material).dispose(); }
       mount.removeEventListener('pointermove', move); mount.removeEventListener('pointerleave', leave);
       draco.dispose(); renderer.dispose(); renderer.domElement.remove();
     };

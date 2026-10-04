@@ -77,3 +77,11 @@ Compared the 19.6-second plane recording with live reference screenshots at 1440
 - Added `npm run test:flight` to CI: continuous idle travel, acceleration, recovery to cruise, equal distance at 30/60/120 Hz, and static idle/manual exploration with reduced motion.
 
 The simplified plane geometry and placeholder imagery still differ from the original. Flight speed is tuned from the recording, not measured from the reference's internal camera. No credit-consuming Higgsfield operation was used.
+
+## Requested 1.5× scale and flight controls
+
+The owner's subsequent request intentionally enlarges the reference proportions. `src/scale.css` defines a shared `--ui-scale: 1.5` for type, controls, cards, globe, aircraft and travel frames. At 1440 × 900, the heading is 48 px, controls are 81 px, the active card is 502.5 × 516 px, the globe canvas is 600 × 600 px and the aircraft canvas is 390 × 270 px. Mobile cards are bounded to the screen width; larger controls wrap on narrow phones. Project information grows vertically to fit its enlarged text.
+
+The faint, clipped WebGL lines were replaced with viewport-sized SVG contrails, anchored to the aircraft's wingtips and curved with steering. Their length responds to flight speed. A persistent animated scroll indicator now says “Scroll to fly faster” at the bottom. “Click anywhere to return” returns to About from the background, artwork, aircraft, or button; drags beyond 8 px accelerate without returning. The return button remains keyboard accessible.
+
+Verified desktop dimensions, visible trails, persistent hint, background return, drag acceleration without leaving, mobile control fit, project text fit and the existing motion checks. Screenshots are saved alongside the repository in `outputs/scale-and-flight/`. No paid generation was used.

@@ -1,0 +1,95 @@
+/* One scale for the typography, controls, artwork and 3D canvases. */
+:root {
+  --ui-scale: 1.5;
+  --unit: calc(100vw / 1440 * var(--ui-scale));
+  --fixed-unit: calc(1px * var(--ui-scale));
+  font-size: calc(16 * var(--fixed-unit));
+}
+body { overflow-x: clip; }
+.about-view { position: relative; overflow-x: clip; }
+
+.identity-text { width: calc(400 * var(--unit)); }
+.contact-status, .project-status { font-size: calc(12 * var(--unit)); }
+.model-fallback { font-size: calc(14 * var(--unit)); }
+.contact-status { top: calc(70 * var(--unit)); }
+.pagination button { width: calc(24 * var(--unit)); }
+.pagination button span { width: calc(2 * var(--unit)); height: calc(2 * var(--unit)); }
+.recognitions h2, .next-project { font-size: calc(14 * var(--unit)); }
+.next-project span { font-size: calc(24 * var(--unit)); }
+.recognitions { margin: calc(90 * var(--unit)) 0; }
+.biography p { margin-bottom: calc(28 * var(--unit)); }
+.project-status { margin-top: calc(18 * var(--unit)); }
+.project-copy { min-height: 100%; height: auto; gap: calc(40 * var(--unit)); }
+.project-copy p { max-width: none; }
+.show-info .project-slide { height: auto; aspect-ratio: auto; min-height: calc((50vw - 30 * var(--unit)) * 344 / 335); }
+.show-info .project-copy { border-radius: inherit; min-height: inherit; }
+
+/* Scale the sample artwork's fixed type along with its surrounding cards. */
+.mock-nav, .mock-footer { font-size: calc(4 * var(--fixed-unit)); }
+.mock-kicker { font-size: calc(5 * var(--fixed-unit)); }
+.mock-title { font-size: calc(19 * var(--fixed-unit)); }
+.mock-panel span { font-size: calc(48 * var(--fixed-unit)); }
+.artwork-expanded .mock-title { font-size: clamp(36px, 5.25vw, 90px); }
+.artwork-expanded .mock-kicker { font-size: calc(9 * var(--fixed-unit)); }
+.artwork-expanded .mock-nav, .artwork-expanded .mock-footer { font-size: calc(8 * var(--fixed-unit)); }
+.artwork-expanded .mock-panel span { font-size: calc(90 * var(--fixed-unit)); }
+.flight-picture .project-art-title { font-size: calc(12 * var(--unit)); bottom: calc(16 * var(--unit)); left: calc(16 * var(--unit)); }
+
+.travel-view { cursor: pointer; }
+.travel-scene { cursor: inherit; }
+.flight-trails { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; pointer-events: none; }
+.flight-trails path { fill: none; stroke: url(#flight-trail-fade); stroke-width: calc(1.5 * var(--unit)); stroke-linecap: round; }
+.aircraft { z-index: 3; }
+.travel-return { white-space: nowrap; color: #979b9b; }
+.travel-return > span:last-child { padding: calc(3 * var(--unit)) calc(7 * var(--unit)); background: #ffffffdb; border-radius: calc(5 * var(--unit)); }
+.travel-drag-hint {
+  z-index: 10;
+  left: 50%; right: auto; bottom: calc(20 * var(--unit));
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: calc(9 * var(--unit));
+  font-size: calc(12 * var(--unit)); color: #858c8e;
+  opacity: 1; animation: none; white-space: nowrap; pointer-events: none;
+}
+.scroll-wheel { display: block; width: calc(14 * var(--unit)); height: calc(23 * var(--unit)); border: calc(1 * var(--unit)) solid #aeb6b8; border-radius: calc(9 * var(--unit)); position: relative; }
+.scroll-wheel i { position: absolute; width: calc(2 * var(--unit)); height: calc(5 * var(--unit)); left: 50%; top: calc(4 * var(--unit)); border-radius: 2px; background: #8c9699; transform: translateX(-50%); animation: scroll-wheel 1.6s ease-in-out infinite; }
+@keyframes scroll-wheel { 0%, 100% { transform: translate(-50%, 0); opacity: .3; } 45% { transform: translate(-50%, calc(6 * var(--unit))); opacity: 1; } }
+
+@media (max-width: 700px) {
+  :root {
+    --unit: var(--fixed-unit);
+    --control: calc(60 * var(--unit));
+    --card-width: min(calc(72vw * var(--ui-scale)), calc(100vw - 24px));
+    --card-height: var(--card-width);
+  }
+  .identity h1, .identity p, .project-identity h1, .project-category { font-size: calc(23 * var(--unit)); }
+  .identity-text { width: 100%; }
+  .identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open { gap: calc(4 * var(--unit)); }
+  .control { border-radius: calc(19 * var(--unit)); }
+  .control svg { width: calc(16 * var(--unit)); height: calc(16 * var(--unit)); }
+  .project-close { width: calc(45 * var(--unit)); height: calc(45 * var(--unit)); }
+  .project-close svg { width: calc(14 * var(--unit)); height: calc(14 * var(--unit)); }
+  .project-identity { padding-top: 110px; }
+  .project-status { bottom: calc(110 * var(--unit)); }
+  .contact-status { top: auto; bottom: calc(75 * var(--unit)); }
+  .project-art-title { left: calc(30 * var(--unit)); bottom: calc(28 * var(--unit)); font-size: calc(16 * var(--unit)); }
+  .globe-link { left: calc(50% - 160 * var(--unit)); width: calc(320 * var(--unit)); height: calc(320 * var(--unit)); }
+  .globe-link > span { bottom: calc(10 * var(--unit)); font-size: calc(14 * var(--unit)); }
+  .biography { padding-top: calc(140px + 350 * var(--unit)); font-size: calc(22 * var(--unit)); overflow-wrap: break-word; }
+  .project-copy { padding: 32px 32px 110px; }
+  .show-info .project-slide { min-height: 72svh; }
+  .project-copy p { font-size: calc(22 * var(--unit)); }
+  .project-copy h2 { font-size: calc(14 * var(--unit)); }
+  .flight-picture { width: calc(220 * var(--unit)); height: calc(150 * var(--unit)); }
+  .flight-picture:nth-child(5n+3) { width: calc(130 * var(--unit)); height: calc(195 * var(--unit)); }
+  .aircraft { width: calc(190 * var(--unit)); height: calc(130 * var(--unit)); left: calc(50% - 95 * var(--unit)); top: calc(58% - 65 * var(--unit)); }
+  .travel-return { bottom: 13%; }
+  .travel-drag-hint { bottom: 24px; left: 50%; right: auto; }
+  .artwork-expanded .mock-title { font-size: calc(30 * var(--unit)); }
+  .artwork-expanded .mock-panel span { font-size: calc(70 * var(--unit)); }
+  .artwork-expanded .mock-nav, .artwork-expanded .mock-footer { font-size: calc(6 * var(--unit)); }
+}
+
+@media (max-width: 380px) {
+  .identity-controls.social-open { display: grid; grid-template-columns: repeat(2, var(--control)); }
+  .identity-controls.social-open .contact-status { bottom: calc(2 * var(--control) + 18px); }
+}
