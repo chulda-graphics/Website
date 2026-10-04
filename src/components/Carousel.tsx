@@ -20,6 +20,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     let lastTime = 0;
     let frame = 0;
     let height = container.clientHeight;
+    let unit = container.clientWidth <= 700 ? 1 : container.clientWidth / 1440;
     let wheelTotal = 0;
     let lastWheel = 0;
     let lastStep = -1000;
@@ -33,12 +34,12 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
         let distance = ((i - position + 18) % 12) - 6;
         const amount = Math.abs(distance);
         const near = Math.min(amount, 1);
-        const y = Math.sign(distance) * (Math.min(amount, 1) * height * .4 + Math.max(0, amount - 1) * height * .05);
-        const rotation = Math.sign(distance) * near * (84 - Math.min(4, Math.max(0, amount - 1) * 2));
-        const scale = 1 - .17 * near;
+        const y = Math.sign(distance) * (near * height * .4 + Math.max(0, amount - 1) * 35 * unit);
+        const rotation = Math.sign(distance) * near * 98;
+        const scale = 1 - .2 * near;
         const visible = amount < 3.6;
         cards[i].style.visibility = visible ? 'visible' : 'hidden';
-        cards[i].style.transform = `translate(-50%, -50%) translateY(${y}px) perspective(2000px) rotateX(${rotation}deg) scale(${scale})`;
+        cards[i].style.transform = `translate(-50%, -50%) translateY(${y}px) scale(${scale}) rotateX(${rotation}deg)`;
         cards[i].style.zIndex = String(10 - Math.round(amount));
         cards[i].style.opacity = String(amount > 3 ? 1 - (amount - 3) / .6 : 1);
         shades[i].style.opacity = String(Math.min(1, Math.max(0, (amount - .12) / .7)));
@@ -112,7 +113,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       if (dragged && direction) step(direction); else animate();
     }
     function preventDragClick(event: MouseEvent) { if (dragged) { event.preventDefault(); event.stopPropagation(); dragged = false; } }
-    const resize = new ResizeObserver(() => { height = container.clientHeight; paint(); });
+    const resize = new ResizeObserver(() => { height = container.clientHeight; unit = container.clientWidth <= 700 ? 1 : container.clientWidth / 1440; paint(); });
     resize.observe(container); paint();
     addEventListener('wheel', wheel, { passive: false }); addEventListener('keydown', key);
     container.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up);

@@ -39,8 +39,9 @@
 .control:hover { transform: scale(1.025); }
 .control.active { border-radius: 50%; }
 .identity-controls.social-open { transform: translateX(calc(-58 * var(--unit))); }
+.page-about .identity-controls.social-open { transform: none; }
 
-.carousel-depth { overflow: hidden; touch-action: none; isolation: isolate; z-index: 1; }
+.carousel-depth { overflow: hidden; touch-action: none; isolation: isolate; z-index: 1; perspective: 1500px; perspective-origin: 70.521% 50%; }
 .stack-card {
   position: absolute;
   left: 70.521%;
@@ -49,13 +50,13 @@
   height: var(--card-height);
   border-radius: calc(35 * var(--unit));
   overflow: hidden;
-  backface-visibility: hidden;
+  backface-visibility: visible;
   user-select: none;
   cursor: pointer;
   transform-origin: 50% 50%;
 }
 .stack-shade { position: absolute; inset: 0; background: #eaeaea; pointer-events: none; }
-.stack-edge { position: absolute; left: 52%; right: 14%; height: 14svh; z-index: 20; pointer-events: none; }
+.stack-edge { position: absolute; left: 52%; right: 14%; height: 8svh; z-index: 20; pointer-events: none; }
 .stack-edge-top { top: 0; background: linear-gradient(var(--paper), #f6f6f600); }
 .stack-edge-bottom { bottom: 0; background: linear-gradient(#f6f6f600, var(--paper)); }
 .project-art-title { left: calc(30 * var(--unit)); bottom: calc(28 * var(--unit)); font-size: calc(16 * var(--unit)); letter-spacing: 0; }
@@ -92,17 +93,19 @@
 @keyframes root-out { to { opacity: 0; } }
 @keyframes root-in { from { opacity: 0; } }
 
-.travel-scene { perspective: 1100px; transform-style: preserve-3d; transition: none; }
-.flight-picture { position: absolute; left: 50%; top: 50%; width: 340px; height: 225px; overflow: hidden; backface-visibility: hidden; }
+.travel-scene { perspective: calc(1100 * var(--unit)); transform-style: preserve-3d; transition: none; }
+.flight-picture { position: absolute; left: 50%; top: 50%; width: calc(340 * var(--unit)); height: calc(225 * var(--unit)); overflow: hidden; backface-visibility: hidden; }
+.flight-picture:nth-child(5n+3) { width: calc(200 * var(--unit)); height: calc(300 * var(--unit)); }
 .flight-picture .artwork { height: 100%; }
 .flight-picture .project-art-title { font-size: 12px; bottom: 16px; left: 16px; }
 .flight-picture .placeholder-layout { top: 18%; height: 64%; }
 .flight-picture img { width: 100%; height: 100%; object-fit: cover; }
-.travel-return { z-index: 10; }
-.departure-code i { overflow: hidden; }
+.travel-return { z-index: 10; bottom: calc(86 * var(--unit)); gap: calc(20 * var(--unit)); font-size: calc(13 * var(--unit)); line-height: 1; }
+.departure-code { gap: calc(6 * var(--unit)); }
+.departure-code i { overflow: hidden; width: calc(42 * var(--unit)); height: calc(42 * var(--unit)); border-radius: calc(7 * var(--unit)); font-size: calc(26 * var(--unit)); }
 .departure-code i span { animation: flap .55s ease both; }
 @keyframes flap { 0% { transform: translateY(-110%); } 55% { transform: translateY(12%); } 100% { transform: none; } }
-.aircraft { pointer-events: none; }
+.aircraft { pointer-events: none; width: calc(260 * var(--unit)); height: calc(180 * var(--unit)); left: calc(50% - 130 * var(--unit)); top: calc(58% - 90 * var(--unit)); }
 .travel-view { touch-action: none; perspective: none; }
 .travel-drag-hint { position: absolute; right: 30px; bottom: 30px; font-size: 12px; color: #bbb; opacity: 0; animation: hint-away 6s both; }
 @keyframes hint-away { 10%, 60% { opacity: 1; } 100% { opacity: 0; } }
@@ -111,10 +114,11 @@
   :root { --unit: 1px; --control: 60px; --card-width: 72vw; --card-height: 72vw; }
   .identity { top: 24px; left: 0; }
   .identity h1, .identity p, .project-identity h1, .project-category { font-size: 23px; line-height: 1.05; }
-  .identity-controls, .identity-controls.social-open { margin: 0; gap: 4px; transform: translateX(-50%); }
+  .identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open { margin: 0; gap: 4px; transform: translateX(-50%); }
   .control { border-radius: 19px; }
   .control svg { width: 16px; height: 16px; }
   .stack-card { left: 50%; border-radius: 30px; }
+  .carousel-depth { perspective-origin: 50% 50%; }
   .stack-edge { left: 10%; right: 10%; height: 20svh; }
   .project-art-title { left: 30px; bottom: 28px; font-size: 16px; }
   .project-identity { left: auto; top: auto; }
@@ -129,6 +133,10 @@
   .globe-link > span { bottom: 10px; font-size: 14px; }
   .biography { padding-top: 500px; max-width: none; font-size: 22px; }
   .flight-picture { width: 220px; height: 150px; }
+  .flight-picture:nth-child(5n+3) { width: 130px; height: 195px; }
+  .travel-scene { perspective: 517px; }
+  .aircraft { width: 190px; height: 130px; left: calc(50% - 95px); top: calc(58% - 65px); }
+  .travel-return { bottom: 9.5%; }
   .travel-drag-hint { bottom: 28px; left: 0; right: 0; text-align: center; }
 }
 

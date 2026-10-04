@@ -53,3 +53,27 @@ Land geometry: [Natural Earth public-domain 1:110m land](https://github.com/nvke
 - No sound effects have been enabled.
 
 The earlier `FOUNDATION.md` is a historical checkpoint. This document describes the current comparison pass.
+
+## Second recording: continuous flight and scale correction
+
+Compared the 19.6-second plane recording with live reference screenshots at 1440 × 900 and 1874 × 1005. Saved before/after and reference screenshots alongside the repository in `outputs/comparison-flight/`.
+
+| Measurement | Original | Before this pass | After |
+| --- | --- | --- | --- |
+| Airport controls width at 1874 | 179.58 px | 138 px | 179.58 px |
+| Return group top at 1874 × 1005 | 795.49 px | 831.03 px | 795.48 px |
+| Return group bottom | 893.09 px | 909.53 px | 893.09 px |
+| Active card at 1440 | 335 × 344 px | 335 × 344 px | unchanged |
+| Nearest folded card at 1440 | 302.33 × 44.02 px | approximately 299 × 30 px | 302.33 × 44.02 px |
+| Nearest folded card top | 790.49 px | approximately 795 px | 790.49 px |
+| About navigation left at 1440 | 257 px | 199 px | 256.99 px |
+
+- Enlarged the aircraft canvas from fixed 180 × 120 px to viewport-scaled 260 × 180 reference units. Its visible wingspan is approximately 180 px at the recording's viewport width, compared with approximately 93 px before.
+- Made travel advance continuously at 95 scene units/second. Wheel, arrow keys, and drag provide a forward speed boost that decays back to cruise. The old implementation only eased toward a scroll destination, then stopped.
+- Added smooth pointer steering, gentle banking, and faint wingtip trails. Scaled image sizes, depth, and perspective consistently across desktop widths; introduced portrait frames among the landscape placeholders.
+- Matched the reference stack's shared 1500 px perspective, 0.8 scale, ±98° rotation, and 35-unit spacing. Reduced the edge fade so the folded cards remain visible.
+- Kept the main heading at the measured 32 px and the matching 335 × 344 px active card. The globe's rendered diameter was already close to the reference.
+- Verified cruise at rest, a live scroll boost above 1100 units/second, touch-drag boost above 800, and the return button. Mobile travel has no horizontal overflow at 390 × 844.
+- Added `npm run test:flight` to CI: continuous idle travel, acceleration, recovery to cruise, equal distance at 30/60/120 Hz, and static idle/manual exploration with reduced motion.
+
+The simplified plane geometry and placeholder imagery still differ from the original. Flight speed is tuned from the recording, not measured from the reference's internal camera. No credit-consuming Higgsfield operation was used.
