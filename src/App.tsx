@@ -118,7 +118,11 @@ function About({ navigate }: { navigate: (route: string) => void }) {
         <div className="biography-content">
           <p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
           <p>{profile.biography}</p>
-          <div className="recognitions"><h2>Selected disciplines:</h2><ul><li>Motion design</li><li>Graphic design</li><li>Brand identity</li><li>Art direction</li></ul></div>
+          <div className="recognitions"><h2>Selected disciplines:</h2><ul>
+            {['Motion design', 'Graphic design', 'Brand identity', 'Art direction'].map((discipline, index) =>
+              <li key={discipline}><span className="discipline-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{discipline}</span></li>
+            )}
+          </ul></div>
         </div>
       </div>
     </section>
@@ -126,12 +130,16 @@ function About({ navigate }: { navigate: (route: string) => void }) {
 }
 
 function ProjectView({ slug, navigate }: { slug: string; navigate: (route: string) => void }) {
+  const stills = useRef<HTMLElement>(null);
+  useEditorialReveal(stills, '.project-stills-grid img');
   const project = projects.find(item => item.slug === slug);
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
   const nextProject = projects[(index + 1) % projects.length];
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
-    <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
+    <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}>
+      <div className="project-index"><span className="sr-only">Project {index + 1} of {projects.length}</span><span aria-hidden="true">Selected work</span><span aria-hidden="true">{String(index + 1).padStart(2, '0')} <span className="project-index-divider">/</span> {String(projects.length).padStart(2, '0')}</span></div>
+      <h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
         <Control label={`Next project: ${nextProject.title}`} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
         <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
@@ -145,8 +153,8 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
           <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.body}</ScrollFloat>
         </div>
       </section>)}
-      {!!project.stills?.length && <section className="project-stills" aria-labelledby="project-stills-title">
-        <h2 id="project-stills-title">Selected frames</h2>
+      {!!project.stills?.length && <section ref={stills} className="project-stills" aria-labelledby="project-stills-title">
+        <div className="project-stills-heading"><h2 id="project-stills-title">Selected frames</h2><span aria-hidden="true">{String(project.stills.length).padStart(2, '0')}</span></div>
         <div className="project-stills-grid">
           {project.stills.map(frame => <img key={frame.src} src={frame.src} alt={frame.alt} width={800} height={450} loading="lazy" decoding="async"/>)}
         </div>

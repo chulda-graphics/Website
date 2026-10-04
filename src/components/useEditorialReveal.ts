@@ -1,12 +1,12 @@
 import { useLayoutEffect, type RefObject } from 'react';
 
 /** Reveal each editorial block once; the readable DOM is the default and fallback. */
-export function useEditorialReveal(ref: RefObject<HTMLElement | null>) {
+export function useEditorialReveal(ref: RefObject<HTMLElement | null>, selector = 'p, h2, li') {
   useLayoutEffect(() => {
     const root = ref.current;
     if (!root) return;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const blocks = [...root.querySelectorAll<HTMLElement>('p, h2, li')];
+    const blocks = [...root.querySelectorAll<HTMLElement>(selector)];
     const seen = new WeakSet<Element>();
     const animations = new Set<Animation>();
     let observer: IntersectionObserver | undefined;
@@ -39,5 +39,5 @@ export function useEditorialReveal(ref: RefObject<HTMLElement | null>) {
       reduced.removeEventListener('change', configure);
       animations.forEach(animation => animation.cancel());
     };
-  }, [ref]);
+  }, [ref, selector]);
 }

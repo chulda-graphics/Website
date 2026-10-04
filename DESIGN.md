@@ -34,3 +34,11 @@ Preserve current scrolling, transitions, keyboard navigation and reduced-motion 
 ## Implementation
 
 Theme tokens and surface styles live in `src/desktop-theme.css`, imported last. The About window markup lives in `src/App.tsx`. This keeps the applied theme easy to review and revise independently from the existing motion and routing.
+
+## Editorial refinements
+
+Secondary reference: https://matthieugivelet.com/ — inspected on October 4, 2026.
+
+Adapt its restrained numbering and ruled information hierarchy: a small current/total project index above each title, a frame count beside the gallery heading, and numbered discipline rows separated by fine rules. Preserve the existing rounded surfaces, blue controls, and Rethink Sans rather than adopting the reference’s oversized masthead or global navigation.
+
+Still images use the existing one-time editorial reveal (18px vertical travel and opacity, 650ms with a short stagger). Reduced motion leaves them static; readable content is the default, and observers and animations are cleaned up on navigation.
