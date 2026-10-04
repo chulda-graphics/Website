@@ -1,18 +1,13 @@
-import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react';
-import { assets } from '../content';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { travelPhotos } from '../travelPhotos';
 import { accelerateFlight, advanceFlight, createFlight } from './flight';
 
-const Model = lazy(() => import('./Model').then(module => ({ default: module.Model })));
 const positions = [[-330,100], [260,0], [-30,-150], [-175,-155], [150,-220], [400,100], [-420,-100]];
 const spacing = 560;
 const wrap = (value: number, total: number) => (value % total + total) % total;
 
 export function Travel({ navigate }: { navigate: (route: string) => void }) {
   const host = useRef<HTMLDivElement>(null);
-  const cursor = useRef<HTMLDivElement>(null);
-  const leftTrail = useRef<SVGPathElement>(null);
-  const rightTrail = useRef<SVGPathElement>(null);
   const gesture = useRef({ x: 0, y: 0, moved: false });
   const flight = useRef(createFlight());
   const [place, setPlace] = useState(0);
@@ -22,11 +17,11 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     const pictures = [...mount.querySelectorAll<HTMLDivElement>('.flight-picture')];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const motion = flight.current = createFlight();
-    let previous = 0, frame = 0, pointerX = 0, pointerY = 0, smoothX = 0, smoothY = 0, lastPlace = 0, elapsed = 0;
+    let previous = 0, frame = 0, pointerX = 0, pointerY = 0, smoothX = 0, smoothY = 0, lastPlace = 0;
     let dragging = false, lastY = 0;
-    let width = mount.clientWidth, height = mount.clientHeight, cursorWidth = 0, cursorHeight = 0;
-    const measure = () => { width = mount.clientWidth; height = mount.clientHeight; cursorWidth = cursor.current?.offsetWidth ?? 0; cursorHeight = cursor.current?.offsetHeight ?? 0; };
-    const resize = new ResizeObserver(measure); resize.observe(mount); if (cursor.current) resize.observe(cursor.current); measure();
+    let width = mount.clientWidth;
+    const measure = () => { width = mount.clientWidth; };
+    const resize = new ResizeObserver(measure); resize.observe(mount); measure();
     function wheel(event: WheelEvent) { if (event.ctrlKey) return; event.preventDefault(); accelerateFlight(motion, event.deltaY * (event.deltaMode === 1 ? 12 : event.deltaMode === 2 ? innerHeight : 1), reduced.matches); }
     function key(event: KeyboardEvent) { if (['ArrowDown','ArrowUp'].includes(event.key)) { event.preventDefault(); accelerateFlight(motion, 400, reduced.matches); } }
     function down(event: PointerEvent) { if (event.button !== 0) return; dragging = true; lastY = event.clientY; }
@@ -41,12 +36,9 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       if (document.hidden) { frame = requestAnimationFrame(draw); return; }
       advanceFlight(motion, dt, reduced.matches);
       const progress = motion.distance;
-      elapsed += reduced.matches ? 0 : dt;
       const ease = reduced.matches ? 1 : 1 - Math.exp(-4 * dt);
       smoothX += (pointerX - smoothX) * ease;
       smoothY += (pointerY - smoothY) * ease;
-      motion.bank = reduced.matches ? 0 : -smoothX * .12 - (pointerX - smoothX) * .2 + Math.sin(elapsed * .8) * .025;
-      motion.pitch = reduced.matches ? 0 : smoothY * .05 + Math.min(1, (motion.speed - 95) / 1000) * .035;
       mount.dataset.flightDistance = progress.toFixed(2);
       mount.dataset.flightSpeed = motion.speed.toFixed(2);
       const nextPlace = wrap(Math.floor((progress + spacing / 2) / spacing), travelPhotos.length);
@@ -58,18 +50,6 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
         pictures[index].style.transform = `translate(-50%, -50%) translate3d(${(location[0] + smoothX * 22) * factor}px, ${(location[1] + smoothY * 10) * factor}px, ${-z * factor}px)`;
         pictures[index].style.opacity = String(Math.max(0, z > 1800 ? 1 - (z - 1800) / 1100 : z < -80 ? 1 - (-z - 80) / 430 : 1));
         pictures[index].style.visibility = z > 2900 || z < -505 ? 'hidden' : 'visible';
-      }
-      const offsetX = (smoothX * 95 + Math.sin(elapsed * .65) * 3) * factor;
-      const offsetY = (smoothY * 32 + Math.sin(elapsed * 1.1) * 2) * factor;
-      if (cursor.current) cursor.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-      // Contrails follow the two rear wings of the flat arrowhead.
-      const centerX = width * .5 + offsetX, centerY = height * .5 + offsetY + cursorHeight * .15;
-      const halfSpan = cursorWidth * .255, length = cursorHeight * (.8 + Math.min(motion.speed / 1500, .35));
-      for (const [side, path] of [[-1, leftTrail.current], [1, rightTrail.current]] as const) {
-        const x = centerX + side * halfSpan;
-        const y = centerY - side * motion.bank * halfSpan;
-        const bend = -smoothX * length * .25 - motion.bank * length;
-        path?.setAttribute('d', `M ${x} ${y} C ${x} ${y + length * .3}, ${x + bend} ${y + length * .7}, ${x + bend + side * length * .12} ${y + length}`);
       }
       frame = requestAnimationFrame(draw);
     }
@@ -89,15 +69,6 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
         <img src={photo.src} alt="" width={photo.width} height={photo.height} decoding="async" draggable={false} fetchPriority={index < 5 ? 'high' : 'low'}/>
       </div>)}
     </div>
-    <svg className="flight-trails" aria-hidden="true">
-      <defs><linearGradient id="flight-trail-fade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#9dabae" stopOpacity=".8"/>
-        <stop offset=".55" stopColor="#b9c3c5" stopOpacity=".5"/>
-        <stop offset="1" stopColor="#dce1e2" stopOpacity="0"/>
-      </linearGradient></defs>
-      <path ref={leftTrail}/><path ref={rightTrail}/>
-    </svg>
-    <div className="flight-cursor" ref={cursor}><Suspense fallback={null}><Model src={assets.cursor} kind="cursor" flight={flight}/></Suspense></div>
     <button className="travel-return" aria-label="Click anywhere to return to the about page">
       <span>Click anywhere to return</span>
     </button>

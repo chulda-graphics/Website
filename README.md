@@ -1,6 +1,6 @@
 # Chulda Graphics portfolio
 
-Portfolio with the original reference-style composition and vertical project stack, restored at the owner's request. Rethink Sans, the refined entry slider, and the flat stemless cursor flight remain. See [DIRECTION.md](docs/DIRECTION.md) for the current state and [AUDIT.md](docs/AUDIT.md) for usability fixes.
+Portfolio with the original reference-style composition and vertical project stack, restored at the owner's request. Rethink Sans, the refined entry slider, and the flying-photo experience remain. The cursors around the globe and in travel have been removed. See [DIRECTION.md](docs/DIRECTION.md) for the current state and [AUDIT.md](docs/AUDIT.md) for usability fixes.
 
 ## Run
 
@@ -56,7 +56,7 @@ node scripts/blender-local.mjs globe-relief-v4
 
 The build refuses to overwrite existing models or Blender files. Inspect and save a new revision before rebuilding. Each execution uses a separate background Blender session and does not modify unsaved work in the desktop application.
 
-The current globe is `globe-relief-v3.blend`, with geographic land relief and an editable mesh-reduction modifier. Its Draco-compressed GLB is about 231 KB. The active travel and orbiting model is `cursor-v2.blend`: a beveled, stemless arrowhead using the aircraft’s original base color (.72, .72, .69) and roughness (.6). The original aircraft is retained as a material reference. The browser provides globe rotation, the orbiting cursor, and travel banking. The original smooth-sphere blockout is retained for reference.
+The current globe is `globe-relief-v3.blend`, with geographic land relief and an editable mesh-reduction modifier. Its Draco-compressed GLB is about 231 KB. The retained, currently unused cursor source is `cursor-v2.blend`: a beveled, stemless arrowhead using the aircraft’s original base color (.72, .72, .69) and roughness (.6). The original aircraft is retained as a material reference. The browser provides globe rotation and continuous photo flight. The original smooth-sphere blockout is retained for reference.
 
 ## Sound
 

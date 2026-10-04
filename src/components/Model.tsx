@@ -3,7 +3,6 @@ import type { FlightState } from './flight';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { assets } from '../content';
 import { addTerrainRelief } from './terrain';
 
 export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'globe' | 'cursor'; flight?: RefObject<FlightState> }) {
@@ -29,14 +28,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     key.position.set(-3, 4, 5); scene.add(key);
     let model: THREE.Group | undefined;
     const cursorFrame = new THREE.Group(); scene.add(cursorFrame);
-    let orbitCursor: THREE.Group | undefined;
-    let orbitAngle = -Math.PI / 2;
-    function positionOrbitCursor() {
-      if (!orbitCursor) return;
-      orbitCursor.position.set(Math.sin(orbitAngle) * 1.2, Math.cos(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
-      // The arrowhead lies flat; its nose follows the horizontal orbit tangent.
-      orbitCursor.rotation.set(-1.05, orbitAngle - Math.PI / 2, 0, 'YXZ');
-    }
     let pointer = 0;
     let disposed = false;
     let frame = 0, previous = performance.now(), inView = true, dirty = true, contextLost = false;
@@ -83,19 +74,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       }
       invalidate();
     }, undefined, () => { if (!disposed) setFailed(true); });
-    if (kind === 'globe') loader.load(assets.cursor, gltf => {
-      if (disposed) { disposeObject(gltf.scene); return; }
-      const cursor = gltf.scene;
-      const bounds = new THREE.Box3().setFromObject(cursor);
-      const size = bounds.getSize(new THREE.Vector3());
-      cursor.position.sub(bounds.getCenter(new THREE.Vector3()));
-      const normalized = new THREE.Group(); normalized.add(cursor);
-      normalized.scale.setScalar(.28 / Math.max(size.x, size.y, size.z));
-      orbitCursor = new THREE.Group(); orbitCursor.add(normalized);
-      scene.add(orbitCursor);
-      positionOrbitCursor();
-      invalidate();
-    });
     const move = (event: PointerEvent) => {
       const box = mount.getBoundingClientRect();
       pointer = ((event.clientX - box.left) / box.width - .5) * 2;
@@ -125,8 +103,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
         const delta = Math.min((now - previous) / 1000, .05);
         if (kind === 'globe') {
           model.rotation.y += delta * (.045 + pointer * .15);
-          orbitAngle += delta * .55;
-          positionOrbitCursor();
         } else {
           const state = flight?.current;
           cursorFrame.rotation.z = state?.bank ?? Math.sin(now / 1600) * .04;
@@ -145,7 +121,6 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       renderer.domElement.removeEventListener('webglcontextlost', loseContext);
       renderer.domElement.removeEventListener('webglcontextrestored', restoreContext);
       if (model) disposeObject(model);
-      if (orbitCursor) disposeObject(orbitCursor);
       mount.removeEventListener('pointermove', move); mount.removeEventListener('pointerleave', leave);
       draco.dispose(); renderer.dispose(); renderer.domElement.remove();
     };

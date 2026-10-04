@@ -1,8 +1,8 @@
 # Chulda design direction — 4 October 2026
 
-## Current state: original layout restored
+## Current state: original layout restored, cursors removed
 
-At the owner’s latest request, Home, About, and project layouts have returned to the audited pre-redesign composition. Home uses the original vertical project stack and left-hand identity. The original biography spacing and project panel arrangement are restored. The flat stemless cursor, clean flight footer, smaller slider with rotating filled airplane, entry crossfade, and selective font weights remain. Earlier horizontal-layout explorations below are historical.
+At the owner’s latest request, Home, About, and project layouts have returned to the audited pre-redesign composition. Home uses the original vertical project stack and left-hand identity. The original biography spacing and project panel arrangement are restored. The orbiting globe cursor and flying cursor (including its contrails) are removed at the owner’s latest request. The globe, continuously flying photographs, scroll acceleration, return prompt, smaller slider with rotating filled airplane, entry crossfade, and selective font weights remain. Earlier horizontal-layout explorations below are historical.
 
 
 The owner has replaced the exact-reference goal with a distinct composition that retains the restrained visual language and continuous flight experience.
