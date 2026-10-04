@@ -4,10 +4,9 @@ export const profile = {
   title: 'Motion Designer',
   email: 'chulda.graphics2022@gmail.com',
   social: { x: 'https://x.com/dhrexinmotion', linkedin: 'https://www.linkedin.com/in/dhrex-cañezo' },
-  introductionLead: 'Motion Designer,',
-  introduction: 'creating thoughtful digital experiences that bring together clear ideas, considered details, and interfaces that feel natural.',
-  biography: 'More about my practice, background, and approach will be added here, along with selected collaborations and the thinking behind the work.',
-  availability: 'For new projects and collaborations, get in touch.',
+  introductionLead: 'Motion Designer',
+  introduction: 'focused on creating thoughtful visual experiences through motion, design, and storytelling.',
+  biography: 'I’m Dhrex F. Cañezo, a multimedia designer specialising in motion design, with a background in graphic design, branding, and creative direction. I enjoy turning ideas into clear, engaging visuals—combining strong design with purposeful movement.',
 };
 
 export interface Project {

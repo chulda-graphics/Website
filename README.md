@@ -69,5 +69,5 @@ The supplied Botanica folder was found and is available for later sound selectio
 
 - Do not use Higgsfield credit-consuming generations.
 - Preserve the restored reference-style layout with the requested typography, opening slider, and cursor flight refinements.
-- The five supplied videos and contact links are the owner's supplied content; biography text is still a placeholder.
+- The five supplied videos, contact links, and biography are the owner's supplied content.
 - The world gallery uses screenshots from the owner-supplied videos. Legacy reference travel assets are unused.
