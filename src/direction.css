@@ -24,3 +24,6 @@
 .recognitions h2 { font-weight: 600; }
 @media (max-width: 700px) { .travel-return { bottom: max(28px, env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion: reduce) { .app { animation: none; } }
+
+/* The Phosphor left caret's ink sits 8 units left of its 256-unit viewBox center. */
+.control svg[data-icon="back"] { translate: 3.125% 0; }

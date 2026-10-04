@@ -22,5 +22,5 @@ const icons = {
 
 export function Icon({ name, ...props }: IconProps & { name: keyof typeof icons }) {
   const Component = icons[name];
-  return <Component size={16} weight="regular" aria-hidden="true" {...props}/>;
+  return <Component size={16} weight="regular" aria-hidden="true" data-icon={name} {...props}/>;
 }

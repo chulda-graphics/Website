@@ -30,7 +30,7 @@
 .control svg { width: calc(16 * var(--unit)); height: calc(16 * var(--unit)); }
 .control:hover { transform: scale(1.025); }
 .control.active { border-radius: 50%; }
-.identity-controls.social-open { transform: translateX(calc(-58 * var(--unit))); }
+.identity-controls.social-open { transform: none; }
 .page-about .identity-controls.social-open { transform: none; }
 
 .carousel-depth { overflow: hidden; touch-action: none; isolation: isolate; z-index: 1; perspective: 1500px; perspective-origin: 70.521% 50%; }
