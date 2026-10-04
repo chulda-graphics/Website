@@ -15,3 +15,11 @@ button, input, textarea, select { font-family: inherit; }
 .travel-drag-hint > svg { width: 21px; height: 26px; flex: none; }
 @media (hover: none) { .entry-keyboard-hint { display: none; } }
 @media (prefers-reduced-motion: reduce) { .entry-screen { transition: none; } }
+
+/* ScrollSmoother owns the document; fixed controls are portaled to the viewport. */
+html { scroll-behavior: auto; }
+#smooth-content { position: relative; width: 100%; min-height: 100svh; display: flow-root; }
+#smooth-wrapper { min-height: 100svh; }
+@media (max-width: 700px) {
+  body > .identity-controls.social-open { transform: translateX(-50%); }
+}

@@ -4,6 +4,7 @@ import { EntryScreen, hasEntered, rememberEntry } from './components/EntryScreen
 import { Carousel } from './components/Carousel';
 import { Travel } from './components/Travel';
 import { assets, profile, projects } from './content';
+import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
 import { ProjectArtwork } from './components/ProjectArtwork';
 
@@ -45,7 +46,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   }
   return <header className="identity">
     <div className="identity-text" style={{viewTransitionName: 'identity'}}><h1>{profile.name}</h1><p>{profile.title}</p></div>
-    <nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
+    <ViewportLayer when="mobile"><nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
       {about ? <Control label="Back to Home" active onClick={() => navigate('/')}><Icon name="back" /></Control> :
         !social && <Control label="Open About Page" onClick={() => navigate('/about')}><Icon name="person" /></Control>}
       {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
@@ -55,7 +56,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
         <Control label="LinkedIn" onClick={() => openSocial(profile.social.linkedin)}><Icon name="linkedin" /></Control>
       </>}
       <span role="status" className="contact-status">{status}</span>
-    </nav>
+    </nav></ViewportLayer>
   </header>;
 }
 
@@ -81,13 +82,13 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
   return <main className="project-view">
-    <header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
-      <nav aria-label="Project controls">
+    <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
+      <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
         <Control label="Toggle Project Info" active={info} expanded={info} onClick={() => setInfo(!info)}><Icon name="info"/></Control>
         <Control label="Open Project External Link" onClick={() => project.url ? window.open(project.url, '_blank', 'noopener,noreferrer') : setMessage('Project link coming soon')}><Icon name="external"/></Control>
-      </nav><span className="project-status" role="status">{message}</span>
-    </header>
-    <Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
+      </nav></ViewportLayer><ViewportLayer when="mobile"><span className="project-status" role="status">{message}</span></ViewportLayer>
+    </header></ViewportLayer>
+    <ViewportLayer><Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control></ViewportLayer>
     <div className={`project-detail ${info ? 'show-info' : ''}`}>
       {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
         {info ? <div className="project-copy"><h2>{section.title}</h2><p>{section.body}</p></div> : <ProjectArtwork project={project} expanded index={index + sectionIndex}/>}
@@ -116,14 +117,14 @@ function Portfolio() {
   }, [path]);
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
-    <div id="main" className={`app page-${home ? 'home' : about ? 'about' : travel ? 'travel' : 'project'}`}>
+    <SmoothScroll route={path}><div id="main" className={`app page-${home ? 'home' : about ? 'about' : travel ? 'travel' : 'project'}`}>
       {(home || about) && <Identity about={about} navigate={navigate}/>}
       {home && <Carousel navigate={navigate} selected={selected} setSelected={setSelected}/>}
       {about && <About navigate={navigate}/>}
       {travel && <Travel navigate={navigate}/>}
       {projectSlug && <ProjectView key={projectSlug} slug={projectSlug} navigate={navigate}/>}
       {!home && !about && !travel && !projectSlug && <main className="not-found"><h1>Page not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>}
-    </div>
+    </div></SmoothScroll>
   </>;
 }
 

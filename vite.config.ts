@@ -8,7 +8,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: { three: ['three', 'three/addons/loaders/GLTFLoader.js'] },
+        manualChunks: {
+          three: ['three', 'three/addons/loaders/GLTFLoader.js'],
+          scroll: ['gsap', 'gsap/ScrollTrigger', 'gsap/ScrollSmoother'],
+        },
       },
     },
   },

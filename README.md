@@ -26,6 +26,7 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 - `src/components/EntryScreen.tsx` and `SlideCommit.jsx`: opening slider adapted from the owner-supplied React Bits source. It appears once per tab session and stays dismissed when returning Home or refreshing. Direct page links retain their destination.
 - `src/components/Icon.tsx`: shared Phosphor icon set.
 - `src/brand.css`: Rethink Sans brand typography and opening-screen styles. Fonts are self-hosted through Fontsource.
+- `src/components/SmoothScroll.tsx`: GSAP ScrollSmoother shared by all routes, with 1.1-second desktop smoothing, a short 0.12-second touch response, route cleanup, and native scrolling for reduced-motion preferences. Fixed controls stay outside the transformed content.
 - `src/components/Carousel.tsx`: continuous card stack and gesture controls.
 - `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
 - `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
