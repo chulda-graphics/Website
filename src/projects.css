@@ -29,7 +29,6 @@
   padding-top: max(var(--project-gutter), calc(50svh - var(--project-media-width) * .28125));
   min-height: 100svh;
 }
-.project-next-control { width: auto; padding: 0 18px; gap: 10px; white-space: nowrap; font-size: 14px; font-weight: 500; }
 .project-description { margin-top: clamp(28px, 4vw, 48px); }
 .project-description .project-copy { padding: 0 4px; min-height: 0; background: transparent; justify-content: flex-start; gap: 18px; }
 .project-description .project-copy p { line-height: 1.4; }

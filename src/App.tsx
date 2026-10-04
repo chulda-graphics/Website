@@ -126,7 +126,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
     <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
-        <Control className="project-next-control" label={`Next project: ${nextProject.title}`} onClick={() => navigate(`/project/${nextProject.slug}`)}><span>Next project</span><Icon name="next"/></Control>
+        <Control label={`Next project: ${nextProject.title}`} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
         <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
       </nav></ViewportLayer>
     </header></ViewportLayer>
