@@ -32,6 +32,11 @@
 .project-description { margin-top: clamp(28px, 4vw, 48px); }
 .project-description .project-copy { padding: 0 4px; min-height: 0; background: transparent; justify-content: flex-start; gap: 18px; }
 .project-description .project-copy p { line-height: 1.4; }
+.project-stills { margin-top: clamp(40px, 5vw, 64px); padding-top: 24px; border-top: 1px solid #1a1a1a18; }
+.project-stills h2 { margin-bottom: 20px; color: var(--muted); font-size: 14px; font-weight: 500; }
+.project-stills-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.project-stills-grid img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: #eaeaea; border-radius: 12px; }
+.project-stills-grid img:first-child { grid-column: 1 / -1; border-radius: 20px; }
 @media (min-width: 701px) {
   .project-identity { top: max(32px, calc(50svh - 100px)); }
 }
@@ -44,4 +49,6 @@
   .project-view--video .project-detail { padding-top: 0; min-height: auto; }
   .project-video-slide { height: auto; min-height: 0; aspect-ratio: 16 / 9; }
   .project-description .project-copy { padding: 0; gap: 16px; }
+  .project-stills-grid { grid-template-columns: 1fr; }
+  .project-stills-grid img, .project-stills-grid img:first-child { border-radius: 16px; }
 }

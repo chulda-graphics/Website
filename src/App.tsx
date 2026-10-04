@@ -140,6 +140,12 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
           <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.body}</ScrollFloat>
         </div>
       </section>)}
+      {!!project.stills?.length && <section className="project-stills" aria-labelledby="project-stills-title">
+        <h2 id="project-stills-title">Selected frames</h2>
+        <div className="project-stills-grid">
+          {project.stills.map(frame => <img key={frame.src} src={frame.src} alt={frame.alt} width={800} height={450} loading="lazy" decoding="async"/>)}
+        </div>
+      </section>}
     </div>
   </main>;
 }
