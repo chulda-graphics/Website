@@ -107,7 +107,7 @@ function About({ navigate }: { navigate: (route: string) => void }) {
   return <main className="about-view">
     <ViewportLayer when="desktop"><button className="globe-link" aria-label="Explore my world" onClick={() => navigate('/travel')}>
       <Suspense fallback={<div className="model"/>}><Model src={assets.globe}/></Suspense>
-      <span>click my world</span>
+      <span>Click my world</span>
     </button></ViewportLayer>
     <section className="biography" aria-label="About">
       <p><strong>{profile.introductionLead}</strong> {profile.introduction}</p>

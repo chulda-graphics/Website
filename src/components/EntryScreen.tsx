@@ -25,13 +25,12 @@ export function EntryScreen({ onEnter }: { onEnter: () => void }) {
     document.body.dataset.page = 'entry';
     const resize = () => setWidth(Math.min(264, innerWidth - 48));
     addEventListener('resize', resize);
-    host.current?.querySelector<HTMLElement>('[role="slider"]')?.focus({ preventScroll: true });
     // Warm the 3D module and brand font while the visitor approaches the handle.
     ready.current = Promise.allSettled([import('./Model'), document.fonts.ready]);
     return () => { removeEventListener('resize', resize); timers.current.forEach(clearTimeout); };
   }, []);
   function finish() {
-    timers.current.push(setTimeout(onEnter, reduced ? 0 : 220));
+    timers.current.push(setTimeout(onEnter, 1100));
   }
   async function prepare() {
     let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -41,11 +40,11 @@ export function EntryScreen({ onEnter }: { onEnter: () => void }) {
   }
   return <motion.main ref={host} className="entry-screen" aria-label="Welcome"
     initial={false} exit={{ opacity: 0 }} transition={{ duration: reduced ? .1 : .85, ease: [.22, 1, .36, 1] }}>
-    <div className="entry-identity"><h1>{profile.name}</h1><p>{profile.title}</p></div>
+    <h1 className="sr-only">Welcome to my portfolio</h1>
     <div className="entry-action">
-      <SlideCommit label="Slide to start" doneLabel="Welcome aboard" width={width} height={52} radius={26}
+      <SlideCommit label="Slide to verify" doneLabel="Welcome to my portfolio" width={width} height={52} radius={26}
         trackColor="#292929" handleColor="#f6f6f6" successColor="#f6f6f6" holdMs={0}
-        icon={<Icon name="plane" size={23} weight="fill"/>} onConfirm={prepare} onDone={finish}/>
+        icon={<Icon name="next" size={23} weight="bold"/>} onConfirm={prepare} onDone={finish}/>
     </div>
   </motion.main>;
 }

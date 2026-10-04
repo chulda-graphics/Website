@@ -5,7 +5,8 @@
 .entry-keyboard-hint { color: var(--muted); }
 .travel-return, .travel-drag-hint { color: #656c6d; }
 .entry-action .slide-commit__track:focus-within { outline: none; }
-.entry-action .slide-commit__track:has(:focus-visible) { outline: 2px solid #666; outline-offset: 5px; }
+.entry-action .slide-commit:not([data-pointer]):not([data-held]) .slide-commit__track:has(:focus-visible) { outline: 2px solid #666; outline-offset: 5px; }
+.slide-commit[data-pointer] .slide-commit__capsule:focus-visible { box-shadow: none; }
 #main:focus, h1[tabindex="-1"]:focus { outline: none; }
 .app { animation: route-appear .22s ease-out both; }
 .social-open .control { animation-name: route-appear; }

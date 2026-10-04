@@ -36,7 +36,7 @@ const finePointer = () =>
 const Spinner = ({ size }) => <Icon name="spinner" size={size} className="slide-commit__spinner" />;
 
 export default function SlideCommit({
-  label = 'Slide to start',
+  label = 'Slide to verify',
   doneLabel = 'Welcome',
   errorLabel = 'Try again',
   onConfirm,
@@ -60,6 +60,7 @@ export default function SlideCommit({
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState('idle');
   const [held, setHeld] = useState(false);
+  const [pointerInput, setPointerInput] = useState(false);
   const [hot, setHot] = useState(false);
 
   const trackRef = useRef(null);
@@ -103,7 +104,6 @@ export default function SlideCommit({
   const origin = useTransform(() => `${seen.get()}px 50%`);
   const say = useTransform(seen, [0, TRAVEL * 0.55], [1, 0]);
   const arrow = useTransform(() => shown.get() * clamp(1 - (seen.get() - TRAVEL * 0.55) / (TRAVEL * 0.4), 0, 1));
-  const iconRotation = useTransform(seen, [0, TRAVEL * .42], [-90, 45]);
   const trackTransform = useTransform(() => `translateX(${shake.get()}px) scale(${pulse.get()})`);
 
   const labelText = typeof label === 'string' ? label : 'Slide to confirm';
@@ -214,6 +214,8 @@ export default function SlideCommit({
 
   const down = e => {
     if (disabled || grip.current || phase === 'pending' || phase === 'done' || e.button !== 0) return;
+    e.preventDefault();
+    setPointerInput(true);
     x.stop();
     grip.current = { id: e.pointerId, grab: local(e.clientX) - x.get(), moved: false, hist: [] };
     setHeld(true);
@@ -265,6 +267,7 @@ export default function SlideCommit({
   live.current = { move, up };
 
   const onKeyDown = e => {
+    setPointerInput(false);
     if (disabled || phase === 'pending' || phase === 'done') return;
     const step = TRAVEL / 10;
     if (e.key === 'End' || e.key === 'Enter' || e.key === ' ') {
@@ -294,6 +297,7 @@ export default function SlideCommit({
       className={`slide-commit${className ? ` ${className}` : ''}`}
       data-phase={phase}
       data-held={held ? '' : undefined}
+      data-pointer={pointerInput ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
       style={{
         width,
@@ -337,11 +341,13 @@ export default function SlideCommit({
             if (e.pointerType === 'mouse' && finePointer()) setHot(true);
           }}
           onPointerLeave={() => setHot(false)}
+          onFocus={() => setPointerInput(false)}
+          onBlur={() => setPointerInput(false)}
           onKeyDown={onKeyDown}
         >
           <motion.div className="slide-commit__content" style={{ transform: content }}>
             <motion.span className="slide-commit__arrow" style={{ opacity: arrow }} aria-hidden="true">
-              <motion.span className="slide-commit__icon" style={{ rotate: iconRotation }}>{icon ?? <Icon name="plane" size={iconSize} weight="fill" />}</motion.span>
+              <span className="slide-commit__icon">{icon ?? <Icon name="next" size={iconSize} weight="bold" />}</span>
             </motion.span>
             <motion.span className="slide-commit__spin" style={{ opacity: spin }} aria-hidden="true">
               <Spinner size={iconSize} />
