@@ -1,6 +1,6 @@
 # Chulda Graphics portfolio
 
-Portfolio recreation in progress, based on [gabrielbeaugonin.com](https://www.gabrielbeaugonin.com/), with replaceable project content. **This is not yet a complete exact match.** See [COMPARISON.md](docs/COMPARISON.md) for measured improvements, verification, and remaining differences. The original foundation checkpoint is documented in [FOUNDATION.md](docs/FOUNDATION.md).
+Portfolio recreation in progress, based on [gabrielbeaugonin.com](https://www.gabrielbeaugonin.com/), with replaceable project content. **This is not yet a complete exact match.** See [AUDIT.md](docs/AUDIT.md) for the latest usability fixes and verification, and [COMPARISON.md](docs/COMPARISON.md) for earlier reference comparisons. The original foundation checkpoint is documented in [FOUNDATION.md](docs/FOUNDATION.md).
 
 ## Run
 

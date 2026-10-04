@@ -11,17 +11,21 @@ import { ProjectArtwork } from './components/ProjectArtwork';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
 
+const normalizePath = (path: string) => path.replace(/\/+$/, '') || '/';
+
 function useRoute() {
-  const [path, setPath] = useState(location.pathname);
+  const [path, setPath] = useState(() => normalizePath(location.pathname));
   useEffect(() => {
-    const pop = () => setPath(location.pathname);
-    addEventListener('popstate', pop); return () => removeEventListener('popstate', pop);
+    const pop = () => setPath(normalizePath(location.pathname));
+    addEventListener('popstate', pop);
+    return () => removeEventListener('popstate', pop);
   }, []);
-  const navigate = (next: string) => {
-    if (next === location.pathname) return;
-    const update = () => { history.pushState({}, '', next); flushSync(() => setPath(next)); window.scrollTo({ top: 0, behavior: 'instant' }); };
-    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(update);
-    else update();
+  const navigate = (destination: string) => {
+    const next = normalizePath(destination);
+    if (next === normalizePath(location.pathname)) return;
+    history.pushState({}, '', next);
+    flushSync(() => setPath(next));
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
   return { path, navigate };
 }
@@ -116,12 +120,17 @@ function Portfolio() {
     document.body.dataset.page = home ? 'home' : about ? 'about' : travel ? 'travel' : 'project';
   }, [path, home, about, travel, projectSlug]);
   useEffect(() => {
+    const target = document.querySelector<HTMLElement>('h1') ?? document.getElementById('main');
+    target?.setAttribute('tabindex', '-1');
+    target?.focus({ preventScroll: true });
+  }, [path]);
+  useEffect(() => {
     const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') navigate(travel ? '/about' : '/'); };
     addEventListener('keydown', escape); return () => removeEventListener('keydown', escape);
   }, [path]);
   return <>
-    <a className="skip-link" href="#main">Skip to content</a>
-    <SmoothScroll route={path}><div id="main" className={`app page-${home ? 'home' : about ? 'about' : travel ? 'travel' : 'project'}`}>
+    <a className="skip-link" href="#main" onClick={event => { event.preventDefault(); document.getElementById('main')?.focus({ preventScroll: true }); }}>Skip to content</a>
+    <SmoothScroll route={path}><div key={path} id="main" tabIndex={-1} className={`app page-${home ? 'home' : about ? 'about' : travel ? 'travel' : 'project'}`}>
       {(home || about) && <Identity about={about} navigate={navigate}/>}
       {home && <Carousel navigate={navigate} selected={selected} setSelected={setSelected}/>}
       {about && <About navigate={navigate}/>}

@@ -39,6 +39,12 @@ export function SmoothScroll({ route, children }: { route: string; children: Rea
           wrapper: wrapper.current!, content: content.current!,
           smooth: 1.1, smoothTouch: 0.12,
           effects: false, normalizeScroll: false,
+          // Route headings and viewport controls already manage their position.
+          // Re-centering them on pointer focus can move a button before pointerup.
+          onFocusIn: (_self, event) => {
+            const target = event.target as HTMLElement;
+            if (target.closest('.control, .globe-link, .travel-return') || target.tabIndex === -1) return false;
+          },
         });
         smoother.scrollTop(position);
       } else window.scrollTo({ top: position, behavior: 'instant' });

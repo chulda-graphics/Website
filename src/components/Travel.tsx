@@ -19,6 +19,7 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
   const [place, setPlace] = useState(0);
   useEffect(() => {
     const mount = host.current!;
+    const interaction = mount.parentElement!;
     const pictures = [...mount.querySelectorAll<HTMLDivElement>('.flight-picture')];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const motion = flight.current = createFlight();
@@ -75,14 +76,15 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     }
     frame = requestAnimationFrame(draw);
     addEventListener('wheel', wheel, { passive: false }); addEventListener('keydown', key);
-    mount.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
-    return () => { cancelAnimationFrame(frame); resize.disconnect(); removeEventListener('wheel',wheel); removeEventListener('keydown',key); mount.removeEventListener('pointerdown',down); removeEventListener('pointermove',move); removeEventListener('pointerup',up); removeEventListener('pointercancel',up); };
+    interaction.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    return () => { cancelAnimationFrame(frame); resize.disconnect(); removeEventListener('wheel',wheel); removeEventListener('keydown',key); interaction.removeEventListener('pointerdown',down); removeEventListener('pointermove',move); removeEventListener('pointerup',up); removeEventListener('pointercancel',up); };
   }, []);
   return <main className="travel-view" aria-label="Travel gallery"
     onPointerDown={event => { gesture.current = { x: event.clientX, y: event.clientY, moved: false }; }}
     onPointerMove={event => { if (Math.hypot(event.clientX - gesture.current.x, event.clientY - gesture.current.y) > 8) gesture.current.moved = true; }}
     onPointerCancel={() => { gesture.current.moved = true; }}
     onClick={event => { if (gesture.current.moved && event.detail !== 0) { event.preventDefault(); return; } navigate('/about'); }}>
+    <h1 className="sr-only">Travel gallery</h1>
     <div className="travel-scene" ref={host} aria-hidden="true">
       {travelPhotos.map((photo, index) => <div key={photo.src} className="flight-picture" style={{ '--photo-width': photo.width > photo.height ? 340 : 225, aspectRatio: `${photo.width} / ${photo.height}` } as CSSProperties}>
         <img src={photo.src} alt="" width={photo.width} height={photo.height} decoding="async" draggable={false} fetchPriority={index < 5 ? 'high' : 'low'}/>
@@ -101,7 +103,7 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       <span className="departure-code" aria-hidden="true">{[...travelPhotos[place].city].map((letter,index) => <i key={index}><span key={`${travelPhotos[place].city}-${letter}`}>{letter}</span></i>)}</span>
       <span>Click anywhere to return</span>
     </button>
-    <span className="travel-drag-hint"><Icon name="scroll"/><span>Scroll to fly faster</span></span>
+    <span className="travel-drag-hint"><Icon name="scroll"/><span className="hint-pointer">Scroll to fly faster</span><span className="hint-touch">Drag to fly faster</span></span>
     <span className="sr-only" aria-live="polite">{travelPhotos[place].city} gallery</span>
   </main>;
 }

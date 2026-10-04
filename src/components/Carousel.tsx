@@ -26,6 +26,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     let lastStep = -1000;
     let pointerY = 0;
     let dragging = false;
+    let pointerId: number | null = null;
     let dragged = false;
     let startTarget = target;
     let selectedIndex = selected;
@@ -96,18 +97,30 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       event.preventDefault(); step(['ArrowDown','PageDown'].includes(event.key) ? 1 : -1);
     }
     function down(event: PointerEvent) {
-      if (event.button !== 0 || (event.target as HTMLElement).closest('.pagination')) return;
+      if (event.button !== 0 || !event.isPrimary || dragging || (event.target as Element).closest('.pagination')) return;
+      pointerId = event.pointerId;
       pointerY = event.clientY; startTarget = target; dragging = true; dragged = false;
     }
     function move(event: PointerEvent) {
-      if (!dragging) return;
+      if (!dragging || event.pointerId !== pointerId) return;
       const dy = pointerY - event.clientY;
-      if (Math.abs(dy) > 7) dragged = true;
+      if (Math.abs(dy) > 7) {
+        dragged = true;
+        if (!container.hasPointerCapture(event.pointerId)) container.setPointerCapture(event.pointerId);
+      }
       target = startTarget + dy / (height * .45); animate();
     }
-    function up() {
+    function release() {
+      if (pointerId !== null && container.hasPointerCapture(pointerId)) container.releasePointerCapture(pointerId);
+      pointerId = null; dragging = false;
+    }
+    function cancel() {
       if (!dragging) return;
-      dragging = false;
+      release(); dragged = false; target = startTarget; animate();
+    }
+    function up(event: PointerEvent) {
+      if (!dragging || event.pointerId !== pointerId) return;
+      release();
       const direction = Math.sign(target - startTarget);
       target = startTarget;
       if (dragged && direction) step(direction); else animate();
@@ -116,24 +129,24 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     const resize = new ResizeObserver(() => { height = container.clientHeight; unit = container.clientWidth <= 700 ? 1 : container.clientWidth / 1440; paint(); });
     resize.observe(container); paint();
     addEventListener('wheel', wheel, { passive: false }); addEventListener('keydown', key);
-    container.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up);
+    container.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', cancel); addEventListener('blur', cancel);
     container.addEventListener('click', preventDragClick, true);
     return () => {
       cancelAnimationFrame(frame); resize.disconnect();
       removeEventListener('wheel', wheel); removeEventListener('keydown', key);
-      container.removeEventListener('pointerdown', down); removeEventListener('pointermove', move); removeEventListener('pointerup', up);
+      container.removeEventListener('pointerdown', down); removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', cancel); removeEventListener('blur', cancel);
       container.removeEventListener('click', preventDragClick, true);
     };
   }, []);
-  return <section className="carousel carousel-depth" aria-label="Selected projects" ref={host}>
+  return <main className="carousel carousel-depth" aria-label="Selected projects" ref={host}>
     <div className="stack-edge stack-edge-top"/><div className="stack-edge stack-edge-bottom"/>
     {copies.map(index => {
       const project = projects[index % count];
-      return <a key={index} className="stack-card" href={`/project/${project.slug}`} aria-label={`Open ${project.title}`} onDragStart={event => event.preventDefault()} onClick={event => { event.preventDefault(); navigate(`/project/${project.slug}`); }}>
+      return <a key={index} className="stack-card" href={`/project/${project.slug}`} aria-label={`Open ${project.title}`} onDragStart={event => event.preventDefault()} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); navigate(`/project/${project.slug}`); }}>
         <ProjectArtwork project={project} index={index % count}/><div className="stack-shade"/>
       </a>;
     })}
     <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span/></button>)}</div>
     <span className="sr-only" aria-live="polite">{projects[selected].title}, {selected + 1} of {count}</span>
-  </section>;
+  </main>;
 }

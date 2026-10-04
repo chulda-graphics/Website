@@ -22,7 +22,7 @@ The exact reference Suisse Intl Book webfont is now bundled, with its source rec
 ## Motion and geometry improved
 
 - Replaced static decorative stacks and crossfading cards with a continuous depth carousel. Actual project cards fold into the upper/lower stack with a damped spring. Wheel, drag, arrow-key, and pagination inputs share the same state.
-- Added shared-element transitions for the selected project card and heading using the browser View Transition API. Unsupported browsers use direct navigation; reduced-motion mode skips the transition.
+- Initially added shared-element transitions using the View Transition API. The subsequent [usability audit](AUDIT.md) replaced them with a short CSS route fade after reproducing first-click interception by transition overlays.
 - Corrected project media aspect ratios and responsive corner radii.
 - Replaced the smooth sphere with locally modeled geographic relief, retaining an editable Blender source and non-destructive web-mesh reduction modifier.
 - Added the small orbiting aircraft and pointer response on the globe. Adjusted the camera and lighting for the pale reference appearance.

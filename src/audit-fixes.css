@@ -1,0 +1,74 @@
+/* Audit corrections: preserve the reference layout while keeping it usable at every width. */
+:root { --muted: #6e706d; }
+.identity p, .project-category, .biography p, .entry-identity p,
+.globe-link > span, .next-project, .contact-status, .project-status,
+.entry-keyboard-hint { color: var(--muted); }
+.travel-return, .travel-drag-hint { color: #656c6d; }
+.entry-action .slide-commit__track:focus-within { outline: none; }
+.entry-action .slide-commit__track:has(:focus-visible) { outline: 2px solid #666; outline-offset: 5px; }
+#main:focus, h1[tabindex="-1"]:focus { outline: none; }
+.app { animation: route-appear .22s ease-out both; }
+.social-open .control { animation-name: route-appear; }
+@keyframes route-appear { from { opacity: 0; } to { opacity: 1; } }
+.pagination button { width: 32px; height: 28px; }
+.pagination button span { width: 3px; height: 3px; }
+.pagination button.selected span { width: 4px; height: 4px; }
+.hint-touch { display: none; }
+@media (pointer: coarse) { .hint-pointer { display: none; } .hint-touch { display: inline; } }
+
+/* Keep the decorative project mockup proportional to its card, not the window. */
+.artwork { container-type: inline-size; }
+.artwork .mock-title { font-size: 5.6cqw; width: 64%; line-height: 1.06; letter-spacing: -.025em; }
+.artwork .mock-panel { width: 34%; }
+.artwork .mock-panel span { font-size: 20cqw; letter-spacing: -.07em; }
+.artwork .mock-kicker { font-size: 1.6cqw; }
+.artwork .mock-nav, .artwork .mock-footer { font-size: 1.25cqw; }
+.artwork-placeholder .project-art-title { color: #30362f; }
+
+@media (min-width: 701px) {
+  :root {
+    --control: max(44px, calc(54 * var(--unit)));
+    --card-width: clamp(260px, 23.26389vw, 380px);
+    --card-height: calc(var(--card-width) * 344 / 335);
+    --globe-size: clamp(280px, 27.77778vw, 440px);
+  }
+  .identity h1, .identity p, .project-identity h1, .project-category { font-size: max(24px, calc(32 * var(--unit))); }
+  .identity-text { width: max(220px, calc(400 * var(--unit))); }
+  .control svg { width: max(16px, calc(16 * var(--unit))); height: max(16px, calc(16 * var(--unit))); }
+  .control { border-radius: max(13px, calc(15 * var(--unit))); }
+  .control.active { border-radius: 50%; }
+  .project-close { left: calc(50% - var(--control) - max(10px, calc(10 * var(--unit)))); top: calc(50svh - var(--control) / 2); }
+  .project-art-title { font-size: max(14px, calc(16 * var(--unit))); }
+  .biography, .project-copy p { font-size: max(20px, calc(24 * var(--unit))); }
+  .recognitions h2, .project-copy h2, .globe-link > span, .next-project { font-size: max(14px, calc(14 * var(--unit))); }
+  .contact-status, .project-status { font-size: max(12px, calc(12 * var(--unit))); }
+  .globe-link { width: var(--globe-size); height: var(--globe-size); left: calc(79.2% - var(--globe-size) / 2); top: calc(50svh - var(--globe-size) / 2); }
+  .travel-return { font-size: max(14px, calc(14 * var(--unit))); }
+  .travel-drag-hint { font-size: max(12px, calc(12 * var(--unit))); }
+  .departure-code i { width: max(32px, calc(42 * var(--unit))); height: max(32px, calc(42 * var(--unit))); font-size: max(22px, calc(26 * var(--unit))); }
+}
+@media (max-width: 700px) {
+  .project-identity { padding: 28px 64px 76px; }
+  .project-category { font-size: clamp(17px, 5.5vw, 23px); line-height: 1.2; }
+  .project-controls { padding: 6px; border-radius: 26px; background: #f6f6f6f2; box-shadow: 0 2px 18px #00000009; bottom: max(24px, env(safe-area-inset-bottom)); }
+  .project-close { top: max(23px, env(safe-area-inset-top)); }
+  .project-status { left: 16px; right: 16px; width: auto; text-align: center; background: #f6f6f6f2; padding: 8px; border-radius: 10px; }
+  .project-status:empty { display: none; }
+  .identity-controls { bottom: max(32px, env(safe-area-inset-bottom)); }
+  .pagination { right: 0; }
+  .pagination button { width: 40px; height: 32px; }
+  .contact-status { white-space: normal; width: min(280px, calc(100vw - 32px)); text-align: center; }
+  .travel-drag-hint { bottom: max(24px, env(safe-area-inset-bottom)); }
+}
+@media (max-width: 700px) and (max-height: 620px) {
+  :root { --card-width: min(72vw, calc(100svh - 230px)); }
+  .stack-edge { height: 13svh; }
+}
+@media (max-width: 700px) and (max-height: 400px) {
+  :root { --control: 44px; --card-width: min(60vw, calc(100svh - 170px)); }
+  .identity { top: 16px; }
+  .identity h1, .identity p { font-size: 20px; }
+  .identity-controls { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .control { border-radius: 14px; }
+  .project-art-title { left: 16px; bottom: 14px; font-size: 14px; }
+}
