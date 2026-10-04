@@ -44,7 +44,7 @@ for (const project of projects) {
   assert.match(project.slug, /^[a-z0-9-]+$/);
   assert.ok(project.sections.length > 0);
 }
-const sources = [...Object.values(assets), ...travelPhotos.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'];
+const sources = [...Object.values(assets), ...projects.flatMap(project => project.cover ? [project.cover] : []), ...travelPhotos.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'];
 for (const src of sources) {
   assert.ok(src.startsWith('/assets/'), `Asset must be local: ${src}`);
   assert.ok((await stat(new URL(`../public${src}`, import.meta.url))).size > 0, `Missing or empty asset: ${src}`);

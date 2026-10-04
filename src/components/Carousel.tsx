@@ -32,7 +32,8 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     let selectedIndex = selected;
     function paint() {
       for (let i = 0; i < cards.length; i++) {
-        let distance = ((i - position + 18) % 12) - 6;
+        const total = copies.length;
+        const distance = ((i - position + total / 2) % total + total) % total - total / 2;
         const amount = Math.abs(distance);
         const near = Math.min(amount, 1);
         const y = Math.sign(distance) * (near * height * .4 + Math.max(0, amount - 1) * 35 * unit);

@@ -9,6 +9,7 @@ import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
 import ScrollFloat from './components/ScrollFloat';
 import { ProjectArtwork } from './components/ProjectArtwork';
+import { ProjectVideo } from './components/ProjectVideo';
 import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
@@ -145,7 +146,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   }
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
-  return <main className="project-view">
+  return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
     <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
         <Control label="Toggle Project Info" active={info} expanded={info} onClick={toggleInfo}><Icon name="info"/></Control>
@@ -154,7 +155,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     </header></ViewportLayer>
     <ViewportLayer><Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control></ViewportLayer>
     <div ref={detail} className={`project-detail ${info ? 'show-info' : ''}`}>
-      {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
+      {!info && project.video ? <ProjectVideo key={project.slug} project={project}/> : project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
         {info ? <div className="project-copy project-copy--animated">
           <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.title}</ScrollFloat>
           <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.body}</ScrollFloat>
@@ -167,7 +168,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
 
 function Portfolio() {
   const { path, navigate } = useRoute();
-  const [selected, setSelected] = useState(3);
+  const [selected, setSelected] = useState(0);
   const home = path === '/'; const about = path === '/about'; const travel = path === '/travel';
   const projectSlug = path.startsWith('/project/') ? path.slice(9) : '';
   useEffect(() => {

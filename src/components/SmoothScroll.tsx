@@ -43,7 +43,7 @@ export function SmoothScroll({ route, children }: { route: string; children: Rea
           // Re-centering them on pointer focus can move a button before pointerup.
           onFocusIn: (_self, event) => {
             const target = event.target as HTMLElement;
-            if (target.closest('.control, .globe-link, .travel-return') || target.tabIndex === -1) return false;
+            if (target.closest('.control, .globe-link, .travel-return, video') || target.tabIndex === -1) return false;
           },
         });
         smoother.scrollTop(position);

@@ -23,7 +23,7 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 
 ## Content and structure
 
-- `src/content.ts`: identity, contact details, four placeholder projects, and local asset paths.
+- `src/content.ts`: identity, contact details, five video projects, and local asset paths.
 - `src/App.tsx`: one-time entry gate, routing, entry crossfade, project information, and About.
 - `src/components/EntryScreen.tsx` and `SlideCommit.jsx`: opening slider adapted from the owner-supplied React Bits source. It appears once per tab session and stays dismissed when returning Home or refreshing. Direct page links retain their destination.
 - `src/components/Icon.tsx`: shared Phosphor icon set.
@@ -31,6 +31,7 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 - `src/components/SmoothScroll.tsx`: GSAP ScrollSmoother shared by all routes, with 1.1-second desktop smoothing, a short 0.12-second touch response, route cleanup, and native scrolling for reduced-motion preferences. Fixed controls stay outside the transformed content.
 - `src/components/ScrollFloat.jsx`: owner-supplied React Bits character reveal for each project’s info headings and paragraphs, with accessible text and reduced-motion support.
 - `src/components/Carousel.tsx`: vertical project stack with wheel, vertical drag, arrow-key, and dot controls.
+- `src/components/ProjectVideo.tsx`: click-to-play native video controls, muted by default, inline playback, and retry feedback. Videos stream from the owner-supplied R2 URLs. Poster frame provenance is in `public/assets/projects/SOURCE.md`.
 - `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
 - `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
 - `src/components/Model.tsx`: lazy-loaded Three.js viewer for locally exported GLBs.
@@ -68,5 +69,5 @@ The supplied Botanica folder was found and is available for later sound selectio
 
 - Do not use Higgsfield credit-consuming generations.
 - Preserve the restored reference-style layout with the requested typography, opening slider, and cursor flight refinements.
-- Project content may be placeholder content.
+- The five supplied videos are live project content; biography and contact details are still placeholders.
 - Travel photographs remain reference assets and should be replaced with owner-provided imagery before launch.

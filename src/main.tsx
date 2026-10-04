@@ -8,5 +8,6 @@ import './scale.css';
 import './brand.css';
 import './audit-fixes.css';
 import './direction.css';
+import './projects.css';
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
