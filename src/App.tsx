@@ -119,47 +119,24 @@ function About({ navigate }: { navigate: (route: string) => void }) {
 
 function ProjectView({ slug, navigate }: { slug: string; navigate: (route: string) => void }) {
   const project = projects.find(item => item.slug === slug);
-  const [info, setInfo] = useState(false);
-  const detail = useRef<HTMLDivElement>(null);
-  const switching = useRef<Animation[]>([]);
-  const switchRevision = useRef(0);
-  const desiredInfo = useRef(false);
-  useEffect(() => () => { switchRevision.current++; switching.current.forEach(animation => animation.cancel()); }, []);
-  async function toggleInfo() {
-    const request = ++switchRevision.current;
-    desiredInfo.current = !desiredInfo.current;
-    const opacity = detail.current ? getComputedStyle(detail.current).opacity : '1';
-    switching.current.forEach(animation => animation.cancel());
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    switching.current = reduced || !detail.current ? [] : [detail.current.animate(
-      [{ opacity }, { opacity: 0 }],
-      { duration: 120, easing: 'ease-out', fill: 'forwards' },
-    )];
-    await settled(switching.current);
-    if (request !== switchRevision.current) return;
-    flushSync(() => setInfo(desiredInfo.current));
-    switching.current.forEach(animation => animation.cancel());
-    switching.current = reduced || !detail.current ? [] : [detail.current.animate(
-      [{ opacity: 0 }, { opacity: 1 }], { duration: 320, easing: 'ease-out' },
-    )];
-  }
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
+  const nextProject = projects[(index + 1) % projects.length];
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
     <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}><h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
-        <Control label="Toggle Project Info" active={info} expanded={info} onClick={toggleInfo}><Icon name="info"/></Control>
+        <Control className="project-next-control" label={`Next project: ${nextProject.title}`} onClick={() => navigate(`/project/${nextProject.slug}`)}><span>Next project</span><Icon name="next"/></Control>
         <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
       </nav></ViewportLayer>
     </header></ViewportLayer>
-    <div ref={detail} className={`project-detail ${info ? 'show-info' : ''}`}>
-      {!info && project.video ? <ProjectVideo key={project.slug} project={project}/> : project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
-        {info ? <div className="project-copy project-copy--animated">
-          <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.title}</ScrollFloat>
-          <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.body}</ScrollFloat>
-        </div> : <ProjectArtwork project={project} expanded index={index + sectionIndex}/>}
+    <div className="project-detail">
+      {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
+      {project.sections.map(section => <section key={section.title} className="project-description" aria-label={section.title}>
+        <div className="project-copy project-copy--animated">
+          <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.title}</ScrollFloat>
+          <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom bottom-=12%)" stagger={0.02}>{section.body}</ScrollFloat>
+        </div>
       </section>)}
-      <button className="next-project" onClick={() => navigate(`/project/${projects[(index + 1) % projects.length].slug}`)}>Next project<br/><span>{projects[(index + 1) % projects.length].title}</span></button>
     </div>
   </main>;
 }

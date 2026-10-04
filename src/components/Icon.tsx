@@ -5,6 +5,7 @@ import { CaretLeftIcon } from '@phosphor-icons/react/dist/csr/CaretLeft';
 import { EnvelopeSimpleIcon } from '@phosphor-icons/react/dist/csr/EnvelopeSimple';
 import { XLogoIcon } from '@phosphor-icons/react/dist/csr/XLogo';
 import { LinkedinLogoIcon } from '@phosphor-icons/react/dist/csr/LinkedinLogo';
+import { ArrowRightIcon } from '@phosphor-icons/react/dist/csr/ArrowRight';
 import { InfoIcon } from '@phosphor-icons/react/dist/csr/Info';
 import { ArrowUpRightIcon } from '@phosphor-icons/react/dist/csr/ArrowUpRight';
 import { CornersInIcon } from '@phosphor-icons/react/dist/csr/CornersIn';
@@ -18,7 +19,7 @@ const icons = {
   person: UserIcon, chat: ChatCircleDotsIcon, back: CaretLeftIcon, mail: EnvelopeSimpleIcon,
   x: XLogoIcon, linkedin: LinkedinLogoIcon, info: InfoIcon, external: ArrowUpRightIcon,
   collapse: CornersInIcon, plane: AirplaneTiltIcon, check: CheckIcon, spinner: SpinnerGapIcon,
-  scroll: MouseScrollIcon, play: PlayIcon,
+  scroll: MouseScrollIcon, play: PlayIcon, next: ArrowRightIcon,
 };
 
 export function Icon({ name, ...props }: IconProps & { name: keyof typeof icons }) {
