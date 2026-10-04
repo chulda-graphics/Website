@@ -6,7 +6,7 @@ export const profile = {
   social: { x: 'https://x.com/dhrexinmotion', linkedin: 'https://www.linkedin.com/in/dhrex-cañezo' },
   introductionLead: 'Motion Designer',
   introduction: 'focused on creating thoughtful visual experiences through motion, design, and storytelling.',
-  biography: 'I’m Dhrex F. Cañezo, a multimedia designer specialising in motion design, with a background in graphic design, branding, and creative direction. I enjoy turning ideas into clear, engaging visuals—combining strong design with purposeful movement.',
+  biography: 'I’m Dhrex Cañezo, a multimedia designer specialising in motion design, with a background in graphic design, branding, and creative direction. I enjoy turning ideas into clear, engaging visuals—combining strong design with purposeful movement.',
 };
 
 export interface Project {
