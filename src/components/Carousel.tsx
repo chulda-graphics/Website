@@ -12,7 +12,6 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
   useEffect(() => {
     const container = host.current!;
     const cards = [...container.querySelectorAll<HTMLAnchorElement>('.stack-card')];
-    const shades = [...container.querySelectorAll<HTMLDivElement>('.stack-shade')];
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
     let position = count + selected;
     let target = position;
@@ -33,19 +32,18 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       for (let i = 0; i < cards.length; i++) {
         const distance = ((i - position + count * 4.5) % (count * 3)) - count * 1.5;
         const amount = Math.abs(distance);
-        const visible = amount < 2.4;
-        const x = distance * (cardWidth + 28);
-        const scale = 1 - Math.min(amount, 1) * .1;
+        const visible = amount < 1;
+        const x = distance * cardWidth * .6;
+        const scale = 1 - Math.min(amount, 1) * .04;
         cards[i].style.visibility = visible ? 'visible' : 'hidden';
-        cards[i].style.transform = `translate(-50%, -50%) translateX(${x}px) scale(${scale}) rotateY(${-distance * 9}deg)`;
+        cards[i].style.transform = `translate(-50%, -50%) translateX(${x}px) scale(${scale})`;
         cards[i].style.zIndex = String(10 - Math.round(amount));
-        cards[i].style.opacity = String(Math.max(0, 1 - Math.max(0, amount - 1.4)));
-        shades[i].style.opacity = String(Math.min(.28, amount * .2));
+        cards[i].style.opacity = String(Math.max(0, 1 - amount));
         const active = i === wrap(selectedIndex) + count;
-        // Repeated copies render only the surrounding stack; one copy is interactive.
+        // Only the selected project is visible at rest; neighbours enter during movement.
         cards[i].tabIndex = active ? 0 : -1;
         cards[i].setAttribute('aria-hidden', String(!active));
-        cards[i].style.pointerEvents = amount < 1.2 ? 'auto' : 'none';
+        cards[i].style.pointerEvents = active && amount < .5 ? 'auto' : 'none';
         cards[i].style.viewTransitionName = active ? 'project-media' : 'none';
       }
     }
@@ -136,15 +134,13 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     };
   }, []);
   return <main className="carousel carousel-depth" aria-label="Selected projects" ref={host}>
-    <div className="gallery-heading"><p>Independent design practice</p><h2>Selected work<span> / {String(count).padStart(2, '0')}</span></h2></div>
     {copies.map(index => {
       const project = projects[index % count];
       return <a key={index} className="stack-card" href={`/project/${project.slug}`} aria-label={`Open ${project.title}`} onDragStart={event => event.preventDefault()} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); if (index % count !== selected) controls.current.select(index % count); else navigate(`/project/${project.slug}`); }}>
-        <ProjectArtwork project={project} index={index % count}/><div className="stack-shade"/>
+        <ProjectArtwork project={project} index={index % count}/>
       </a>;
     })}
-    <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span>{String(index + 1).padStart(2, '0')}</span></button>)}</div>
-    <div className="gallery-caption" aria-hidden="true"><span>{projects[selected].title}</span><span>{projects[selected].category}</span></div>
+    <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span/></button>)}</div>
     <span className="sr-only" aria-live="polite">{projects[selected].title}, {selected + 1} of {count}</span>
   </main>;
 }
