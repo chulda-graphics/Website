@@ -9,7 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const server = process.env.HIGGSFIELD_BLENDER_SERVER;
 const blender = process.env.BLENDER_EXECUTABLE;
 const kind = process.argv[2];
-if (!server || !blender || !/^(globe|aircraft|globe-relief(?:-v[0-9]+)?)$/.test(kind)) {
+if (!server || !blender || !/^(globe|aircraft|cursor|globe-relief(?:-v[0-9]+)?)$/.test(kind)) {
   throw new Error('Set HIGGSFIELD_BLENDER_SERVER and BLENDER_EXECUTABLE, then run: node scripts/blender-local.mjs globe|aircraft');
 }
 const child = spawn(process.execPath, [server], { env: { ...process.env, BLENDER_EXECUTABLE: blender }, stdio: ['pipe','pipe','inherit'] });

@@ -22,7 +22,10 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 ## Content and structure
 
 - `src/content.ts`: identity, contact details, four placeholder projects, and local asset paths.
-- `src/App.tsx`: routing, shared card transitions, project information, and About.
+- `src/App.tsx`: one-time entry gate, routing, shared card transitions, project information, and About.
+- `src/components/EntryScreen.tsx` and `SlideCommit.jsx`: opening slider adapted from the owner-supplied React Bits source. It appears once per tab session and stays dismissed when returning Home or refreshing. Direct page links retain their destination.
+- `src/components/Icon.tsx`: shared Phosphor icon set.
+- `src/brand.css`: Rethink Sans brand typography and opening-screen styles. Fonts are self-hosted through Fontsource.
 - `src/components/Carousel.tsx`: continuous card stack and gesture controls.
 - `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
 - `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
@@ -36,7 +39,7 @@ Contact links remain unconfigured and show an honest coming-soon message. No fab
 
 ## Local 3D workflow — no generation credits
 
-The globe and aircraft blockouts were created with Blender 5.2.1 LTS using the **local Higgsfield use Blender MCP** (`fnf-blender-mcp` 0.2.2). The script communicates over local stdio and does not call cloud generation services.
+The globe, aircraft blockout, and extruded cursor were created with Blender 5.2.1 LTS using the **local Higgsfield use Blender MCP** (`fnf-blender-mcp` 0.2.2). The script communicates over local stdio and does not call cloud generation services.
 
 Install the connector in a persistent tooling directory, then set:
 
@@ -45,12 +48,13 @@ export HIGGSFIELD_BLENDER_SERVER="/absolute/path/to/fnf-blender-mcp/dist/index.j
 export BLENDER_EXECUTABLE="/Applications/Blender.app/Contents/MacOS/Blender"
 node scripts/blender-local.mjs globe
 node scripts/blender-local.mjs aircraft
+node scripts/blender-local.mjs cursor
 node scripts/blender-local.mjs globe-relief-v4
 ```
 
 The build refuses to overwrite existing models or Blender files. Inspect and save a new revision before rebuilding. Each execution uses a separate background Blender session and does not modify unsaved work in the desktop application.
 
-The current globe is `globe-relief-v3.blend`, with geographic land relief and an editable mesh-reduction modifier. Its Draco-compressed GLB is about 231 KB. The aircraft remains a simplified local model. The browser provides globe rotation, the orbiting aircraft, and travel banking. The original smooth-sphere blockout is retained for reference.
+The current globe is `globe-relief-v3.blend`, with geographic land relief and an editable mesh-reduction modifier. Its Draco-compressed GLB is about 231 KB. The active travel and orbiting model is `cursor.blend`: a beveled, extruded pointer using the aircraft’s original base color (.72, .72, .69) and roughness (.6). The original aircraft is retained as a material reference. The browser provides globe rotation, the orbiting cursor, and travel banking. The original smooth-sphere blockout is retained for reference.
 
 ## Sound
 
@@ -59,6 +63,6 @@ The supplied Botanica folder was found and is available for later sound selectio
 ## Constraints
 
 - Do not use Higgsfield credit-consuming generations.
-- Preserve the reference layout and interactions; do not redesign it.
+- Preserve the reference layout and interactions, with the owner-requested Rethink Sans, Phosphor icons, opening slider, and extruded cursor.
 - Project content may be placeholder content.
 - Work in foundation-first stages; do not describe this checkpoint as an exact match.

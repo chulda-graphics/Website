@@ -1,0 +1,17 @@
+/* Shared brand typography, including form controls and the opening interaction. */
+:root { font-family: 'Rethink Sans Variable', Arial, sans-serif; font-synthesis: none; }
+button, input, textarea, select { font-family: inherit; }
+.entry-screen { position: fixed; inset: 0; min-height: 100svh; display: grid; place-items: center; background: #f6f6f6; color: #292929; opacity: 1; transition: opacity 400ms ease; }
+.entry-screen--leaving { opacity: 0; pointer-events: none; }
+.entry-identity { position: absolute; top: clamp(32px, 6vh, 64px); left: 24px; right: 24px; text-align: center; }
+.entry-identity h1, .entry-identity p { margin: 0; font-size: 24px; line-height: 1.12; font-weight: 400; letter-spacing: -.8px; }
+.entry-identity p { color: #a0a0a0; }
+.entry-action { position: relative; }
+.entry-keyboard-hint { position: absolute; top: 100%; left: 0; right: 0; margin: 20px 0 0; text-align: center; color: #8c8c8c; font-size: 12px; }
+.entry-action .slide-commit__text--plain { color: #bfbfbf; }
+.entry-action .slide-commit__track:focus-within { outline: 2px solid #aaa; outline-offset: 5px; }
+.mock-footer > span:last-child { display: inline-flex; align-items: center; gap: .4em; }
+.mock-footer svg { width: 1em; height: 1em; }
+.travel-drag-hint > svg { width: 21px; height: 26px; flex: none; }
+@media (hover: none) { .entry-keyboard-hint { display: none; } }
+@media (prefers-reduced-motion: reduce) { .entry-screen { transition: none; } }

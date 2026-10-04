@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Icon } from './Icon';
 import { assets } from '../content';
 import { travelPhotos } from '../travelPhotos';
 import { accelerateFlight, advanceFlight, createFlight } from './flight';
@@ -10,7 +11,7 @@ const wrap = (value: number, total: number) => (value % total + total) % total;
 
 export function Travel({ navigate }: { navigate: (route: string) => void }) {
   const host = useRef<HTMLDivElement>(null);
-  const aircraft = useRef<HTMLDivElement>(null);
+  const cursor = useRef<HTMLDivElement>(null);
   const leftTrail = useRef<SVGPathElement>(null);
   const rightTrail = useRef<SVGPathElement>(null);
   const gesture = useRef({ x: 0, y: 0, moved: false });
@@ -23,9 +24,9 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     const motion = flight.current = createFlight();
     let previous = 0, frame = 0, pointerX = 0, pointerY = 0, smoothX = 0, smoothY = 0, lastPlace = 0, elapsed = 0;
     let dragging = false, lastY = 0;
-    let width = mount.clientWidth, height = mount.clientHeight, planeWidth = 0, planeHeight = 0;
-    const measure = () => { width = mount.clientWidth; height = mount.clientHeight; planeWidth = aircraft.current?.offsetWidth ?? 0; planeHeight = aircraft.current?.offsetHeight ?? 0; };
-    const resize = new ResizeObserver(measure); resize.observe(mount); if (aircraft.current) resize.observe(aircraft.current); measure();
+    let width = mount.clientWidth, height = mount.clientHeight, cursorWidth = 0, cursorHeight = 0;
+    const measure = () => { width = mount.clientWidth; height = mount.clientHeight; cursorWidth = cursor.current?.offsetWidth ?? 0; cursorHeight = cursor.current?.offsetHeight ?? 0; };
+    const resize = new ResizeObserver(measure); resize.observe(mount); if (cursor.current) resize.observe(cursor.current); measure();
     function wheel(event: WheelEvent) { if (event.ctrlKey) return; event.preventDefault(); accelerateFlight(motion, event.deltaY * (event.deltaMode === 1 ? 12 : event.deltaMode === 2 ? innerHeight : 1), reduced.matches); }
     function key(event: KeyboardEvent) { if (['ArrowDown','ArrowUp'].includes(event.key)) { event.preventDefault(); accelerateFlight(motion, 400, reduced.matches); } }
     function down(event: PointerEvent) { if (event.button !== 0) return; dragging = true; lastY = event.clientY; }
@@ -60,10 +61,10 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       }
       const offsetX = (smoothX * 95 + Math.sin(elapsed * .65) * 3) * factor;
       const offsetY = (smoothY * 32 + Math.sin(elapsed * 1.1) * 2) * factor;
-      if (aircraft.current) aircraft.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-      // Draw in viewport space: contrails must extend beyond the aircraft canvas.
-      const centerX = width * .5 + offsetX, centerY = height * .58 + offsetY + planeHeight * .055;
-      const halfSpan = planeWidth * .267, length = planeHeight * (.8 + Math.min(motion.speed / 1500, .35));
+      if (cursor.current) cursor.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      // A narrow pair of trails follows the cursor stem beyond the model canvas.
+      const centerX = width * .5 + offsetX + cursorWidth * .045, centerY = height * .58 + offsetY + cursorHeight * .31;
+      const halfSpan = cursorWidth * .038, length = cursorHeight * (.8 + Math.min(motion.speed / 1500, .35));
       for (const [side, path] of [[-1, leftTrail.current], [1, rightTrail.current]] as const) {
         const x = centerX + side * halfSpan;
         const y = centerY - side * motion.bank * halfSpan;
@@ -95,12 +96,12 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       </linearGradient></defs>
       <path ref={leftTrail}/><path ref={rightTrail}/>
     </svg>
-    <div className="aircraft" ref={aircraft}><Suspense fallback={null}><Model src={assets.aircraft} kind="aircraft" flight={flight}/></Suspense></div>
+    <div className="flight-cursor" ref={cursor}><Suspense fallback={null}><Model src={assets.cursor} kind="cursor" flight={flight}/></Suspense></div>
     <button className="travel-return" aria-label="Click anywhere to return to the about page">
       <span className="departure-code" aria-hidden="true">{[...travelPhotos[place].city].map((letter,index) => <i key={index}><span key={`${travelPhotos[place].city}-${letter}`}>{letter}</span></i>)}</span>
       <span>Click anywhere to return</span>
     </button>
-    <span className="travel-drag-hint"><span className="scroll-wheel" aria-hidden="true"><i/></span><span>Scroll to fly faster</span></span>
+    <span className="travel-drag-hint"><Icon name="scroll"/><span>Scroll to fly faster</span></span>
     <span className="sr-only" aria-live="polite">{travelPhotos[place].city} gallery</span>
   </main>;
 }

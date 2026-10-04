@@ -1,13 +1,5 @@
-@font-face {
-  font-family: 'Suisse Intl';
-  src: url('/assets/fonts/suisseintl-book.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
-  font-family: 'Suisse Intl', Arial, sans-serif;
+  font-family: 'Rethink Sans Variable', Arial, sans-serif;
   --unit: calc(100vw / 1440);
   --control: calc(54 * var(--unit));
   --card-width: calc(335 * var(--unit));
@@ -105,7 +97,7 @@
 .departure-code i { overflow: hidden; width: calc(42 * var(--unit)); height: calc(42 * var(--unit)); border-radius: calc(7 * var(--unit)); font-size: calc(26 * var(--unit)); }
 .departure-code i span { animation: flap .55s ease both; }
 @keyframes flap { 0% { transform: translateY(-110%); } 55% { transform: translateY(12%); } 100% { transform: none; } }
-.aircraft { pointer-events: none; width: calc(260 * var(--unit)); height: calc(180 * var(--unit)); left: calc(50% - 130 * var(--unit)); top: calc(58% - 90 * var(--unit)); }
+.flight-cursor { pointer-events: none; width: calc(260 * var(--unit)); height: calc(180 * var(--unit)); left: calc(50% - 130 * var(--unit)); top: calc(58% - 90 * var(--unit)); }
 .travel-view { touch-action: none; perspective: none; }
 .travel-drag-hint { position: absolute; right: 30px; bottom: 30px; font-size: 12px; color: #bbb; opacity: 0; animation: hint-away 6s both; }
 @keyframes hint-away { 10%, 60% { opacity: 1; } 100% { opacity: 0; } }
@@ -135,7 +127,7 @@
   .flight-picture { width: 220px; height: 150px; }
   .flight-picture:nth-child(5n+3) { width: 130px; height: 195px; }
   .travel-scene { perspective: 517px; }
-  .aircraft { width: 190px; height: 130px; left: calc(50% - 95px); top: calc(58% - 65px); }
+  .flight-cursor { width: 190px; height: 130px; left: calc(50% - 95px); top: calc(58% - 65px); }
   .travel-return { bottom: 9.5%; }
   .travel-drag-hint { bottom: 28px; left: 0; right: 0; text-align: center; }
 }
