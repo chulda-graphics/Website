@@ -1,0 +1,8 @@
+.scroll-float { overflow: hidden; }
+.scroll-float-text { display: block; font: inherit; text-align: inherit; letter-spacing: inherit; }
+.scroll-float-word { display: inline-block; white-space: nowrap; }
+.scroll-float .char { display: inline-block; }
+.project-copy.project-copy--animated { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-float .char { opacity: 1 !important; transform: none !important; }
+}

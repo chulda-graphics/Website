@@ -6,6 +6,7 @@ import { Travel } from './components/Travel';
 import { assets, profile, projects } from './content';
 import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
+import ScrollFloat from './components/ScrollFloat';
 import { ProjectArtwork } from './components/ProjectArtwork';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
@@ -91,7 +92,10 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     <ViewportLayer><Control className="project-close" label="Back to Home" onClick={() => navigate('/')}><Icon name="collapse"/></Control></ViewportLayer>
     <div className={`project-detail ${info ? 'show-info' : ''}`}>
       {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-slide" style={{viewTransitionName: sectionIndex === 0 ? 'project-media' : 'none'}} aria-label={section.title}>
-        {info ? <div className="project-copy"><h2>{section.title}</h2><p>{section.body}</p></div> : <ProjectArtwork project={project} expanded index={index + sectionIndex}/>}
+        {info ? <div className="project-copy project-copy--animated">
+          <ScrollFloat scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.title}</ScrollFloat>
+          <ScrollFloat as="p" scrollStart="top bottom" scrollEnd="clamp(bottom center)" stagger={0.02}>{section.body}</ScrollFloat>
+        </div> : <ProjectArtwork project={project} expanded index={index + sectionIndex}/>}
       </section>)}
       <button className="next-project" onClick={() => navigate(`/project/${projects[(index + 1) % projects.length].slug}`)}>Next project<br/><span>{projects[(index + 1) % projects.length].title}</span></button>
     </div>
