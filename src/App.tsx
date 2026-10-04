@@ -109,7 +109,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
 
 function Portfolio() {
   const { path, navigate } = useRoute();
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(3);
   const home = path === '/'; const about = path === '/about'; const travel = path === '/travel';
   const projectSlug = path.startsWith('/project/') ? path.slice(9) : '';
   useEffect(() => {

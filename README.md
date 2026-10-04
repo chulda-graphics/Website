@@ -1,6 +1,6 @@
 # Chulda Graphics portfolio
 
-Portfolio with a quiet, single-card horizontal project gallery, Rethink Sans typography, an opening slider, and a porcelain cursor flight experience. The original reference exploration has evolved into a distinct layout at the owner's request. See [DIRECTION.md](docs/DIRECTION.md) for the current design and checks, [AUDIT.md](docs/AUDIT.md) for earlier usability fixes, and [COMPARISON.md](docs/COMPARISON.md) for historical reference comparisons.
+Portfolio with the original reference-style composition and vertical project stack, restored at the owner's request. Rethink Sans, the refined entry slider, and the flat stemless cursor flight remain. See [DIRECTION.md](docs/DIRECTION.md) for the current state and [AUDIT.md](docs/AUDIT.md) for usability fixes.
 
 ## Run
 
@@ -28,7 +28,7 @@ The production output is `dist/`. The host must rewrite unknown routes to `index
 - `src/brand.css`: Rethink Sans brand typography and opening-screen styles. Fonts are self-hosted through Fontsource.
 - `src/components/SmoothScroll.tsx`: GSAP ScrollSmoother shared by all routes, with 1.1-second desktop smoothing, a short 0.12-second touch response, route cleanup, and native scrolling for reduced-motion preferences. Fixed controls stay outside the transformed content.
 - `src/components/ScrollFloat.jsx`: owner-supplied React Bits character reveal for each project’s info headings and paragraphs, with accessible text and reduced-motion support.
-- `src/components/Carousel.tsx`: single-card horizontal gallery with wheel, swipe, arrow-key, and small dot controls.
+- `src/components/Carousel.tsx`: vertical project stack with wheel, vertical drag, arrow-key, and dot controls.
 - `src/components/Travel.tsx`: continuous flight, scroll acceleration, and click-anywhere return.
 - `src/travelPhotos.ts`: reference travel imagery; replace with the owner's photographs. Sources are listed in `public/assets/travel/SOURCE.md`.
 - `src/components/Model.tsx`: lazy-loaded Three.js viewer for locally exported GLBs.
@@ -65,6 +65,6 @@ The supplied Botanica folder was found and is available for later sound selectio
 ## Constraints
 
 - Do not use Higgsfield credit-consuming generations.
-- Keep the restrained design language, Rethink Sans, Phosphor icons, opening slider, and continuous flight; the layout should be distinct from the original reference.
+- Preserve the restored reference-style layout with the requested typography, opening slider, and cursor flight refinements.
 - Project content may be placeholder content.
 - Travel photographs remain reference assets and should be replaced with owner-provided imagery before launch.

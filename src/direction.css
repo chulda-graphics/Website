@@ -1,4 +1,4 @@
-/* Chulda: one project at a time, with a quiet masthead and horizontal motion. */
+/* Preserve the requested entry, typography and flight refinements over the original layout. */
 .entry-screen { z-index: 1000; transition: none; }
 .entry-identity h1 { font-weight: 650; letter-spacing: -.04em; }
 .entry-identity p { font-size: 15px; margin-top: 8px; font-weight: 450; }
@@ -8,85 +8,14 @@
 @keyframes studio-arrive { from { opacity: 0; } to { opacity: 1; } }
 .identity h1, .project-identity h1 { font-weight: 550; letter-spacing: -.035em; }
 .identity p, .project-category { font-weight: 450; }
-.identity { top: 38px; left: 6vw; right: 6vw; }
-.identity-text { width: auto; max-width: none; }
-.identity h1 { font-size: clamp(23px, 2vw, 28px); }
-.identity p { margin-top: 7px; font-size: 15px; }
-.identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open {
-  position: absolute; top: 0; right: 0; left: auto; bottom: auto; margin: 0; transform: none;
-}
-.contact-status { left: auto; right: 0; }
 .project-art-title { font-weight: 450; }
-.biography { margin-left: 9vw; max-width: 49vw; padding-top: 240px; padding-bottom: 100px; font-size: clamp(22px, 2vw, 30px); }
-.biography > p:first-child { font-size: clamp(26px, 2.3vw, 32px); font-weight: 450; line-height: 1.2; letter-spacing: -.035em; color: #292929; }
 .biography strong { font-weight: 550; }
-.biography > p { line-height: 1.35; }
-.recognitions { padding-top: 0; margin: 70px 0; }
-.recognitions h2 { font-weight: 600; font-size: 13px; margin-bottom: 24px; }
-.recognitions ul { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; font-size: 20px; font-weight: 500; }
-.project-identity { left: 6vw; top: 64px; width: 28vw; }
-.project-identity h1 { font-size: clamp(28px, 2.8vw, 38px); }
-.project-category { margin-top: 10px; font-size: 17px; }
-.project-controls { margin-top: 42px; }
-.project-detail { margin-left: 40%; padding: 24px 24px 24px 0; }
-.project-slide { border-radius: 28px; }
-.project-close { left: 6vw; top: auto; bottom: 40px; }
 .project-copy h2 { font-weight: 650; }
 .project-copy p { font-weight: 450; }
 .next-project { font-weight: 500; }
 .next-project span { font-weight: 600; }
 .flight-cursor { --cursor-w: clamp(230px, 22vw, 330px); --cursor-h: clamp(165px, 16vw, 235px); width: var(--cursor-w); height: var(--cursor-h); left: calc(50% - var(--cursor-w) / 2); top: calc(50% - var(--cursor-h) / 2); }
 .travel-return { bottom: max(36px, env(safe-area-inset-bottom)); font-size: 13px; font-weight: 450; padding: 12px 18px; min-height: 44px; }
-@media (max-width: 700px) {
-  .identity { top: 26px; left: 24px; right: 24px; text-align: left; }
-  .identity h1 { font-size: 23px; }
-  .identity p { font-size: 14px; margin-top: 6px; }
-  body > .identity-controls, body > .identity-controls.social-open { position: fixed; top: auto; right: auto; bottom: max(24px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); }
-  .contact-status { left: 50%; right: auto; }
-  .biography { margin: 0 24px; max-width: none; padding-top: 460px; padding-bottom: 160px; font-size: 20px; }
-  .biography > p:first-child { font-size: 28px; }
-  .globe-link { top: 115px; }
-  .recognitions ul { font-size: 17px; gap: 14px; }
-  .project-identity { position: relative; top: auto; left: auto; width: auto; padding: 30px 68px 54px; }
-  .project-identity h1 { font-size: 29px; }
-  .project-category { font-size: 16px; margin-top: 8px; }
-  .project-controls { margin-top: 0; }
-  .project-close { left: 15px; top: 25px; bottom: auto; }
-  .project-detail { margin: 0; padding: 0 12px 120px; }
-  .project-slide { border-radius: 26px; }
-  .travel-return { bottom: max(28px, env(safe-area-inset-bottom)); }
-}
-@media (max-height: 650px) and (min-width: 701px) {
-  .identity { top: 20px; }
-}
-@media (max-height: 400px) and (max-width: 700px) {
-  .identity { top: 16px; }
-  .identity h1 { font-size: 21px; }
-  .identity p { font-size: 12px; }
-  body > .identity-controls, body > .identity-controls.social-open { left: auto; right: 20px; top: 16px; bottom: auto; transform: none; }
-}
+.recognitions h2 { font-weight: 600; }
+@media (max-width: 700px) { .travel-return { bottom: max(28px, env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion: reduce) { .app { animation: none; } }
-
-/* Visible dots stay small; the full button remains easy to tap. */
-.carousel-depth { perspective: none; }
-.carousel-depth .stack-card {
-  left: 50%; top: 50%;
-  width: min(34vw, 360px, 52svh); height: min(35vw, 370px, 53.5svh);
-  border-radius: 30px;
-}
-.pagination { top: calc(50% + min(17.5vw, 185px, 26.75svh) + 18px); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); flex-direction: row; gap: 0; }
-.pagination button { width: 36px; height: 36px; background: transparent; }
-.pagination button span, .pagination button.selected span { width: 3px; height: 3px; border-radius: 50%; background: #c6c8c3; }
-.pagination button.selected span { background: #393d36; width: 4px; height: 4px; }
-@media (max-width: 700px) {
-  :root { --control: 48px; }
-  .carousel-depth .stack-card { width: min(74vw, 330px, 46svh); height: min(76vw, 339px, 47.25svh); top: 48%; border-radius: 28px; }
-  .pagination { top: calc(48% + min(38vw, 169.5px, 23.625svh) + 14px); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); }
-  .pagination button { width: 36px; height: 36px; }
-  .control { border-radius: 15px; }
-}
-@media (max-height: 400px) and (max-width: 700px) {
-  :root { --control: 44px; }
-  .carousel-depth .stack-card { width: 46svh; height: 47.25svh; top: 54%; }
-  .pagination { top: calc(54% + 23.625svh + 4px); }
-}
