@@ -10,6 +10,8 @@ import { Icon } from './components/Icon';
 import { ProjectArtwork } from './components/ProjectArtwork';
 import { ProjectVideo } from './components/ProjectVideo';
 import { useEditorialReveal } from './components/useEditorialReveal';
+import { SoundToggle } from './components/SoundToggle';
+import { uiSound } from './components/uiSound';
 import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
 
 const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
@@ -55,6 +57,7 @@ function useRoute() {
     pendingPath.current = null;
     if (next === currentPath.current) { stop(); return; }
     pendingPath.current = next;
+    uiSound.play('navigate');
     const keepIdentity = [currentPath.current, next].every(value => value === '/' || value === '/about');
     const leaving = leavePage(pageElements(keepIdentity), matchMedia('(prefers-reduced-motion: reduce)').matches);
     stop();
@@ -100,10 +103,11 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   async function copyEmail() {
     if (!profile.email) { setStatus('Contact details coming soon'); return; }
     setStatus(profile.email);
-    try { await navigator.clipboard.writeText(profile.email); setStatus('Email copied'); }
+    try { await navigator.clipboard.writeText(profile.email); setStatus('Email copied'); uiSound.play('confirm'); }
     catch { setStatus(profile.email); }
   }
   function openSocial(url: string) {
+    uiSound.play('click');
     if (!url) { setStatus('Social link coming soon'); return; }
     window.open(url, '_blank', 'noopener,noreferrer');
   }
@@ -112,7 +116,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
     <ViewportLayer when="mobile"><nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
       {about ? <Control label="Back to Home" active onClick={() => navigate('/')}><Icon name="back" /></Control> :
         !social && <Control label="Open About Page" onClick={() => navigate('/about')}><Icon name="person" /></Control>}
-      {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
+      {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { uiSound.play('click'); setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
       {social && <>
         <Control label="Copy email" className={status === 'Email copied' ? 'control--success' : ''} onClick={copyEmail}><Icon name={status === 'Email copied' ? 'check' : 'mail'} /></Control>
         <Control label="X (Twitter)" onClick={() => openSocial(profile.social.x)}><Icon name="x" /></Control>
@@ -223,6 +227,7 @@ function Portfolio() {
 export function App() {
   const [entered, setEntered] = useState(hasEntered);
   return <>
+    <SoundToggle/>
     {entered && <Portfolio/>}
     <AnimatePresence>{!entered && <EntryScreen key="entry" onEnter={() => { rememberEntry(); setEntered(true); }}/>}</AnimatePresence>
   </>;

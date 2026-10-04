@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { profile } from '../content';
 import { Icon } from './Icon';
 import SlideCommit from './SlideCommit';
+import { uiSound } from './uiSound';
 
 const sessionKey = 'chulda:entered:v1';
 export function hasEntered() {
@@ -30,6 +31,7 @@ export function EntryScreen({ onEnter }: { onEnter: () => void }) {
     return () => { removeEventListener('resize', resize); timers.current.forEach(clearTimeout); };
   }, []);
   function finish() {
+    uiSound.play('confirm');
     timers.current.push(setTimeout(onEnter, 1100));
   }
   async function prepare() {

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { projects } from '../content';
 import { ProjectArtwork } from './ProjectArtwork';
+import { uiSound } from './uiSound';
 
 const count = projects.length;
 const copies = Array.from({ length: count * 3 }, (_, index) => index);
@@ -68,6 +69,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     }
     function animate() { if (!frame) { lastTime = 0; frame = requestAnimationFrame(tick); } }
     function select(index: number, direction?: number) {
+      if (wrap(index) !== selectedIndex) uiSound.play('click');
       const focusCard = document.activeElement?.classList.contains('stack-card');
       selectedIndex = wrap(index);
       let delta = selectedIndex - wrap(Math.round(target));

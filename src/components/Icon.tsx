@@ -13,13 +13,15 @@ import { AirplaneTiltIcon } from '@phosphor-icons/react/dist/csr/AirplaneTilt';
 import { CheckIcon } from '@phosphor-icons/react/dist/csr/Check';
 import { SpinnerGapIcon } from '@phosphor-icons/react/dist/csr/SpinnerGap';
 import { MouseScrollIcon } from '@phosphor-icons/react/dist/csr/MouseScroll';
+import { SpeakerHighIcon } from '@phosphor-icons/react/dist/csr/SpeakerHigh';
+import { SpeakerSlashIcon } from '@phosphor-icons/react/dist/csr/SpeakerSlash';
 import type { IconProps } from '@phosphor-icons/react';
 
 const icons = {
   person: UserIcon, chat: ChatCircleDotsIcon, back: CaretLeftIcon, mail: EnvelopeSimpleIcon,
   x: XLogoIcon, linkedin: LinkedinLogoIcon, info: InfoIcon, external: ArrowUpRightIcon,
   collapse: CornersInIcon, plane: AirplaneTiltIcon, check: CheckIcon, spinner: SpinnerGapIcon,
-  scroll: MouseScrollIcon, play: PlayIcon, next: ArrowRightIcon,
+  scroll: MouseScrollIcon, play: PlayIcon, next: ArrowRightIcon, sound: SpeakerHighIcon, muted: SpeakerSlashIcon,
 };
 
 export function Icon({ name, ...props }: IconProps & { name: keyof typeof icons }) {

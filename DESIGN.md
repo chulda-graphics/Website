@@ -58,3 +58,7 @@ Reference: https://pensatori-irrazionali.com/ — inspected on October 5, 2026. 
 ## Tactile control feedback
 
 Reference: https://tryclico.com/ — inspected on October 5, 2026. Its pale layered navigation and inset control treatment fit the existing dock. Refine hover feedback through border and shadow changes; pressing a control uses an inset shadow without scaling its hit area or icon. Successful email copying shows a Phosphor checkmark and a compact frosted confirmation for four seconds. Clipboard failures continue to display the address instead of falsely reporting success. The confirmation sits above the mobile dock and wraps within the viewport. Preserve the current typeface and page composition.
+
+## Interface audio
+
+Optional, muted by default. The Sound control remembers the choice for the current tab session. Three quiet, short cues from the supplied Botanica v4 library mark carousel/social selection, page navigation, and successful entry/email copying. Load clips only on the first enabled interaction. Play one cue at a time; throttle repeated selection sounds. Stop audio when the page is hidden or a project video starts, and suppress interface cues while video is playing. Never attach sound to hovering, continuous scrolling, or the travel animation. Mobile places the toggle above the bottom navigation; entry and travel place it at the top right. Source details live in `public/assets/audio/SOURCE.md`.

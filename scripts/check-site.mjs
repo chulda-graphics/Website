@@ -69,3 +69,48 @@ assert.equal(after.cycle, -1);
 assert.ok(before.z < -505 && after.z > 2900, 'Placement changes occur between invisible ends of the flight path');
 assert.equal(flightDepth(0, total + 511, total).z, after.z, 'Gallery loops continuously');
 console.log('Work gallery checks passed: complete shuffle, bounded placement, invisible recycling, repeated loops.');
+
+// Silent player doubles exercise audio lifecycle without using a speaker.
+const { createSoundEngine, soundSources } = await loadTS('../src/components/soundEngine.ts');
+for (const src of Object.values(soundSources)) assert.ok((await stat(new URL(`../public${src}`, import.meta.url))).size > 0);
+let clock = 0, allowed = true, notifications = 0;
+const players = [];
+const sound = createSoundEngine({
+  now: () => clock, allowed: () => allowed,
+  create: src => {
+    const player = { src, currentTime: 0, volume: 1, plays: 0, pauses: 0, pending: [],
+      play() { this.plays++; return new Promise((resolve, reject) => this.pending.push({ resolve, reject })); },
+      pause() { this.pauses++; }
+    };
+    players.push(player); return player;
+  }
+});
+const unsubscribe = sound.subscribe(() => notifications++);
+sound.play('click');
+assert.equal(players.length, 0, 'Muted by default; no audio allocation or downloads');
+sound.setEnabled(true);
+sound.play('click');
+assert.equal(players.length, 1);
+assert.equal(players[0].volume, .6);
+sound.play('navigate');
+assert.equal(players.length, 1, 'Rapid incidental cues are throttled');
+clock = 110; sound.play('click');
+const pauses = players[0].pauses;
+players[0].pending[0].resolve(); await Promise.resolve();
+assert.equal(players[0].pauses, pauses, 'An older play promise cannot stop a newer cue on the same player');
+sound.play('confirm');
+assert.equal(players.length, 2, 'Confirmation can preempt a click');
+assert.ok(players[0].pauses > pauses, 'New cues stop the previous sound');
+sound.setEnabled(false);
+const stopped = players[1].pauses;
+players[1].pending[0].resolve(); await Promise.resolve();
+assert.ok(players[1].pauses > stopped, 'A pending play cannot restart audio after muting');
+sound.setEnabled(true); allowed = false; clock = 250;
+sound.play('navigate');
+assert.equal(players.length, 2, 'Hidden pages and playing videos suppress new cues');
+allowed = true; sound.play('navigate');
+players[2].pending[0].reject(new Error('Autoplay denied')); await Promise.resolve(); await Promise.resolve();
+assert.equal(notifications, 3);
+unsubscribe(); sound.setEnabled(false);
+assert.equal(notifications, 3);
+console.log('Sound checks passed: default mute, lazy loading, throttling, single voice, async races, video suppression, rejection handling, assets.');

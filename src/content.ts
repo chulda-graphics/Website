@@ -89,6 +89,3 @@ export const assets = {
   globe: '/assets/models/globe-relief-v3.glb',
   cursor: '/assets/models/cursor-v2.glb',
 };
-
-// Off until a locally selected sound has been reviewed and added.
-export const audio = { enabled: false, navigation: '' };

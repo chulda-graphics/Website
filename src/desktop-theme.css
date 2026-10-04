@@ -9,6 +9,20 @@
   color: var(--ui-ink);
   background: var(--paper);
 }
+.sound-toggle {
+  position: fixed; top: max(18px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); z-index: 1100;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 13px;
+  border: 1px solid var(--ui-border); border-radius: 16px; background: #ffffffd9;
+  box-shadow: 0 4px 16px #1823330a, inset 0 1px 0 #fff; color: var(--muted); font-size: 12px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.sound-toggle[aria-pressed="true"] { color: var(--ui-blue); }
+.sound-toggle:focus-visible { outline: 2px solid var(--ui-blue); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .sound-toggle { top: auto; bottom: calc(112px + env(safe-area-inset-bottom)); right: max(12px, env(safe-area-inset-right)); min-height: 44px; width: 44px; padding: 0; border-radius: 14px; }
+  .sound-toggle > span { display: none; }
+  body[data-page="travel"] .sound-toggle, body[data-page="entry"] .sound-toggle { top: max(12px, env(safe-area-inset-top)); bottom: auto; }
+}
 .identity h1, .project-identity h1 { font-weight: 650; letter-spacing: -.04em; }
 .identity p, .project-category { color: var(--muted); font-weight: 450; }
 .identity-controls, .project-controls {
