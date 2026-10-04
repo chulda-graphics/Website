@@ -79,6 +79,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   useEffect(() => { setSocial(about); setStatus(''); }, [about]);
   async function copyEmail() {
     if (!profile.email) { setStatus('Contact details coming soon'); return; }
+    setStatus(profile.email);
     try { await navigator.clipboard.writeText(profile.email); setStatus('Email copied'); }
     catch { setStatus(profile.email); }
   }
