@@ -34,9 +34,8 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
     function positionOrbitCursor() {
       if (!orbitCursor) return;
       orbitCursor.position.set(Math.sin(orbitAngle) * 1.2, Math.cos(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
-      // Keep the pointer's face readable; its tip follows the projected orbit tangent.
-      const tangent = Math.atan2(-Math.sin(orbitAngle) * .13, Math.cos(orbitAngle) * 1.2);
-      orbitCursor.rotation.set(.12, -.28, tangent - Math.atan2(1.05, -.72));
+      // The arrowhead lies flat; its nose follows the horizontal orbit tangent.
+      orbitCursor.rotation.set(-1.05, orbitAngle - Math.PI / 2, 0, 'YXZ');
     }
     let pointer = 0;
     let disposed = false;
@@ -78,7 +77,10 @@ export function Model({ src, kind = 'globe', flight }: { src: string; kind?: 'gl
       const group = new THREE.Group(); group.add(model);
       group.scale.setScalar(2 / Math.max(size.x, size.y, size.z));
       cursorFrame.add(group);
-      if (kind === 'cursor') cursorFrame.rotation.y = -.28;
+      if (kind === 'cursor') {
+        group.rotation.x = -Math.PI / 2;
+        cursorFrame.rotation.y = -.12;
+      }
       invalidate();
     }, undefined, () => { if (!disposed) setFailed(true); });
     if (kind === 'globe') loader.load(assets.cursor, gltf => {

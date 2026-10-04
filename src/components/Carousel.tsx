@@ -19,12 +19,11 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     let velocity = 0;
     let lastTime = 0;
     let frame = 0;
-    let height = container.clientHeight;
-    let unit = container.clientWidth <= 700 ? 1 : container.clientWidth / 1440;
+    let cardWidth = cards[0].offsetWidth;
     let wheelTotal = 0;
     let lastWheel = 0;
     let lastStep = -1000;
-    let pointerY = 0;
+    let pointerX = 0;
     let dragging = false;
     let pointerId: number | null = null;
     let dragged = false;
@@ -32,23 +31,21 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     let selectedIndex = selected;
     function paint() {
       for (let i = 0; i < cards.length; i++) {
-        let distance = ((i - position + 18) % 12) - 6;
+        const distance = ((i - position + count * 4.5) % (count * 3)) - count * 1.5;
         const amount = Math.abs(distance);
-        const near = Math.min(amount, 1);
-        const y = Math.sign(distance) * (near * height * .4 + Math.max(0, amount - 1) * 35 * unit);
-        const rotation = Math.sign(distance) * near * 98;
-        const scale = 1 - .2 * near;
-        const visible = amount < 3.6;
+        const visible = amount < 2.4;
+        const x = distance * (cardWidth + 28);
+        const scale = 1 - Math.min(amount, 1) * .1;
         cards[i].style.visibility = visible ? 'visible' : 'hidden';
-        cards[i].style.transform = `translate(-50%, -50%) translateY(${y}px) scale(${scale}) rotateX(${rotation}deg)`;
+        cards[i].style.transform = `translate(-50%, -50%) translateX(${x}px) scale(${scale}) rotateY(${-distance * 9}deg)`;
         cards[i].style.zIndex = String(10 - Math.round(amount));
-        cards[i].style.opacity = String(amount > 3 ? 1 - (amount - 3) / .6 : 1);
-        shades[i].style.opacity = String(Math.min(1, Math.max(0, (amount - .12) / .7)));
+        cards[i].style.opacity = String(Math.max(0, 1 - Math.max(0, amount - 1.4)));
+        shades[i].style.opacity = String(Math.min(.28, amount * .2));
         const active = i === wrap(selectedIndex) + count;
         // Repeated copies render only the surrounding stack; one copy is interactive.
         cards[i].tabIndex = active ? 0 : -1;
         cards[i].setAttribute('aria-hidden', String(!active));
-        cards[i].style.pointerEvents = active ? 'auto' : 'none';
+        cards[i].style.pointerEvents = amount < 1.2 ? 'auto' : 'none';
         cards[i].style.viewTransitionName = active ? 'project-media' : 'none';
       }
     }
@@ -89,26 +86,26 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       const now = performance.now();
       if (now - lastWheel > 140) wheelTotal = 0;
       lastWheel = now;
-      wheelTotal += event.deltaY * (event.deltaMode === 1 ? 16 : 1);
+      wheelTotal += (Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY) * (event.deltaMode === 1 ? 16 : 1);
       if (Math.abs(wheelTotal) > 35 && now - lastStep > 600) { step(Math.sign(wheelTotal)); wheelTotal = 0; lastStep = now; }
     }
     function key(event: KeyboardEvent) {
-      if (event.repeat || !['ArrowDown','ArrowUp','PageDown','PageUp'].includes(event.key)) return;
-      event.preventDefault(); step(['ArrowDown','PageDown'].includes(event.key) ? 1 : -1);
+      if (event.repeat || !['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','PageDown','PageUp'].includes(event.key)) return;
+      event.preventDefault(); step(['ArrowDown','ArrowRight','PageDown'].includes(event.key) ? 1 : -1);
     }
     function down(event: PointerEvent) {
       if (event.button !== 0 || !event.isPrimary || dragging || (event.target as Element).closest('.pagination')) return;
       pointerId = event.pointerId;
-      pointerY = event.clientY; startTarget = target; dragging = true; dragged = false;
+      pointerX = event.clientX; startTarget = target; dragging = true; dragged = false;
     }
     function move(event: PointerEvent) {
       if (!dragging || event.pointerId !== pointerId) return;
-      const dy = pointerY - event.clientY;
+      const dy = pointerX - event.clientX;
       if (Math.abs(dy) > 7) {
         dragged = true;
         if (!container.hasPointerCapture(event.pointerId)) container.setPointerCapture(event.pointerId);
       }
-      target = startTarget + dy / (height * .45); animate();
+      target = startTarget + dy / (cardWidth + 28); animate();
     }
     function release() {
       if (pointerId !== null && container.hasPointerCapture(pointerId)) container.releasePointerCapture(pointerId);
@@ -126,7 +123,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       if (dragged && direction) step(direction); else animate();
     }
     function preventDragClick(event: MouseEvent) { if (dragged) { event.preventDefault(); event.stopPropagation(); dragged = false; } }
-    const resize = new ResizeObserver(() => { height = container.clientHeight; unit = container.clientWidth <= 700 ? 1 : container.clientWidth / 1440; paint(); });
+    const resize = new ResizeObserver(() => { cardWidth = cards[0].offsetWidth; paint(); });
     resize.observe(container); paint();
     addEventListener('wheel', wheel, { passive: false }); addEventListener('keydown', key);
     container.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', cancel); addEventListener('blur', cancel);
@@ -139,14 +136,15 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
     };
   }, []);
   return <main className="carousel carousel-depth" aria-label="Selected projects" ref={host}>
-    <div className="stack-edge stack-edge-top"/><div className="stack-edge stack-edge-bottom"/>
+    <div className="gallery-heading"><p>Independent design practice</p><h2>Selected work<span> / {String(count).padStart(2, '0')}</span></h2></div>
     {copies.map(index => {
       const project = projects[index % count];
-      return <a key={index} className="stack-card" href={`/project/${project.slug}`} aria-label={`Open ${project.title}`} onDragStart={event => event.preventDefault()} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); navigate(`/project/${project.slug}`); }}>
+      return <a key={index} className="stack-card" href={`/project/${project.slug}`} aria-label={`Open ${project.title}`} onDragStart={event => event.preventDefault()} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); if (index % count !== selected) controls.current.select(index % count); else navigate(`/project/${project.slug}`); }}>
         <ProjectArtwork project={project} index={index % count}/><div className="stack-shade"/>
       </a>;
     })}
-    <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span/></button>)}</div>
+    <div className="pagination" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}><span>{String(index + 1).padStart(2, '0')}</span></button>)}</div>
+    <div className="gallery-caption" aria-hidden="true"><span>{projects[selected].title}</span><span>{projects[selected].category}</span></div>
     <span className="sr-only" aria-live="polite">{projects[selected].title}, {selected + 1} of {count}</span>
   </main>;
 }

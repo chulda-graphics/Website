@@ -7,9 +7,10 @@ shader = material.node_tree.nodes.get('Principled BSDF')
 shader.inputs['Base Color'].default_value = (.72, .72, .69, 1)
 shader.inputs['Roughness'].default_value = .6
 
-# Front silhouette lies in X/Z, facing the same review camera as the aircraft.
-outline = [(-.72, 1.05), (.88, -.15), (.19, -.27), (.61, -.97), (.24, -1.19), (-.18, -.48), (-.72, -.94)]
-depth = .2
+# A stemless navigation pointer: broad wings and a recessed tail, not a mouse stem.
+# Blender X/Z becomes glTF X/Y; Model lays this face into the flight plane.
+outline = [(0, 1.15), (.8, -.85), (0, -.43), (-.8, -.85)]
+depth = .16
 vertices = [(x, -depth / 2, z) for x,z in outline] + [(x, depth / 2, z) for x,z in outline]
 n = len(outline)
 faces = [tuple(reversed(range(n))), tuple(range(n, 2*n))]

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
+import { AnimatePresence } from 'motion/react';
 import { EntryScreen, hasEntered, rememberEntry } from './components/EntryScreen';
 import { Carousel } from './components/Carousel';
 import { Travel } from './components/Travel';
@@ -108,7 +109,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
 
 function Portfolio() {
   const { path, navigate } = useRoute();
-  const [selected, setSelected] = useState(3);
+  const [selected, setSelected] = useState(0);
   const home = path === '/'; const about = path === '/about'; const travel = path === '/travel';
   const projectSlug = path.startsWith('/project/') ? path.slice(9) : '';
   useEffect(() => {
@@ -143,5 +144,8 @@ function Portfolio() {
 
 export function App() {
   const [entered, setEntered] = useState(hasEntered);
-  return entered ? <Portfolio/> : <EntryScreen onEnter={() => { rememberEntry(); setEntered(true); }}/>;
+  return <>
+    {entered && <Portfolio/>}
+    <AnimatePresence>{!entered && <EntryScreen key="entry" onEnter={() => { rememberEntry(); setEntered(true); }}/>}</AnimatePresence>
+  </>;
 }

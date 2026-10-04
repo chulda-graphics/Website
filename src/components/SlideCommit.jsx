@@ -103,6 +103,7 @@ export default function SlideCommit({
   const origin = useTransform(() => `${seen.get()}px 50%`);
   const say = useTransform(seen, [0, TRAVEL * 0.55], [1, 0]);
   const arrow = useTransform(() => shown.get() * clamp(1 - (seen.get() - TRAVEL * 0.55) / (TRAVEL * 0.4), 0, 1));
+  const iconRotation = useTransform(seen, [0, TRAVEL * .42], [-90, 45]);
   const trackTransform = useTransform(() => `translateX(${shake.get()}px) scale(${pulse.get()})`);
 
   const labelText = typeof label === 'string' ? label : 'Slide to confirm';
@@ -340,7 +341,7 @@ export default function SlideCommit({
         >
           <motion.div className="slide-commit__content" style={{ transform: content }}>
             <motion.span className="slide-commit__arrow" style={{ opacity: arrow }} aria-hidden="true">
-              {icon ?? <Icon name="plane" size={iconSize} />}
+              <motion.span className="slide-commit__icon" style={{ rotate: iconRotation }}>{icon ?? <Icon name="plane" size={iconSize} weight="fill" />}</motion.span>
             </motion.span>
             <motion.span className="slide-commit__spin" style={{ opacity: spin }} aria-hidden="true">
               <Spinner size={iconSize} />
@@ -364,4 +365,3 @@ export default function SlideCommit({
     </div>
   );
 }
-

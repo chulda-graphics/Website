@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react';
-import { Icon } from './Icon';
 import { assets } from '../content';
 import { travelPhotos } from '../travelPhotos';
 import { accelerateFlight, advanceFlight, createFlight } from './flight';
@@ -63,9 +62,9 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
       const offsetX = (smoothX * 95 + Math.sin(elapsed * .65) * 3) * factor;
       const offsetY = (smoothY * 32 + Math.sin(elapsed * 1.1) * 2) * factor;
       if (cursor.current) cursor.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-      // A narrow pair of trails follows the cursor stem beyond the model canvas.
-      const centerX = width * .5 + offsetX + cursorWidth * .045, centerY = height * .58 + offsetY + cursorHeight * .31;
-      const halfSpan = cursorWidth * .038, length = cursorHeight * (.8 + Math.min(motion.speed / 1500, .35));
+      // Contrails follow the two rear wings of the flat arrowhead.
+      const centerX = width * .5 + offsetX, centerY = height * .5 + offsetY + cursorHeight * .15;
+      const halfSpan = cursorWidth * .255, length = cursorHeight * (.8 + Math.min(motion.speed / 1500, .35));
       for (const [side, path] of [[-1, leftTrail.current], [1, rightTrail.current]] as const) {
         const x = centerX + side * halfSpan;
         const y = centerY - side * motion.bank * halfSpan;
@@ -100,10 +99,8 @@ export function Travel({ navigate }: { navigate: (route: string) => void }) {
     </svg>
     <div className="flight-cursor" ref={cursor}><Suspense fallback={null}><Model src={assets.cursor} kind="cursor" flight={flight}/></Suspense></div>
     <button className="travel-return" aria-label="Click anywhere to return to the about page">
-      <span className="departure-code" aria-hidden="true">{[...travelPhotos[place].city].map((letter,index) => <i key={index}><span key={`${travelPhotos[place].city}-${letter}`}>{letter}</span></i>)}</span>
       <span>Click anywhere to return</span>
     </button>
-    <span className="travel-drag-hint"><Icon name="scroll"/><span className="hint-pointer">Scroll to fly faster</span><span className="hint-touch">Drag to fly faster</span></span>
     <span className="sr-only" aria-live="polite">{travelPhotos[place].city} gallery</span>
   </main>;
 }

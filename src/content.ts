@@ -39,7 +39,7 @@ export const projects: Project[] = [
 // These paths are exported from the editable local Blender source.
 export const assets = {
   globe: '/assets/models/globe-relief-v3.glb',
-  cursor: '/assets/models/cursor.glb',
+  cursor: '/assets/models/cursor-v2.glb',
 };
 
 // Off until a locally selected sound has been reviewed and added.

@@ -9,7 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const server = process.env.HIGGSFIELD_BLENDER_SERVER;
 const blender = process.env.BLENDER_EXECUTABLE;
 const kind = process.argv[2];
-if (!server || !blender || !/^(globe|aircraft|cursor|globe-relief(?:-v[0-9]+)?)$/.test(kind)) {
+if (!server || !blender || !/^(globe|aircraft|cursor(?:-v[0-9]+)?|globe-relief(?:-v[0-9]+)?)$/.test(kind)) {
   throw new Error('Set HIGGSFIELD_BLENDER_SERVER and BLENDER_EXECUTABLE, then run: node scripts/blender-local.mjs globe|aircraft');
 }
 const child = spawn(process.execPath, [server], { env: { ...process.env, BLENDER_EXECUTABLE: blender }, stdio: ['pipe','pipe','inherit'] });
@@ -58,7 +58,7 @@ try {
     await call('bl_add_primitive', { kind: 'uv_sphere', name: 'Globe_Ocean', location: [0,0,0] });
     await call('bl_set_material', { object: 'Globe_Ocean', material_name: 'Porcelain', color: [.82,.81,.77,1], roughness: .9 });
   }
-  const source = await readFile(resolve(root, `scripts/${kind.startsWith('globe-relief') ? 'globe-relief' : kind}.py`), 'utf8');
+  const source = await readFile(resolve(root, `scripts/${kind.startsWith('globe-relief') ? 'globe-relief' : kind.startsWith('cursor') ? 'cursor' : kind}.py`), 'utf8');
   await call('bl_execute', { code: `ASSET_ROOT = ${JSON.stringify(root)}\n` + source });
   await call('bl_execute', { code: `
 import bpy
@@ -107,7 +107,7 @@ result = {'path':target,'bytes':os.path.getsize(target)}
   await call('bl_save_project', { path: resolve(root, `assets/blender/${kind}.blend`) });
   const preview = resolve(root, `work/previews/${kind}.png`);
   await call('bl_render', { output_path: preview, resolution: [512,512], engine: 'CYCLES', samples: 16 });
-  await writeFile(resolve(root, `assets/blender/${kind}.build.json`), JSON.stringify({ kind, stage: kind.startsWith('globe-relief') ? 'geographic-relief' : 'foundation-blockout', source: 'local Higgsfield use Blender MCP', creditsUsed: 0, preview: `work/previews/${kind}.png` }, null, 2) + '\n');
+  await writeFile(resolve(root, `assets/blender/${kind}.build.json`), JSON.stringify({ kind, stage: kind.startsWith('globe-relief') ? 'geographic-relief' : kind.startsWith('cursor') ? 'stemless-navigation-pointer' : 'foundation-blockout', source: 'local Higgsfield use Blender MCP', creditsUsed: 0, preview: `work/previews/${kind}.png` }, null, 2) + '\n');
 } finally {
   child.stdin.end();
 }
