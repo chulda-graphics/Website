@@ -1,10 +1,9 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { AnimatePresence } from 'motion/react';
 import { EntryScreen, hasEntered, rememberEntry } from './components/EntryScreen';
 import { Carousel } from './components/Carousel';
-import { Travel } from './components/Travel';
-import { assets, profile, projects } from './content';
+import { profile, projects } from './content';
 import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
 import { Icon } from './components/Icon';
 import { ProjectArtwork } from './components/ProjectArtwork';
@@ -14,9 +13,7 @@ import { SoundToggle } from './components/SoundToggle';
 import { uiSound } from './components/uiSound';
 import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
 
-const Model = lazy(() => import('./components/Model').then(module => ({ default: module.Model })));
-
-const normalizePath = (path: string) => path.replace(/\/+$/, '') || '/';
+import { normalizePath } from './routes';
 
 function useRoute() {
   const [path, setPath] = useState(() => normalizePath(location.pathname));
@@ -34,7 +31,9 @@ function useRoute() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   useEffect(() => {
+    if (location.pathname.replace(/\/+$/, '') === '/travel') history.replaceState(history.state, '', '/about');
     const pop = () => {
+      if (location.pathname.replace(/\/+$/, '') === '/travel') history.replaceState(history.state, '', '/about');
       revision.current++; stop();
       commit(normalizePath(location.pathname));
     };
@@ -113,7 +112,7 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   }
   return <header className="identity">
     <div className="identity-text" style={{viewTransitionName: 'identity'}}><h1>{profile.name}</h1><p>{profile.title}</p></div>
-    <ViewportLayer when="mobile"><nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
+    <ViewportLayer><nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
       {about ? <Control label="Back to Home" active onClick={() => navigate('/')}><Icon name="back" /></Control> :
         !social && <Control label="Open About Page" onClick={() => navigate('/about')}><Icon name="person" /></Control>}
       {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { uiSound.play('click'); setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
@@ -127,20 +126,16 @@ function Identity({ about, navigate }: { about: boolean; navigate: (route: strin
   </header>;
 }
 
-function About({ navigate }: { navigate: (route: string) => void }) {
+function About() {
   const biography = useRef<HTMLElement>(null);
   useEditorialReveal(biography);
   return <main className="about-view">
-    <ViewportLayer when="desktop"><button className="globe-link" aria-label="Explore my world" onClick={() => navigate('/travel')}>
-      <Suspense fallback={<div className="model"/>}><Model src={assets.globe}/></Suspense>
-      <span>Click my world</span>
-    </button></ViewportLayer>
     <section className="biography" aria-label="About" ref={biography}>
       <div className="biography-window">
         <div className="window-titlebar"><span className="window-lights" aria-hidden="true"><i/><i/><i/></span><span>About me</span></div>
         <div className="biography-content">
-          <p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
-          <p>{profile.biography}</p>
+          <div className="biography-copy"><p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
+          <p>{profile.biography}</p></div>
           <div className="recognitions"><h2>Selected disciplines:</h2><ul>
             {['Motion design', 'Graphic design', 'Brand identity', 'Art direction'].map((discipline, index) =>
               <li key={discipline}><span className="discipline-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{discipline}</span></li>
@@ -160,14 +155,14 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   const index = projects.indexOf(project);
   const nextProject = projects[(index + 1) % projects.length];
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
-    <ViewportLayer when="desktop"><header className="project-identity"><div style={{viewTransitionName: 'identity'}}>
+    <header className="project-identity"><div style={{viewTransitionName: 'identity'}}>
       <div className="project-index"><span className="sr-only">Project {index + 1} of {projects.length}</span><span aria-hidden="true">Selected work</span><span aria-hidden="true">{String(index + 1).padStart(2, '0')} <span className="project-index-divider">/</span> {String(projects.length).padStart(2, '0')}</span></div>
       <h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
-      <ViewportLayer when="mobile"><nav className="project-controls" aria-label="Project controls">
+      <ViewportLayer><nav className="project-controls" aria-label="Project controls">
         <Control label={`Next project: ${nextProject.title}`} preview={nextProject.cover ? { src: nextProject.cover, title: nextProject.title } : undefined} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
         <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
       </nav></ViewportLayer>
-    </header></ViewportLayer>
+    </header>
     <div className="project-detail">
       {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
       {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-description" aria-label={section.title}>
@@ -192,34 +187,33 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
 function Portfolio() {
   const { path, navigate } = useRoute();
   const [selected, setSelected] = useState(0);
-  const home = path === '/'; const about = path === '/about'; const travel = path === '/travel';
+  const home = path === '/'; const about = path === '/about';
   const projectSlug = path.startsWith('/project/') ? path.slice(9) : '';
   useEffect(() => {
     const index = projects.findIndex(project => project.slug === projectSlug);
     if (index >= 0) setSelected(index);
   }, [projectSlug]);
   useEffect(() => {
-    document.title = `${profile.name} — ${home ? profile.title : about ? 'About' : travel ? 'My world' : projects.find(project => project.slug === projectSlug)?.title ?? 'Not found'}`;
-    document.body.dataset.page = home ? 'home' : about ? 'about' : travel ? 'travel' : 'project';
-  }, [path, home, about, travel, projectSlug]);
+    document.title = `${profile.name} — ${home ? profile.title : about ? 'About' : projects.find(project => project.slug === projectSlug)?.title ?? 'Not found'}`;
+    document.body.dataset.page = home ? 'home' : about ? 'about' : 'project';
+  }, [path, home, about, projectSlug]);
   useEffect(() => {
     const target = document.querySelector<HTMLElement>('h1') ?? document.getElementById('main');
     target?.setAttribute('tabindex', '-1');
     target?.focus({ preventScroll: true });
   }, [path]);
   useEffect(() => {
-    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') navigate(travel ? '/about' : '/'); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') navigate('/'); };
     addEventListener('keydown', escape); return () => removeEventListener('keydown', escape);
   }, [path]);
   return <>
     <a className="skip-link" href="#main" onClick={event => { event.preventDefault(); document.getElementById('main')?.focus({ preventScroll: true }); }}>Skip to content</a>
-    <SmoothScroll route={path}><div key={path} id="main" tabIndex={-1} className={`app page-${home ? 'home' : about ? 'about' : travel ? 'travel' : 'project'}`}>
+    <SmoothScroll route={path}><div key={path} id="main" tabIndex={-1} className={`app page-${home ? 'home' : about ? 'about' : 'project'}`}>
       {(home || about) && <Identity about={about} navigate={navigate}/>}
       {home && <Carousel navigate={navigate} selected={selected} setSelected={setSelected}/>}
-      {about && <About navigate={navigate}/>}
-      {travel && <Travel navigate={navigate}/>}
+      {about && <About/>}
       {projectSlug && <ProjectView key={projectSlug} slug={projectSlug} navigate={navigate}/>}
-      {!home && !about && !travel && !projectSlug && <main className="not-found"><h1>Page not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>}
+      {!home && !about && !projectSlug && <main className="not-found"><h1>Page not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>}
     </div></SmoothScroll>
   </>;
 }

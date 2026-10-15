@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -7,18 +7,8 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 /** Fixed UI must live outside ScrollSmoother's transformed content. */
-export function ViewportLayer({ children, when = 'always' }: {
-  children: ReactNode; when?: 'always' | 'mobile' | 'desktop';
-}) {
-  const [mobile, setMobile] = useState(() => matchMedia('(max-width: 700px)').matches);
-  useEffect(() => {
-    const query = matchMedia('(max-width: 700px)');
-    const update = () => setMobile(query.matches);
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, []);
-  const fixed = when === 'always' || (when === 'mobile' ? mobile : !mobile);
-  return fixed ? createPortal(children, document.body) : children;
+export function ViewportLayer({ children }: { children: ReactNode }) {
+  return createPortal(children, document.body);
 }
 
 /** One scroll owner across routes; viewport-only scenes retain their own gestures. */
@@ -43,7 +33,7 @@ export function SmoothScroll({ route, children }: { route: string; children: Rea
           // Re-centering them on pointer focus can move a button before pointerup.
           onFocusIn: (_self, event) => {
             const target = event.target as HTMLElement;
-            if (target.closest('.control, .globe-link, .travel-return, video') || target.tabIndex === -1) return false;
+            if (target.closest('.control, .sound-toggle, video') || target.tabIndex === -1) return false;
           },
         });
         smoother.scrollTop(position);

@@ -1,5 +1,5 @@
 const ease = 'cubic-bezier(.22, 1, .36, 1)';
-const selectors = '.identity-text, .identity-controls, .carousel, .biography, .globe-link, .project-identity, .project-controls, .project-close, .project-detail, .travel-view, .not-found';
+const selectors = '.identity-text, .identity-controls, .carousel, .biography, .project-identity, .project-controls, .project-close, .project-detail, .not-found';
 
 export function pageElements(keepIdentity: boolean) {
   const elements = [...document.querySelectorAll<HTMLElement>(selectors)]

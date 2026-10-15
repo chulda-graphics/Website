@@ -26,8 +26,8 @@ export function EntryScreen({ onEnter }: { onEnter: () => void }) {
     document.body.dataset.page = 'entry';
     const resize = () => setWidth(Math.min(264, innerWidth - 48));
     addEventListener('resize', resize);
-    // Warm the 3D module and brand font while the visitor approaches the handle.
-    ready.current = Promise.allSettled([import('./Model'), document.fonts.ready]);
+    // Prepare the brand font while the visitor approaches the handle.
+    ready.current = document.fonts.ready;
     return () => { removeEventListener('resize', resize); timers.current.forEach(clearTimeout); };
   }, []);
   function finish() {

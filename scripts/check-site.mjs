@@ -114,3 +114,10 @@ assert.equal(notifications, 3);
 unsubscribe(); sound.setEnabled(false);
 assert.equal(notifications, 3);
 console.log('Sound checks passed: default mute, lazy loading, throttling, single voice, async races, video suppression, rejection handling, assets.');
+
+const { normalizePath } = await loadTS('../src/routes.ts');
+assert.equal(normalizePath('/travel'), '/about');
+assert.equal(normalizePath('/travel/'), '/about');
+assert.equal(normalizePath('/project/project-02/'), '/project/project-02');
+assert.equal(normalizePath('/'), '/');
+console.log('Route checks passed: retired world links resolve to About; portfolio routes preserved.');

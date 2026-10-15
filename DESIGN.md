@@ -6,7 +6,7 @@ This is a locally authored specification derived from the rendered reference, no
 
 ## Direction
 
-An airy desktop-inspired portfolio: light surfaces, inset button highlights, floating frosted navigation, clear typography, and small blue accents. Keep Dhrex Cañezo’s existing routes, work, globe, opening slider, flying gallery, and content.
+An airy desktop-inspired portfolio: light surfaces, inset button highlights, floating frosted navigation, clear typography, and small blue accents. Keep Dhrex Cañezo’s work, opening slider, and content. Use the phone composition at every screen size, with desktop-appropriate proportions. The world experience and globe were retired on October 15, 2026.
 
 ## Tokens
 
@@ -24,7 +24,6 @@ An airy desktop-inspired portfolio: light surfaces, inset button highlights, flo
 - Project media: preserve full aspect ratio, dark video framing, and selected still compositions. Add soft elevation without altering thumbnail colors.
 - Project descriptions: white cards with generous responsive padding.
 - About: a desktop-window surface with a quiet title bar, decorative traffic-light dots, and the supplied biography. Dots are not interactive controls.
-- Globe caption: a small translucent pill.
 - Entry: a pale recessed slider track and blue right-arrow icon, retaining the existing verification and welcome labels.
 
 ## Behaviour and accessibility
@@ -33,7 +32,7 @@ Preserve current scrolling, transitions, keyboard navigation and reduced-motion 
 
 ## Implementation
 
-Theme tokens and surface styles live in `src/desktop-theme.css`, imported last. The About window markup lives in `src/App.tsx`. This keeps the applied theme easy to review and revise independently from the existing motion and routing.
+Theme tokens and surface styles live in `src/desktop-theme.css`. The final responsive composition lives in `src/responsive-layout.css`, imported last. The About window markup lives in `src/App.tsx`. This keeps the applied theme easy to review and revise independently from the existing motion and routing.
 
 ## Editorial refinements
 
@@ -53,7 +52,7 @@ Reference: https://www.zeynapp.co.uk/ — inspected on October 4, 2026. Adapt it
 
 ## Next-project preview
 
-Reference: https://pensatori-irrazionali.com/ — inspected on October 5, 2026. Its case studies end with an image-led handoff to the next project. Adapt that concept into a compact thumbnail and title attached to the existing next arrow, visible on desktop hover or keyboard focus. Keep the control icon-only at rest. The preview is pointer-reachable, dismissible with Escape, and uses a local poster image without starting video or sound. It sits above the mobile dock for keyboard users and disables transition animation for reduced motion. Preserve the current quiet layout rather than adding oversized marquees or automatic scroll-to-next navigation.
+Reference: https://pensatori-irrazionali.com/ — inspected on October 5, 2026. Its case studies end with an image-led handoff to the next project. Adapt that concept into a compact thumbnail and title attached to the existing next arrow, visible on desktop hover or keyboard focus. Keep the control icon-only at rest. The preview is pointer-reachable, dismissible with Escape, and uses a local poster image without starting video or sound. It sits above the dock on every screen size for keyboard users and disables transition animation for reduced motion. Preserve the current quiet layout rather than adding oversized marquees or automatic scroll-to-next navigation.
 
 ## Tactile control feedback
 
@@ -61,4 +60,12 @@ Reference: https://tryclico.com/ — inspected on October 5, 2026. Its pale laye
 
 ## Interface audio
 
-Optional, muted by default. The Sound control remembers the choice for the current tab session. Three quiet, short cues from the supplied Botanica v4 library mark carousel/social selection, page navigation, and successful entry/email copying. Load clips only on the first enabled interaction. Play one cue at a time; throttle repeated selection sounds. Stop audio when the page is hidden or a project video starts, and suppress interface cues while video is playing. Never attach sound to hovering, continuous scrolling, or the travel animation. Mobile places the toggle above the bottom navigation; entry and travel place it at the top right. Source details live in `public/assets/audio/SOURCE.md`.
+Optional, muted by default. The Sound control remembers the choice for the current tab session. Three quiet, short cues from the supplied Botanica v4 library mark carousel/social selection, page navigation, and successful entry/email copying. Load clips only on the first enabled interaction. Play one cue at a time; throttle repeated selection sounds. Stop audio when the page is hidden or a project video starts, and suppress interface cues while video is playing. Never attach sound to hovering, continuous scrolling, or continuous animation. Mobile places the toggle above the bottom navigation; entry places it at the top right. Source details live in `public/assets/audio/SOURCE.md`.
+
+## Shared phone and desktop composition — October 15, 2026
+
+- Center the identity above the featured project. The navigation dock stays centered at the bottom on every device, outside transformed scrolling content.
+- Keep the square cover, numbered project selector, rounded surfaces, existing typeface and blue accents. Desktop enlarges the cover up to 460px, while accounting for shorter windows and clear space around the header and dock.
+- Project pages use a centered header and wide video column, with static overview text below. Size the column against both viewport width and height so the first video fits comfortably on normal desktop screens. Keep next-project and minimise actions in the bottom dock.
+- About begins immediately below the identity. Wide screens put the biography and disciplines side by side in one window; narrow screens stack them. No empty globe stage.
+- Remove the world entry point and runtime, including the opening screen’s 3D preloading. Legacy `/travel` links resolve to `/about` with history replacement. The production bundle contains no Three.js or model chunk.
