@@ -9,7 +9,6 @@ const wrap = (value: number) => ((value % count) + count) % count;
 
 export function Carousel({ navigate, selected, setSelected }: { navigate: (path: string) => void; selected: number; setSelected: (index: number) => void }) {
   const host = useRef<HTMLElement>(null);
-  const controls = useRef<{ select: (index: number) => void }>({ select: () => {} });
   useEffect(() => {
     const container = host.current!;
     const cards = [...container.querySelectorAll<HTMLAnchorElement>('.stack-card')];
@@ -85,7 +84,6 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
       if (focusCard) cards[selectedIndex + count].focus({ preventScroll: true });
       animate();
     }
-    controls.current.select = index => select(index);
     function step(direction: number) { select(selectedIndex + direction, direction); }
     function wheel(event: WheelEvent) {
       if (event.ctrlKey) return;
@@ -150,10 +148,6 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
         <ProjectArtwork project={project} index={index % count}/><div className="stack-shade"/>
       </a>;
     })}
-    <div className="pagination" role="group" aria-label="Select project">{projects.map((project,index) => <button key={project.slug} className={index === selected ? 'selected' : ''} aria-label={`Show ${project.title}`} aria-current={index === selected ? 'true' : undefined} onClick={() => controls.current.select(index)}>
-      <span className="pagination-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-      <span className="pagination-label" aria-hidden="true">{project.title}</span>
-    </button>)}</div>
     <span className="sr-only" aria-live="polite">{projects[selected].title}, {selected + 1} of {count}</span>
   </main>;
 }

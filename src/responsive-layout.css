@@ -104,3 +104,40 @@
   .identity h1, .identity p { font-size: 20px; }
   .identity-controls, .identity-controls.social-open, .project-controls { bottom: 16px; }
 }
+
+/* Clean media presentation: thumbnail proportions, quiet details, stationary docks. */
+:root { --card-width: min(760px, calc(100vw - 96px), calc((100svh - 300px) * 16 / 9)); --card-height: calc(var(--card-width) * 9 / 16); }
+.stack-card { border-radius: 24px; }
+.artwork--video > img { inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.window-titlebar { border-bottom: 0; }
+.project-stills { border: 0; padding-top: 0; margin-top: 32px; }
+.biography-content .recognitions, .biography-content .recognitions li { border: 0; }
+.biography-content .recognitions { padding-top: 0; }
+.identity-controls, .project-controls, .social-open .control { animation: none !important; }
+.project-video-slide { aspect-ratio: auto; background: #fff; }
+.video-picture { position: relative; background: #111; aspect-ratio: 16 / 9; }
+.video-picture video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+.video-toolbar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #ffffffeb; color: var(--ui-ink); }
+.video-action { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; height: 44px; border-radius: 14px; background: linear-gradient(#fff,#f4f5f7); box-shadow: 0 2px 4px #17213314,inset 0 1px 0 #fff; }
+.video-action:first-child { color: var(--ui-blue); }
+.video-action:hover { background: #eaf0f8; }
+.video-action:active { box-shadow: inset 0 2px 5px #18233320; }
+.video-action:focus-visible, .video-progress:focus-visible { outline: 2px solid var(--ui-blue); outline-offset: 3px; }
+.video-progress { flex: 1; width: 0; min-width: 20px; height: 44px; margin: 0; accent-color: var(--ui-blue); cursor: pointer; }
+.video-time { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted); }
+.video-message { padding: 0 20px 16px; font-size: 13px; color: var(--muted); }
+.project-video-slide:fullscreen { width: 100vw; height: 100dvh; display: flex; flex-direction: column; border: 0; border-radius: 0; }
+.project-video-slide:fullscreen .video-picture { flex: 1; min-height: 0; aspect-ratio: auto; }
+.project-video-slide:fullscreen .video-toolbar { flex-shrink: 0; }
+@media (min-width: 701px) {
+  .project-detail, .project-view--video .project-detail { max-width: min(1040px, max(640px, calc((100svh - 340px) * 16 / 9))); }
+}
+@media (max-width: 700px) {
+  :root { --card-width: min(calc(100vw - 40px), calc((100svh - 230px) * 16 / 9)); }
+  .stack-card { border-radius: 20px; }
+  .video-toolbar { gap: 4px; padding: 8px; }
+  .video-time { display: none; }
+}
+@media (min-width: 701px) and (max-height: 650px) {
+  :root { --card-width: min(680px, calc(100vw - 96px), calc((100svh - 240px) * 16 / 9)); }
+}

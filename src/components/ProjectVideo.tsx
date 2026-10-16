@@ -1,16 +1,63 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../content';
+import { Icon } from './Icon';
+
+const timeLabel = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 
 export function ProjectVideo({ project }: { project: Project }) {
   const video = useRef<HTMLVideoElement>(null);
+  const player = useRef<HTMLElement>(null);
   const [failed, setFailed] = useState(false);
-  return <section className="project-slide project-video-slide" aria-label={`${project.title} video`}>
-    <video ref={video} controls muted playsInline preload="none" poster={project.cover}
-      aria-label={`${project.title} — ${project.category}`} src={project.video}
-      onError={() => setFailed(true)} onLoadedData={() => setFailed(false)} />
-    {failed && <div className="video-error" role="alert">
-      <p>The video couldn’t load.</p>
-      <button onClick={() => { setFailed(false); video.current?.load(); }}>Try again</button>
-    </div>}
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [time, setTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [message, setMessage] = useState('');
+  useEffect(() => {
+    const update = () => setFullscreen(document.fullscreenElement === player.current);
+    document.addEventListener('fullscreenchange', update);
+    return () => document.removeEventListener('fullscreenchange', update);
+  }, []);
+  async function togglePlayback() {
+    if (!video.current) return;
+    setMessage('');
+    if (!video.current.paused) video.current.pause();
+    else try { await video.current.play(); } catch { setMessage('Unable to play. Please try again.'); }
+  }
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (player.current?.requestFullscreen) await player.current.requestFullscreen();
+      else {
+        const native = video.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+        if (native?.webkitEnterFullscreen) native.webkitEnterFullscreen();
+        else setMessage('Fullscreen is unavailable in this browser.');
+      }
+    } catch { setMessage('Fullscreen is unavailable in this browser.'); }
+  }
+  return <section ref={player} className="project-slide project-video-slide" aria-label={`${project.title} video`}>
+    <div className="video-picture">
+      <video ref={video} muted={muted} playsInline preload="metadata" poster={project.cover}
+        aria-label={`${project.title} — ${project.category}`} src={project.video}
+        onClick={togglePlayback} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
+        onEnded={() => setPlaying(false)} onTimeUpdate={event => setTime(event.currentTarget.currentTime)}
+        onDurationChange={event => setDuration(Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : 0)}
+        onVolumeChange={event => setMuted(event.currentTarget.muted)}
+        onError={() => setFailed(true)} onLoadedData={() => setFailed(false)} />
+      {failed && <div className="video-error" role="alert"><p>The video couldn’t load.</p>
+        <button onClick={() => { setFailed(false); video.current?.load(); }}>Try again</button>
+      </div>}
+    </div>
+    <div className="video-toolbar" role="group" aria-label="Video controls">
+      <button className="video-action" aria-label={playing ? 'Pause video' : 'Play video'} onClick={togglePlayback}><Icon name={playing ? 'pause' : 'play'} weight="fill"/></button>
+      <input className="video-progress" type="range" aria-label="Seek video" min={0} max={duration || 1} step={0.1}
+        value={Math.min(time, duration || 1)} disabled={!duration} aria-valuetext={`${timeLabel(time)} of ${timeLabel(duration)}`}
+        onChange={event => { const next = Number(event.target.value); if (video.current) video.current.currentTime = next; setTime(next); }}/>
+      <span className="video-time" aria-hidden="true">{timeLabel(time)}</span>
+      <button className="video-action" aria-label={muted ? 'Unmute video' : 'Mute video'} onClick={() => setMuted(!muted)}><Icon name={muted ? 'muted' : 'sound'}/></button>
+      <button className="video-action" aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} onClick={toggleFullscreen}><Icon name={fullscreen ? 'collapse' : 'expand'}/></button>
+    </div>
+    {message && <p className="video-message" role="status">{message}</p>}
   </section>;
 }

@@ -69,3 +69,9 @@ Optional, muted by default. The Sound control remembers the choice for the curre
 - Project pages use a centered header and wide video column, with static overview text below. Size the column against both viewport width and height so the first video fits comfortably on normal desktop screens. Keep next-project and minimise actions in the bottom dock.
 - About begins immediately below the identity. Wide screens put the biography and disciplines side by side in one window; narrow screens stack them. No empty globe stage.
 - Remove the world entry point and runtime, including the opening screen’s 3D preloading. Legacy `/travel` links resolve to `/about` with history replacement. The production bundle contains no Three.js or model chunk.
+
+## Clean media revision — October 16, 2026
+
+This revision supersedes the square cover, numbered selector, project index, duration labels, frame headings, and divider rules described above. Covers are image-only 16:9 rectangles with no title, play badge or runtime overlay. Browse using wheel, swipe and arrow keys. Project pages retain their title and category but omit selected-work numbering, running-time metadata and selected-frame headings/counts. Use whitespace instead of divider lines.
+
+The video player uses a separate light control strip with rounded Phosphor play/pause, mute and fullscreen buttons, a blue seek slider and compact elapsed time. No dark control gradient covers the picture. Playback starts muted; errors offer retry and keyboard controls remain available. Docks do not fade on navigation or social-menu clicks; page content can retain its existing transition.

@@ -156,7 +156,7 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   const nextProject = projects[(index + 1) % projects.length];
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
     <header className="project-identity"><div style={{viewTransitionName: 'identity'}}>
-      <div className="project-index"><span className="sr-only">Project {index + 1} of {projects.length}</span><span aria-hidden="true">Selected work</span><span aria-hidden="true">{String(index + 1).padStart(2, '0')} <span className="project-index-divider">/</span> {String(projects.length).padStart(2, '0')}</span></div>
+
       <h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
       <ViewportLayer><nav className="project-controls" aria-label="Project controls">
         <Control label={`Next project: ${nextProject.title}`} preview={nextProject.cover ? { src: nextProject.cover, title: nextProject.title } : undefined} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
@@ -165,17 +165,17 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
     </header>
     <div className="project-detail">
       {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
-      {project.sections.map((section, sectionIndex) => <section key={section.title} className="project-description" aria-label={section.title}>
+      {project.sections.map((section) => <section key={section.title} className="project-description" aria-label={section.title}>
         <div className="project-copy">
           <div className="project-copy-heading">
             <h2>{section.title}</h2>
-            {sectionIndex === 0 && project.video && project.duration && <span className="project-runtime"><span>Running time</span><span>{project.duration}</span></span>}
+
           </div>
           <p>{section.body}</p>
         </div>
       </section>)}
-      {!!project.stills?.length && <section ref={stills} className="project-stills" aria-labelledby="project-stills-title">
-        <div className="project-stills-heading"><h2 id="project-stills-title">Selected frames</h2><span aria-hidden="true">{String(project.stills.length).padStart(2, '0')}</span></div>
+      {!!project.stills?.length && <section ref={stills} className="project-stills" aria-label="Project images">
+
         <div className="project-stills-grid">
           {project.stills.map(frame => <img key={frame.src} src={frame.src} alt={frame.alt} width={800} height={450} loading="lazy" decoding="async"/>)}
         </div>
@@ -203,7 +203,7 @@ function Portfolio() {
     target?.focus({ preventScroll: true });
   }, [path]);
   useEffect(() => {
-    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') navigate('/'); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape' && !document.fullscreenElement) navigate('/'); };
     addEventListener('keydown', escape); return () => removeEventListener('keydown', escape);
   }, [path]);
   return <>

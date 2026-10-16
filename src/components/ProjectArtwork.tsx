@@ -9,7 +9,5 @@ export function ProjectArtwork({ project, expanded = false, index = 0 }: { proje
       <div className="mock-content"><span className="mock-kicker">A new perspective</span><span className="mock-title">Something<br/>considered.</span><div className="mock-panel"><span>{project.slug.slice(-2)}</span></div></div>
       <div className="mock-footer"><span>Portfolio project</span><span>Coming soon <Icon name="external"/></span></div>
     </div>}
-    {project.video && <span className="project-video-label" aria-hidden="true"><Icon name="play" weight="fill"/>{project.duration}</span>}
-    <span className="project-art-title">{project.title}</span>
   </div>;
 }

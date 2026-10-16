@@ -1,5 +1,5 @@
 const ease = 'cubic-bezier(.22, 1, .36, 1)';
-const selectors = '.identity-text, .identity-controls, .carousel, .biography, .project-identity, .project-controls, .project-close, .project-detail, .not-found';
+const selectors = '.identity-text, .carousel, .biography, .project-identity, .project-detail, .not-found';
 
 export function pageElements(keepIdentity: boolean) {
   const elements = [...document.querySelectorAll<HTMLElement>(selectors)]
@@ -24,7 +24,7 @@ export function enterPage(elements: HTMLElement[], reduced: boolean) {
   if (reduced) return [];
   return elements.map(element => {
     // Keep navigation hit areas stationary throughout the transition.
-    const controls = element.matches('.identity-controls, .project-controls, .project-close, .project-identity');
+    const controls = element.matches('.identity-controls, .project-identity');
     return element.animate([
       { opacity: 0, translate: controls ? '0 0' : '0 10px' },
       { opacity: 1, translate: '0 0' },
