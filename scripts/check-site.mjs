@@ -36,7 +36,7 @@ assert.equal(queued.size, 0);
 loop.destroy(); loop.invalidate(); loop.setActive(true);
 assert.equal(queued.size, 0, 'Unmounted scenes cannot restart');
 
-const { projects, assets } = await loadTS('../src/content.ts');
+const { projects, assets, profile } = await loadTS('../src/content.ts');
 const { workFrames } = await loadTS('../src/workFrames.ts');
 assert.equal(new Set(projects.map(project => project.slug)).size, projects.length, 'Project routes must be unique');
 assert.ok(projects.length > 0);
@@ -44,7 +44,7 @@ for (const project of projects) {
   assert.match(project.slug, /^[a-z0-9-]+$/);
   assert.ok(project.sections.length > 0);
 }
-const sources = [...new Set([...Object.values(assets), ...projects.flatMap(project => [...(project.cover ? [project.cover] : []), ...(project.stills ?? []).map(frame => frame.src)]), ...workFrames.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'])];
+const sources = [...new Set([...Object.values(assets), ...profile.toolGroups.flatMap(group => group.items.map(tool => tool.icon)), ...projects.flatMap(project => [...(project.cover ? [project.cover] : []), ...(project.stills ?? []).map(frame => frame.src)]), ...workFrames.map(photo => photo.src), '/assets/draco/draco_decoder.wasm', '/assets/draco/draco_wasm_wrapper.js'])];
 for (const src of sources) {
   assert.ok(src.startsWith('/assets/'), `Asset must be local: ${src}`);
   assert.ok((await stat(new URL(`../public${src}`, import.meta.url))).size > 0, `Missing or empty asset: ${src}`);

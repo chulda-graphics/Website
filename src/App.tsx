@@ -147,15 +147,21 @@ function About() {
               <h2 id="leadership-heading">Creative leadership</h2>
               <p>{profile.leadership}</p>
             </section>
-            <section aria-labelledby="tools-heading">
-              <h2 id="tools-heading">Selected tools</h2>
-              <ul className="about-tools">{profile.tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
-            </section>
-            <section aria-labelledby="languages-heading">
-              <h2 id="languages-heading">Languages</h2>
-              <p>{profile.languages}</p>
-            </section>
           </div>
+          <section className="about-toolkit" aria-labelledby="tools-heading">
+            <h2 id="tools-heading">Selected tools</h2>
+            <div className="tool-groups">
+              {profile.toolGroups.map(group => <div className="tool-group" key={group.title}>
+                <h3>{group.title}</h3>
+                <ul className="about-tools">
+                  {group.items.map(tool => <li key={tool.name}>
+                    <span className="tool-icon" aria-hidden="true"><img src={tool.icon} alt="" width={18} height={18} loading="lazy" decoding="async"/></span>
+                    <span>{tool.name}</span>
+                  </li>)}
+                </ul>
+              </div>)}
+            </div>
+          </section>
         </div>
       </div>
     </section>

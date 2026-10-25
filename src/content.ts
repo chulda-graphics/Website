@@ -14,9 +14,25 @@ export const profile = {
     { organisation: 'Highflier Events Management Services', role: 'Multimedia Design Intern', period: 'February – April 2026' },
   ],
   education: { degree: 'Bachelor of Multimedia Arts', institution: 'Lyceum of the Philippines University – Cavite', period: '2022 – 2026' },
-  tools: ['After Effects', 'Premiere Pro', 'Photoshop', 'Illustrator', 'Blender', 'Canva'],
+  toolGroups: [
+    { title: 'Creative software', items: [
+      { name: 'After Effects', icon: '/assets/tools/aftereffects.svg' },
+      { name: 'Premiere Pro', icon: '/assets/tools/premierepro.svg' },
+      { name: 'Photoshop', icon: '/assets/tools/photoshop.svg' },
+      { name: 'Illustrator', icon: '/assets/tools/illustrator.svg' },
+      { name: 'Blender', icon: '/assets/tools/blender.svg' },
+      { name: 'Canva', icon: '/assets/tools/canva.svg' },
+    ] },
+    { title: 'AI tools', items: [
+      { name: 'ChatGPT Codex', icon: '/assets/tools/codex.svg' },
+      { name: 'Gemini', icon: '/assets/tools/gemini.svg' },
+      { name: 'Nano Banana', icon: '/assets/tools/nanobanana.svg' },
+      { name: 'Midjourney', icon: '/assets/tools/midjourney.svg' },
+      { name: 'Canva AI', icon: '/assets/tools/canva.svg' },
+      { name: 'Claude Code', icon: '/assets/tools/claudecode.svg' },
+    ] },
+  ],
   leadership: 'As Creative Director at Liceo Esports Cavite (2023–2025), I led a visual rebrand with 50+ brand assets. I’ve also mentored student designers and led the Imaginarium multimedia exhibit.',
-  languages: 'Filipino & English',
 };
 
 export interface Project {
