@@ -7,4 +7,4 @@ Small brand marks identify selected software and AI tools. Files are served loca
 - Codex, Gemini, Claude: [Lobe Icons](https://github.com/lobehub/lobe-icons), commit `cc639da879a3f404f5ded8ec41cdfdc63abd8317`, `packages/static-svg/icons/{name}-color.svg`. Claude Code uses the coloured Claude mark. License: `LICENSE-lobe-icons.txt`.
 - Higgsfield: [Dashboard Icons](https://github.com/homarr-labs/dashboard-icons), commit `d3b9234dd56f3af5862f06741f0dce101193b3df`, `svg/higgsfield.svg`, original lime-green app icon. License: `LICENSE-dashboard-icons.txt`.
 
-SVG files are unmodified. No icon library runtime or remote image requests are required.
+SVG artwork is unmodified; Adobe file line endings are normalized. No icon library runtime or remote image requests are required.
