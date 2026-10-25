@@ -119,11 +119,6 @@ function About() {
         <div className="biography-content">
           <div className="biography-copy"><p><strong>{profile.introductionLead}</strong>, {profile.introduction}</p>
           <p>{profile.biography}</p></div>
-          <div className="recognitions"><h2>Selected disciplines:</h2><ul>
-            {['Motion design', 'Video editing', 'Brand identity', 'Art direction'].map((discipline, index) =>
-              <li key={discipline}><span className="discipline-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{discipline}</span></li>
-            )}
-          </ul></div>
         </div>
         <div className="about-background">
           <section className="about-experience" aria-labelledby="experience-heading">

@@ -40,7 +40,8 @@
 .about-view { padding: 44px 40px 150px; }
 .biography { width: 100%; max-width: 920px; margin: 0 auto; padding: 0; }
 .biography-window { border-radius: 24px; }
-.biography-content { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); gap: 48px; padding: 40px; }
+.biography-content { display: block; padding: 40px; }
+.biography-copy { max-width: 680px; }
 .biography-content { font-kerning: normal; letter-spacing: 0; }
 .biography-content p { font-size: 18px; line-height: 1.65; margin-bottom: 28px; text-wrap: pretty; }
 .biography-content p:first-child { font-size: 18px; line-height: 1.65; letter-spacing: 0; margin-bottom: 20px; }
