@@ -24,13 +24,13 @@ export function leavePage(elements: HTMLElement[], reduced: boolean) {
 export function enterPage(elements: HTMLElement[], reduced: boolean, sharedCover = false) {
   if (reduced) return [];
   return elements.map(element => {
-    // Keep navigation hit areas stationary throughout the transition.
-    const controls = element.matches('.identity-controls, .project-identity');
+    // The About window stays still while its individual blocks reveal.
+    const stationary = element.matches('.identity-controls, .project-identity, .biography');
     const player = sharedCover && element.matches('.project-video-slide');
     return element.animate([
-      { opacity: 0, translate: controls || player ? '0 0' : '0 10px' },
+      { opacity: 0, translate: stationary || player ? '0 0' : '0 10px' },
       { opacity: 1, translate: '0 0' },
-    ], { duration: player ? 240 : controls ? 280 : 520, delay: player ? 340 : 0, easing: ease, fill: 'backwards' });
+    ], { duration: player ? 240 : stationary ? 280 : 520, delay: player ? 340 : 0, easing: ease, fill: 'backwards' });
   });
 }
 

@@ -40,7 +40,7 @@ Secondary reference: https://matthieugivelet.com/ — inspected on October 4, 20
 
 Adapt its restrained numbering and ruled information hierarchy: a small current/total project index above each title, a frame count beside the gallery heading, and numbered discipline rows separated by fine rules. Preserve the existing rounded surfaces, blue controls, and Rethink Sans rather than adopting the reference’s oversized masthead or global navigation.
 
-Still images use the existing one-time editorial reveal (18px vertical travel and opacity, 650ms with a short stagger). Reduced motion leaves them static; readable content is the default, and observers and animations are cleaned up on navigation.
+Editorial blocks and still images reveal once with 14px vertical travel and opacity over 520ms. Stagger visible blocks in visual reading order by 45ms, capped at 240ms. Include h3 headings such as the degree title; when a list item is animated, do not separately animate its nested headings or paragraphs. Keep the About window stationary while its contents reveal. Reduced motion leaves content static; readable content is the default, and observers and animations are cleaned up on navigation.
 
 ## Gallery navigation
 
