@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { projects } from '../content';
 import { ProjectArtwork } from './ProjectArtwork';
 import { uiSound } from './uiSound';
@@ -9,7 +9,7 @@ const wrap = (value: number) => ((value % count) + count) % count;
 
 export function Carousel({ navigate, selected, setSelected }: { navigate: (path: string) => void; selected: number; setSelected: (index: number) => void }) {
   const host = useRef<HTMLElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const container = host.current!;
     const cards = [...container.querySelectorAll<HTMLAnchorElement>('.stack-card')];
     const shades = [...container.querySelectorAll<HTMLDivElement>('.stack-shade')];
@@ -41,7 +41,7 @@ export function Carousel({ navigate, selected, setSelected }: { navigate: (path:
         const rotation = Math.sign(distance) * turn * 98;
         const scale = 1 - .2 * turn;
         const visible = amount < 3.6;
-        cards[i].style.visibility = visible ? 'visible' : 'hidden';
+        if (!cards[i].hasAttribute('data-transition-target')) cards[i].style.visibility = visible ? 'visible' : 'hidden';
         cards[i].style.transform = `translate(-50%, -50%) translateY(${y}px) scale(${scale}) rotateX(${rotation}deg)`;
         cards[i].style.zIndex = String(10 - Math.round(amount));
         cards[i].style.opacity = String(amount > 3 ? 1 - (amount - 3) / .6 : 1);

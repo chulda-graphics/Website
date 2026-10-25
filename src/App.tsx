@@ -57,10 +57,11 @@ function useRoute() {
     const keepIdentity = [previousPath.current, path].every(value => value === '/' || value === '/about');
     const cover = pendingCover.current;
     pendingCover.current = null;
-    const picture = cover ? document.querySelector<HTMLElement>('.video-picture') : null;
+    const picture = cover ? document.querySelector<HTMLElement>(cover.returning
+      ? `.stack-card[aria-hidden="false"][href="${previousPath.current}"]` : '.video-picture') : null;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const sharedCover = !!(cover && picture && !reduced);
-    const incoming = enterPage(pageElements(keepIdentity, sharedCover), reduced, sharedCover);
+    const incoming = enterPage(pageElements(keepIdentity, sharedCover, cover?.returning), reduced, sharedCover);
     animations.current = incoming;
     if (sharedCover) { activeCover.current = cover; cover.play(picture, () => incoming.forEach(animation => animation.finish())); }
     else cover?.cancel();
@@ -82,6 +83,12 @@ function useRoute() {
     if (card) {
       stop();
       pendingCover.current = captureProjectCover(card);
+      if (pendingCover.current) { history.pushState({}, '', next); commit(next); return; }
+    }
+    if (next === '/' && !reduced && projects.some(item => item.video && `/project/${item.slug}` === currentPath.current)) {
+      stop();
+      const picture = document.querySelector<HTMLElement>('.video-picture');
+      pendingCover.current = picture ? captureProjectCover(picture, true) : null;
       if (pendingCover.current) { history.pushState({}, '', next); commit(next); return; }
     }
     const keepIdentity = [currentPath.current, next].every(value => value === '/' || value === '/about');

@@ -38,6 +38,7 @@ export function ProjectVideo({ project }: { project: Project }) {
   }
   return <section ref={player} className="project-slide project-video-slide" aria-label={`${project.title} video`}>
     <div className="video-picture">
+      <img src={project.cover} alt="" hidden aria-hidden="true"/>
       <video ref={video} muted={muted} playsInline preload="metadata" poster={project.cover}
         aria-label={`${project.title} — ${project.category}`} src={project.video}
         onClick={togglePlayback} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}

@@ -130,16 +130,18 @@ const posters = new Set(), listeners = new Map();
 let finishCover, failAnimation = false, reveals = 0;
 const box = { left: 40, top: 200, width: 320, height: 180, bottom: 380 };
 const sourceImage = { complete: true, naturalWidth: 1280, currentSrc: '/cover.webp' };
-const card = { querySelector: () => sourceImage, getBoundingClientRect: () => box };
-const target = { style: { visibility: '' }, getBoundingClientRect: () => ({ ...box, top: 100, width: 640, height: 360 }), closest: () => null };
+let paused = false, capturedFrame = false;
+const playingVideo = { readyState: 2, currentTime: 5, videoWidth: 1280, videoHeight: 720, pause() { paused = true; } };
+const card = { querySelector: selector => selector === 'img' ? sourceImage : playingVideo, getBoundingClientRect: () => box, closest: () => null };
+const target = { style: { visibility: '' }, setAttribute() {}, removeAttribute() {}, getBoundingClientRect: () => ({ ...box, top: 100, width: 640, height: 360 }), closest: () => null };
 try {
   Object.assign(globalThis, {
     innerHeight: 900, getComputedStyle: () => ({ borderTopLeftRadius: '24px' }),
-    window: { addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
+    window: { scrollY: 0, addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
     document: {
       body: { append: poster => posters.add(poster) },
       createElement: () => {
-        const poster = { style: {}, setAttribute() {}, remove() { posters.delete(poster); },
+        const poster = { style: {}, append() {}, setAttribute() {}, getContext: () => ({ drawImage() { capturedFrame = true; } }), remove() { posters.delete(poster); },
           animate() {
             if (failAnimation) throw new Error('Animation unavailable');
             let reject;
@@ -175,5 +177,18 @@ try {
   assert.equal(target.style.visibility, '', 'Animation failures cannot hide video content');
   assert.equal(posters.size, 0);
   assert.equal(listeners.size, 0);
+  failAnimation = false;
+  const returning = captureProjectCover(card, true);
+  assert.equal(returning.returning, true);
+  assert.equal(paused, true, 'Minimising stops playback');
+  assert.equal(capturedFrame, true, 'A playing video returns from its current frame');
+  returning.play(target, () => reveals++);
+  listeners.get('scroll')();
+  assert.equal(target.style.visibility, 'hidden', 'The route reset scroll event must not abort the return');
+  globalThis.window.scrollY = 20;
+  listeners.get('scroll')(); await Promise.resolve();
+  assert.equal(target.style.visibility, '', 'Actual scrolling restores the thumbnail');
+  assert.equal(posters.size, 0);
+  assert.equal(listeners.size, 0);
 } finally { Object.assign(globalThis, originalDOM); }
-console.log('Project transition checks passed: unloaded-cover fallback, completion, interruption, failure cleanup.');
+console.log('Project transition checks passed: opening, minimising, playback capture, scroll reset, interruption, failure cleanup.');

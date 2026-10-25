@@ -1,8 +1,8 @@
 const ease = 'cubic-bezier(.22, 1, .36, 1)';
 const selectors = '.identity-text, .carousel, .biography, .project-identity, .project-detail, .not-found';
 
-export function pageElements(keepIdentity: boolean, sharedCover = false) {
-  const selection = sharedCover ? '.project-identity, .project-video-slide, .project-description, .project-stills' : selectors;
+export function pageElements(keepIdentity: boolean, sharedCover = false, returning = false) {
+  const selection = sharedCover ? (returning ? '.identity-text' : '.project-identity, .project-video-slide, .project-description, .project-stills') : selectors;
   const elements = [...document.querySelectorAll<HTMLElement>(selection)]
     .filter(element => !(keepIdentity && element.matches('.identity-text')));
   return elements.filter(element => {
