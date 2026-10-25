@@ -98,7 +98,7 @@ Minimising reverses this movement into the matching gallery card, including afte
 
 ## Professional background
 
-Extend the existing About window using the owner's supplied CV: selected work experience, education, creative leadership, selected software, and languages. Preserve the original introduction. Use compact role/date hierarchy and 16px descriptions, with two aligned columns on desktop and a single reading column on phones. Keep whitespace between entries instead of divider rules or extra cards. Do not add the portrait, a CV image, the source PDF, or skill-rating stars to the website. Editable content lives in `profile` in `src/content.ts`.
+Extend the existing About window using the owner's supplied CV: selected work experience, education, creative leadership, selected software, and languages. Lead with motion design for brands, products, campaigns, and events; position graphic design and branding as supporting experience. The introduction uses the same 18px desktop / 17px phone size as body copy, with only “Motion Designer” emphasized. Put the current Onmoon motion role first and prioritise motion design and video editing in the disciplines list. Use compact role/date hierarchy and 16px descriptions, with two aligned columns on desktop and a single reading column on phones. Keep whitespace between entries instead of divider rules or extra cards. Do not add the portrait, a CV image, the source PDF, or skill-rating stars to the website. Editable content lives in `profile` in `src/content.ts`.
 
 ## Video volume
 
