@@ -1,8 +1,9 @@
 const ease = 'cubic-bezier(.22, 1, .36, 1)';
 const selectors = '.identity-text, .carousel, .biography, .project-identity, .project-detail, .not-found';
 
-export function pageElements(keepIdentity: boolean) {
-  const elements = [...document.querySelectorAll<HTMLElement>(selectors)]
+export function pageElements(keepIdentity: boolean, sharedCover = false) {
+  const selection = sharedCover ? '.project-identity, .project-video-slide, .project-description, .project-stills' : selectors;
+  const elements = [...document.querySelectorAll<HTMLElement>(selection)]
     .filter(element => !(keepIdentity && element.matches('.identity-text')));
   return elements.filter(element => {
     const box = element.getBoundingClientRect();
@@ -20,15 +21,16 @@ export function leavePage(elements: HTMLElement[], reduced: boolean) {
   ], { duration: 130, easing: 'ease-out', fill: 'forwards' }));
 }
 
-export function enterPage(elements: HTMLElement[], reduced: boolean) {
+export function enterPage(elements: HTMLElement[], reduced: boolean, sharedCover = false) {
   if (reduced) return [];
   return elements.map(element => {
     // Keep navigation hit areas stationary throughout the transition.
     const controls = element.matches('.identity-controls, .project-identity');
+    const player = sharedCover && element.matches('.project-video-slide');
     return element.animate([
-      { opacity: 0, translate: controls ? '0 0' : '0 10px' },
+      { opacity: 0, translate: controls || player ? '0 0' : '0 10px' },
       { opacity: 1, translate: '0 0' },
-    ], { duration: controls ? 280 : 520, easing: ease, fill: 'backwards' });
+    ], { duration: player ? 240 : controls ? 280 : 520, delay: player ? 340 : 0, easing: ease, fill: 'backwards' });
   });
 }
 

@@ -12,6 +12,7 @@ import { useEditorialReveal } from './components/useEditorialReveal';
 import { SoundToggle } from './components/SoundToggle';
 import { uiSound } from './components/uiSound';
 import { enterPage, leavePage, pageElements, settled } from './components/pageMotion';
+import { captureProjectCover, type ProjectTransition } from './components/projectTransition';
 
 import { normalizePath } from './routes';
 
@@ -22,7 +23,12 @@ function useRoute() {
   const animations = useRef<Animation[]>([]);
   const revision = useRef(0);
   const pendingPath = useRef<string | null>(null);
-  const stop = () => { animations.current.forEach(animation => animation.cancel()); animations.current = []; };
+  const pendingCover = useRef<ProjectTransition | null>(null);
+  const activeCover = useRef<ProjectTransition | null>(null);
+  const stop = () => {
+    activeCover.current?.cancel(); activeCover.current = null;
+    animations.current.forEach(animation => animation.cancel()); animations.current = [];
+  };
   const commit = (next: string) => {
     previousPath.current = currentPath.current;
     currentPath.current = next;
@@ -35,18 +41,29 @@ function useRoute() {
     const pop = () => {
       if (location.pathname.replace(/\/+$/, '') === '/travel') history.replaceState(history.state, '', '/about');
       revision.current++; stop();
+      pendingCover.current?.cancel(); pendingCover.current = null;
       commit(normalizePath(location.pathname));
     };
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const motionChange = () => { if (reduced.matches) animations.current.forEach(animation => animation.finish()); };
+    const motionChange = () => {
+      if (reduced.matches) { animations.current.forEach(animation => animation.finish()); activeCover.current?.cancel(); }
+    };
     reduced.addEventListener('change', motionChange);
     addEventListener('popstate', pop);
-    return () => { revision.current++; stop(); removeEventListener('popstate', pop); reduced.removeEventListener('change', motionChange); };
+    return () => { revision.current++; stop(); pendingCover.current?.cancel(); removeEventListener('popstate', pop); reduced.removeEventListener('change', motionChange); };
   }, []);
   useLayoutEffect(() => {
     stop();
     const keepIdentity = [previousPath.current, path].every(value => value === '/' || value === '/about');
-    animations.current = enterPage(pageElements(keepIdentity), matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const cover = pendingCover.current;
+    pendingCover.current = null;
+    const picture = cover ? document.querySelector<HTMLElement>('.video-picture') : null;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sharedCover = !!(cover && picture && !reduced);
+    const incoming = enterPage(pageElements(keepIdentity, sharedCover), reduced, sharedCover);
+    animations.current = incoming;
+    if (sharedCover) { activeCover.current = cover; cover.play(picture, () => incoming.forEach(animation => animation.finish())); }
+    else cover?.cancel();
     return stop;
   }, [path]);
   const navigate = async (destination: string) => {
@@ -54,11 +71,21 @@ function useRoute() {
     if (next === pendingPath.current) return;
     const request = ++revision.current;
     pendingPath.current = null;
+    pendingCover.current?.cancel(); pendingCover.current = null;
     if (next === currentPath.current) { stop(); return; }
     pendingPath.current = next;
     uiSound.play('navigate');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const project = projects.find(item => `/project/${item.slug}` === next);
+    const card = currentPath.current === '/' && project?.video && !reduced
+      ? document.querySelector<HTMLElement>(`.stack-card[aria-hidden="false"][href="${next}"]`) : null;
+    if (card) {
+      stop();
+      pendingCover.current = captureProjectCover(card);
+      if (pendingCover.current) { history.pushState({}, '', next); commit(next); return; }
+    }
     const keepIdentity = [currentPath.current, next].every(value => value === '/' || value === '/about');
-    const leaving = leavePage(pageElements(keepIdentity), matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const leaving = leavePage(pageElements(keepIdentity), reduced);
     stop();
     animations.current = leaving;
     await settled(animations.current);

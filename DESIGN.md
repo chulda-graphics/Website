@@ -87,3 +87,9 @@ Reduced motion disables the layout and icon animation. Escape closes the home so
 Use a near-critically damped dock spring (stiffness 220, damping 30, mass 1). Social buttons scale in over 260ms and out over 160ms, leaving the layout immediately on exit so the dock can contract concurrently. Exiting buttons are hidden from assistive technology and disabled. Icon changes use a smaller 6-degree, 6% settle. Keep dock opacity constant and disable these transitions for reduced motion.
 
 Give identity and project headings slightly looser tracking (-.025em) and a 1.16 line height. The role is smaller than the name. About body copy uses 18px on desktop and 17px on phones, with 1.65 leading and normal tracking; the introduction stays larger. Project descriptions use 20px/18px with the same leading and a 62-character maximum reading measure. Use 13px semibold section labels, balanced heading wraps, and consistent gaps between labels, paragraphs, and discipline rows. Preserve Rethink Sans and the existing light surfaces.
+
+## Continuous project opening
+
+When opening a loaded cover from the home gallery, carry that same image from its current position into the video picture over 620ms. Commit the route immediately, without the old fade-to-empty interval. Reveal the project heading and description while the cover moves; bring in the player frame and controls near the end. Keep the navigation dock visible and interactive, and do not autoplay the video.
+
+The temporary cover is decorative, ignores pointer input, and is removed on completion or interruption. Scrolling, resizing, new pointer/keyboard input, route changes, and reduced-motion changes immediately restore the real player. Reduced motion skips this movement. Unloaded covers retain the normal page transition, so navigation never waits for media downloads.

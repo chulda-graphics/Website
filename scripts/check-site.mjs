@@ -121,3 +121,59 @@ assert.equal(normalizePath('/travel/'), '/about');
 assert.equal(normalizePath('/project/project-02/'), '/project/project-02');
 assert.equal(normalizePath('/'), '/');
 console.log('Route checks passed: retired world links resolve to About; portfolio routes preserved.');
+
+// A cancelled cover transition must never leave the real player hidden.
+const { captureProjectCover } = await loadTS('../src/components/projectTransition.ts');
+const originalDOM = { document: globalThis.document, window: globalThis.window,
+  innerHeight: globalThis.innerHeight, getComputedStyle: globalThis.getComputedStyle };
+const posters = new Set(), listeners = new Map();
+let finishCover, failAnimation = false, reveals = 0;
+const box = { left: 40, top: 200, width: 320, height: 180, bottom: 380 };
+const sourceImage = { complete: true, naturalWidth: 1280, currentSrc: '/cover.webp' };
+const card = { querySelector: () => sourceImage, getBoundingClientRect: () => box };
+const target = { style: { visibility: '' }, getBoundingClientRect: () => ({ ...box, top: 100, width: 640, height: 360 }), closest: () => null };
+try {
+  Object.assign(globalThis, {
+    innerHeight: 900, getComputedStyle: () => ({ borderTopLeftRadius: '24px' }),
+    window: { addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
+    document: {
+      body: { append: poster => posters.add(poster) },
+      createElement: () => {
+        const poster = { style: {}, setAttribute() {}, remove() { posters.delete(poster); },
+          animate() {
+            if (failAnimation) throw new Error('Animation unavailable');
+            let reject;
+            const finished = new Promise((resolve, fail) => { finishCover = resolve; reject = fail; });
+            return { finished, cancel: () => reject(new Error('Cancelled')) };
+          },
+        };
+        return poster;
+      },
+    },
+  });
+  sourceImage.complete = false;
+  assert.equal(captureProjectCover(card), null, 'Unloaded covers use the normal route transition');
+  assert.equal(posters.size, 0);
+  sourceImage.complete = true;
+  const completed = captureProjectCover(card);
+  completed.play(target, () => reveals++);
+  assert.equal(target.style.visibility, 'hidden');
+  finishCover(); await Promise.resolve();
+  assert.equal(target.style.visibility, '');
+  assert.equal(posters.size, 0);
+  assert.equal(listeners.size, 0);
+  assert.equal(reveals, 1);
+  const interrupted = captureProjectCover(card);
+  interrupted.play(target, () => reveals++);
+  listeners.get('wheel')(); interrupted.cancel(); await Promise.resolve();
+  assert.equal(target.style.visibility, '', 'Scrolling restores the player immediately');
+  assert.equal(posters.size, 0);
+  assert.equal(listeners.size, 0);
+  assert.equal(reveals, 2, 'Cancellation and the rejected animation promise clean up only once');
+  failAnimation = true;
+  captureProjectCover(card).play(target, () => reveals++);
+  assert.equal(target.style.visibility, '', 'Animation failures cannot hide video content');
+  assert.equal(posters.size, 0);
+  assert.equal(listeners.size, 0);
+} finally { Object.assign(globalThis, originalDOM); }
+console.log('Project transition checks passed: unloaded-cover fallback, completion, interruption, failure cleanup.');
