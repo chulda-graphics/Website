@@ -99,3 +99,7 @@ Minimising reverses this movement into the matching gallery card, including afte
 ## Professional background
 
 Extend the existing About window using the owner's supplied CV: selected work experience, education, creative leadership, selected software, and languages. Preserve the original introduction. Use compact role/date hierarchy and 16px descriptions, with two aligned columns on desktop and a single reading column on phones. Keep whitespace between entries instead of divider rules or extra cards. Do not add the portrait, a CV image, the source PDF, or skill-rating stars to the website. Editable content lives in `profile` in `src/content.ts`.
+
+## Video volume
+
+Add a 0–100% volume slider beside the mute control, with keyboard support, a 44px-tall interaction area, and accessible percentage labels. Videos still open muted. Moving the slider above zero enables sound at that level; zero mutes. The mute button restores the most recent nonzero volume, including after the slider reaches zero. Synchronise the controls with native volume changes. On phones, place the seek bar across its own row above play, volume, and fullscreen controls to keep both sliders usable. Focusing either slider must not reposition the player through smooth scrolling.

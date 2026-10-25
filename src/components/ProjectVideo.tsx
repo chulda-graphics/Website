@@ -10,6 +10,8 @@ export function ProjectVideo({ project }: { project: Project }) {
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [volume, setVolume] = useState(1);
+  const lastAudibleVolume = useRef(1);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
@@ -24,6 +26,27 @@ export function ProjectVideo({ project }: { project: Project }) {
     setMessage('');
     if (!video.current.paused) video.current.pause();
     else try { await video.current.play(); } catch { setMessage('Unable to play. Please try again.'); }
+  }
+  function syncVolume() {
+    const media = video.current;
+    if (!media) return;
+    setMuted(media.muted); setVolume(media.volume);
+    if (media.volume > 0) lastAudibleVolume.current = media.volume;
+  }
+  function changeVolume(percent: number) {
+    const media = video.current;
+    if (!media) return;
+    media.volume = Math.min(1, Math.max(0, percent / 100));
+    media.muted = media.volume === 0;
+    syncVolume();
+  }
+  function toggleMute() {
+    const media = video.current;
+    if (!media) return;
+    const silent = media.muted || media.volume === 0;
+    if (silent && media.volume === 0) media.volume = lastAudibleVolume.current;
+    media.muted = !silent;
+    syncVolume();
   }
   async function toggleFullscreen() {
     try {
@@ -44,7 +67,7 @@ export function ProjectVideo({ project }: { project: Project }) {
         onClick={togglePlayback} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)} onTimeUpdate={event => setTime(event.currentTarget.currentTime)}
         onDurationChange={event => setDuration(Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : 0)}
-        onVolumeChange={event => setMuted(event.currentTarget.muted)}
+        onVolumeChange={syncVolume}
         onError={() => setFailed(true)} onLoadedData={() => setFailed(false)} />
       {failed && <div className="video-error" role="alert"><p>The video couldn’t load.</p>
         <button onClick={() => { setFailed(false); video.current?.load(); }}>Try again</button>
@@ -56,7 +79,14 @@ export function ProjectVideo({ project }: { project: Project }) {
         value={Math.min(time, duration || 1)} disabled={!duration} aria-valuetext={`${timeLabel(time)} of ${timeLabel(duration)}`}
         onChange={event => { const next = Number(event.target.value); if (video.current) video.current.currentTime = next; setTime(next); }}/>
       <span className="video-time" aria-hidden="true">{timeLabel(time)}</span>
-      <button className="video-action" aria-label={muted ? 'Unmute video' : 'Mute video'} onClick={() => setMuted(!muted)}><Icon name={muted ? 'muted' : 'sound'}/></button>
+      <div className="video-volume-controls" role="group" aria-label="Audio volume">
+        <button className="video-action" aria-label={muted || volume === 0 ? 'Unmute video' : 'Mute video'} onClick={toggleMute}><Icon name={muted || volume === 0 ? 'muted' : 'sound'}/></button>
+        <input className="video-volume" type="range" aria-label="Video volume" min={0} max={100} step={1}
+          value={muted ? 0 : Math.round(volume * 100)}
+          aria-valuetext={muted || volume === 0 ? 'Muted' : `${Math.round(volume * 100)}% volume`}
+          title={`Volume: ${muted ? 0 : Math.round(volume * 100)}%`}
+          onChange={event => changeVolume(Number(event.currentTarget.value))}/>
+      </div>
       <button className="video-action" aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} onClick={toggleFullscreen}><Icon name={fullscreen ? 'collapse' : 'expand'}/></button>
     </div>
     {message && <p className="video-message" role="status">{message}</p>}

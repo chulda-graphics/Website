@@ -147,11 +147,13 @@
 .video-picture video { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
 .video-toolbar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #ffffffeb; color: var(--ui-ink); }
 .video-action { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; height: 44px; border-radius: 14px; background: linear-gradient(#fff,#f4f5f7); box-shadow: 0 2px 4px #17213314,inset 0 1px 0 #fff; }
-.video-action:first-child { color: var(--ui-blue); }
+.video-toolbar > .video-action:first-child { color: var(--ui-blue); }
 .video-action:hover { background: #eaf0f8; }
 .video-action:active { box-shadow: inset 0 2px 5px #18233320; }
-.video-action:focus-visible, .video-progress:focus-visible { outline: 2px solid var(--ui-blue); outline-offset: 3px; }
+.video-action:focus-visible, .video-progress:focus-visible, .video-volume:focus-visible { outline: 2px solid var(--ui-blue); outline-offset: 3px; }
 .video-progress { flex: 1; width: 0; min-width: 20px; height: 44px; margin: 0; accent-color: var(--ui-blue); cursor: pointer; }
+.video-volume-controls { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.video-volume { width: 80px; min-width: 32px; height: 44px; margin: 0; accent-color: var(--ui-blue); cursor: pointer; }
 .video-time { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted); }
 .video-message { padding: 0 20px 16px; font-size: 13px; color: var(--muted); }
 .project-video-slide:fullscreen { width: 100vw; height: 100dvh; display: flex; flex-direction: column; border: 0; border-radius: 0; }
@@ -163,7 +165,12 @@
 @media (max-width: 700px) {
   :root { --card-width: min(calc(100vw - 40px), calc((100svh - 230px) * 16 / 9)); }
   .stack-card { border-radius: 20px; }
-  .video-toolbar { gap: 4px; padding: 8px; }
+  .video-toolbar { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 4px 8px; padding: 8px; }
+  .video-toolbar > .video-progress { grid-column: 1 / -1; grid-row: 1; width: 100%; }
+  .video-toolbar > .video-action { grid-row: 2; }
+  .video-toolbar > .video-action:last-child { grid-column: 3; }
+  .video-volume-controls { grid-column: 2; grid-row: 2; justify-content: center; }
+  .video-volume { flex: 0 1 80px; width: 80px; }
   .video-time { display: none; }
 }
 @media (min-width: 701px) and (max-height: 650px) {
