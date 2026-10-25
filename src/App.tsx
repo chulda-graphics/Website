@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { AnimatePresence } from 'motion/react';
 import { EntryScreen, hasEntered, rememberEntry } from './components/EntryScreen';
 import { Carousel } from './components/Carousel';
 import { profile, projects } from './content';
-import { SmoothScroll, ViewportLayer } from './components/SmoothScroll';
-import { Icon } from './components/Icon';
+import { SmoothScroll } from './components/SmoothScroll';
+import { Navigation } from './components/Navigation';
 import { ProjectArtwork } from './components/ProjectArtwork';
 import { ProjectVideo } from './components/ProjectVideo';
 import { useEditorialReveal } from './components/useEditorialReveal';
@@ -69,60 +69,9 @@ function useRoute() {
   return { path, navigate };
 }
 
-function Control({ label, active, onClick, children, className = '', disabled = false, expanded, preview }: {
-  label: string; active?: boolean; onClick: () => void; children: ReactNode; className?: string; disabled?: boolean; expanded?: boolean; preview?: { src: string; title: string };
-}) {
-  const [previewDismissed, setPreviewDismissed] = useState(false);
-  return <button className={`control ${active ? 'active' : ''} ${preview ? 'control--preview' : ''} ${className}`} aria-label={label} title={preview ? undefined : label} onClick={onClick} disabled={disabled} aria-expanded={expanded}
-    data-preview-dismissed={previewDismissed || undefined}
-    onPointerEnter={() => setPreviewDismissed(false)} onFocus={() => setPreviewDismissed(false)}
-    onKeyDown={event => {
-      if (preview && !previewDismissed && event.key === 'Escape') {
-        event.stopPropagation();
-        setPreviewDismissed(true);
-      }
-    }}>
-    {children}
-    {preview && <span className="control-preview" aria-hidden="true">
-      <img src={preview.src} alt="" width={320} height={180} decoding="async" draggable={false}/>
-      <span>{preview.title}</span>
-    </span>}
-  </button>;
-}
-
-function Identity({ about, navigate }: { about: boolean; navigate: (route: string) => void }) {
-  const [social, setSocial] = useState(about);
-  const [status, setStatus] = useState('');
-  useEffect(() => { setSocial(about); setStatus(''); }, [about]);
-  useEffect(() => {
-    if (status !== 'Email copied') return;
-    const timeout = window.setTimeout(() => setStatus(''), 4000);
-    return () => window.clearTimeout(timeout);
-  }, [status]);
-  async function copyEmail() {
-    if (!profile.email) { setStatus('Contact details coming soon'); return; }
-    setStatus(profile.email);
-    try { await navigator.clipboard.writeText(profile.email); setStatus('Email copied'); uiSound.play('confirm'); }
-    catch { setStatus(profile.email); }
-  }
-  function openSocial(url: string) {
-    uiSound.play('click');
-    if (!url) { setStatus('Social link coming soon'); return; }
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
+function Identity() {
   return <header className="identity">
     <div className="identity-text" style={{viewTransitionName: 'identity'}}><h1>{profile.name}</h1><p>{profile.title}</p></div>
-    <ViewportLayer><nav className={`identity-controls ${social ? 'social-open' : ''}`} aria-label="Main navigation">
-      {about ? <Control label="Back to Home" active onClick={() => navigate('/')}><Icon name="back" /></Control> :
-        !social && <Control label="Open About Page" onClick={() => navigate('/about')}><Icon name="person" /></Control>}
-      {!about && <Control label={social ? 'Close Social Links' : 'Open Social Links'} active={social} expanded={social} onClick={() => { uiSound.play('click'); setSocial(!social); setStatus(''); }}><Icon name={social ? 'back' : 'chat'} /></Control>}
-      {social && <>
-        <Control label="Copy email" className={status === 'Email copied' ? 'control--success' : ''} onClick={copyEmail}><Icon name={status === 'Email copied' ? 'check' : 'mail'} /></Control>
-        <Control label="X (Twitter)" onClick={() => openSocial(profile.social.x)}><Icon name="x" /></Control>
-        <Control label="LinkedIn" onClick={() => openSocial(profile.social.linkedin)}><Icon name="linkedin" /></Control>
-      </>}
-      <span role="status" className="contact-status">{status}</span>
-    </nav></ViewportLayer>
   </header>;
 }
 
@@ -153,15 +102,10 @@ function ProjectView({ slug, navigate }: { slug: string; navigate: (route: strin
   const project = projects.find(item => item.slug === slug);
   if (!project) return <main className="not-found"><h1>Project not found</h1><button onClick={() => navigate('/')}>Back to Home</button></main>;
   const index = projects.indexOf(project);
-  const nextProject = projects[(index + 1) % projects.length];
   return <main className={`project-view ${project.video ? 'project-view--video' : ''}`}>
     <header className="project-identity"><div style={{viewTransitionName: 'identity'}}>
 
       <h1>{project.title}</h1><p className="project-category">{project.category}</p></div>
-      <ViewportLayer><nav className="project-controls" aria-label="Project controls">
-        <Control label={`Next project: ${nextProject.title}`} preview={nextProject.cover ? { src: nextProject.cover, title: nextProject.title } : undefined} onClick={() => navigate(`/project/${nextProject.slug}`)}><Icon name="next"/></Control>
-        <Control label="Minimise project" onClick={() => navigate('/')}><Icon name="collapse"/></Control>
-      </nav></ViewportLayer>
     </header>
     <div className="project-detail">
       {project.video ? <ProjectVideo key={project.slug} project={project}/> : <section className="project-slide" style={{viewTransitionName: 'project-media'}} aria-label={`${project.title} artwork`}><ProjectArtwork project={project} expanded index={index}/></section>}
@@ -208,8 +152,9 @@ function Portfolio() {
   }, [path]);
   return <>
     <a className="skip-link" href="#main" onClick={event => { event.preventDefault(); document.getElementById('main')?.focus({ preventScroll: true }); }}>Skip to content</a>
+    <Navigation path={path} navigate={navigate}/>
     <SmoothScroll route={path}><div key={path} id="main" tabIndex={-1} className={`app page-${home ? 'home' : about ? 'about' : 'project'}`}>
-      {(home || about) && <Identity about={about} navigate={navigate}/>}
+      {(home || about) && <Identity/>}
       {home && <Carousel navigate={navigate} selected={selected} setSelected={setSelected}/>}
       {about && <About/>}
       {projectSlug && <ProjectView key={projectSlug} slug={projectSlug} navigate={navigate}/>}

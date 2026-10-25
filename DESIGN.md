@@ -75,3 +75,9 @@ Optional, muted by default. The Sound control remembers the choice for the curre
 This revision supersedes the square cover, numbered selector, project index, duration labels, frame headings, and divider rules described above. Covers are image-only 16:9 rectangles with no title, play badge or runtime overlay. Browse using wheel, swipe and arrow keys. Project pages retain their title and category but omit selected-work numbering, running-time metadata and selected-frame headings/counts. Use whitespace instead of divider lines.
 
 The video player uses a separate light control strip with rounded Phosphor play/pause, mute and fullscreen buttons, a blue seek slider and compact elapsed time. No dark control gradient covers the picture. Playback starts muted; errors offer retry and keyboard controls remain available. Docks do not fade on navigation or social-menu clicks; page content can retain its existing transition.
+
+## Navigation morphing — October 26, 2026
+
+Keep one persistent navigation dock outside the changing page content. Opening socials or entering About expands its shape; returning home contracts it. Use an interruptible, restrained spring for layout changes and a small rotation/scale settle when an icon changes. Preserve fixed-size icons, rounded corners, and the centered bottom anchor. Never animate dock opacity or replay the morph when moving between projects with the same controls.
+
+Reduced motion disables the layout and icon animation. Escape closes the home social menu and restores focus to its toggle. Keep next-project previews and email confirmation behaviour. On the narrowest phone layouts, use 60px buttons so all four controls retain even padding.
