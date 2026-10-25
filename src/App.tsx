@@ -127,13 +127,12 @@ function About() {
         </div>
         <div className="about-background">
           <section className="about-experience" aria-labelledby="experience-heading">
-            <h2 id="experience-heading">Selected experience</h2>
+            <h2 id="experience-heading">Professional experiences</h2>
             <ul className="experience-list">
               {profile.experience.map(item => <li key={item.organisation}>
                 <h3>{item.organisation}</h3>
                 <p className="experience-role">{item.role}</p>
                 <p className="experience-period">{item.period}</p>
-                <p className="experience-description">{item.description}</p>
               </li>)}
             </ul>
           </section>
