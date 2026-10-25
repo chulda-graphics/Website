@@ -143,11 +143,10 @@ function About() {
               <p>{profile.leadership}</p>
             </section>
           </div>
-          <section className="about-toolkit" aria-labelledby="tools-heading">
-            <h2 id="tools-heading">Selected tools</h2>
+          <section className="about-toolkit" aria-label="Tools">
             <div className="tool-groups">
               {profile.toolGroups.map(group => <div className="tool-group" key={group.title}>
-                <h3>{group.title}</h3>
+                <h2>{group.title}</h2>
                 <ul className="about-tools">
                   {group.items.map(tool => <li key={tool.name}>
                     <span className="tool-icon" aria-hidden="true"><img src={tool.icon} alt="" width={18} height={18} loading="lazy" decoding="async"/></span>

@@ -15,7 +15,7 @@ export const profile = {
   ],
   education: { degree: 'Bachelor of Multimedia Arts', institution: 'Lyceum of the Philippines University – Cavite', period: '2022 – 2026' },
   toolGroups: [
-    { title: 'Creative software', items: [
+    { title: 'Creative softwares', items: [
       { name: 'After Effects', icon: '/assets/tools/aftereffects.svg' },
       { name: 'Premiere Pro', icon: '/assets/tools/premierepro.svg' },
       { name: 'Photoshop', icon: '/assets/tools/photoshop.svg' },
