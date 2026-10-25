@@ -7,7 +7,8 @@
 }
 .identity-text { width: auto; max-width: none; }
 .identity h1, .identity p { font-size: clamp(26px, 2.3vw, 34px); line-height: 1.1; }
-.identity p { margin-top: 4px; }
+.identity h1 { line-height: 1.16; letter-spacing: -.025em; }
+.identity p { margin-top: 7px; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.3; letter-spacing: -.01em; }
 .identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open,
 .project-controls {
   position: fixed; top: auto; bottom: max(24px, env(safe-area-inset-bottom)); left: 50%; right: auto;
@@ -40,12 +41,13 @@
 .biography { width: 100%; max-width: 920px; margin: 0 auto; padding: 0; }
 .biography-window { border-radius: 24px; }
 .biography-content { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); gap: 48px; padding: 40px; }
-.biography-content p { font-size: 20px; line-height: 1.5; }
-.biography-content p:first-child { font-size: 26px; line-height: 1.4; }
+.biography-content { font-kerning: normal; letter-spacing: 0; }
+.biography-content p { font-size: 18px; line-height: 1.65; margin-bottom: 28px; text-wrap: pretty; }
+.biography-content p:first-child { font-size: 26px; line-height: 1.45; letter-spacing: -.015em; }
 .biography-content p:last-child { margin-bottom: 0; }
 .biography-content .recognitions { margin: 0; padding: 0 0 0 32px; border-top: 0; border-left: 1px solid var(--ui-border); }
-.biography-content .recognitions h2 { font-size: 14px; }
-.biography-content .recognitions li { font-size: 18px; }
+.biography-content .recognitions h2 { font-size: 13px; line-height: 1.5; letter-spacing: .015em; margin-bottom: 16px; }
+.biography-content .recognitions li { font-size: 17px; line-height: 1.5; padding-block: 9px; gap: 14px; }
 
 /* Video pages use a centered, generous reading column at every breakpoint. */
 .project-identity {
@@ -53,17 +55,17 @@
   padding: 40px 80px 36px; text-align: center;
 }
 .project-index { justify-content: center; margin-bottom: 12px; }
-.project-identity h1 { font-size: clamp(28px, 3vw, 42px); }
-.project-category { font-size: 20px; margin-top: 10px; }
+.project-identity h1 { font-size: clamp(28px, 3vw, 42px); line-height: 1.16; letter-spacing: -.025em; }
+.project-category { font-size: 18px; margin-top: 8px; line-height: 1.45; letter-spacing: 0; }
 .project-detail, .project-view--video .project-detail {
   width: calc(100% - 96px); max-width: min(1040px, max(640px, calc((100svh - 300px) * 16 / 9))); margin: 0 auto;
   padding: 0 0 150px; min-height: 0;
 }
 .project-video-slide { border-radius: 24px; }
 .project-description { margin-top: 28px; }
-.project-description .project-copy { gap: 18px; }
-.project-description .project-copy p { font-size: 22px; line-height: 1.5; max-width: 72ch; }
-.project-copy h2 { font-size: 14px; }
+.project-description .project-copy { gap: 12px; }
+.project-description .project-copy p { font-size: 20px; line-height: 1.65; letter-spacing: 0; max-width: 62ch; text-wrap: pretty; }
+.project-copy h2 { font-size: 13px; line-height: 1.5; letter-spacing: .015em; }
 .project-stills { margin-top: 40px; }
 .project-stills-grid { gap: 20px; }
 
@@ -74,26 +76,30 @@
 @media (max-width: 700px) {
   :root { --control: 66px; }
   .identity { padding: 24px 24px 0; }
-  .identity h1, .identity p { font-size: 23px; }
+  .identity h1 { font-size: 25px; }
+  .identity p { font-size: 20px; margin-top: 6px; }
   .identity-controls, .identity-controls.social-open, .page-about .identity-controls.social-open,
   .project-controls { bottom: max(28px, env(safe-area-inset-bottom)); gap: 6px; }
   .control svg { width: 18px; height: 18px; }
-  .about-view { padding: 36px 24px 150px; }
+  .about-view { padding: 32px 20px 150px; }
   .biography { margin: 0; max-width: none; }
   .biography-window { border-radius: 18px; }
-  .biography-content { padding: 24px; gap: 28px; }
-  .biography-content p, .biography-content p:first-child { font-size: 19px; line-height: 1.5; }
+  .biography-content { padding: 24px 22px; gap: 32px; }
+  .biography-content p { font-size: 17px; line-height: 1.65; }
+  .biography-content p:first-child { font-size: 20px; line-height: 1.5; }
   .project-identity { padding: 32px 24px; }
   .project-identity h1 { font-size: 28px; }
-  .project-category { font-size: 18px; }
+  .project-category { font-size: 16px; }
   .project-detail, .project-view--video .project-detail { width: calc(100% - 48px); padding: 0 0 150px; }
   .project-video-slide { border-radius: 18px; }
-  .project-description .project-copy p { font-size: 20px; }
+  .project-description { padding: 24px 22px; }
+  .project-description .project-copy p { font-size: 18px; }
   .project-stills-grid { gap: 12px; }
 }
 @media (min-width: 701px) and (max-height: 650px) {
   .identity { padding-top: 22px; }
-  .identity h1, .identity p { font-size: 26px; }
+  .identity h1 { font-size: 26px; }
+  .identity p { font-size: 21px; }
   :root { --control: 50px; --card-width: max(160px, min(340px, calc(100svh - 230px))); }
   .carousel { inset: 100px 0 95px; }
   .identity-controls, .project-controls { bottom: 16px; }
@@ -101,7 +107,8 @@
 @media (max-width: 700px) and (max-height: 400px) {
   :root { --control: 48px; }
   .identity { padding-top: 16px; }
-  .identity h1, .identity p { font-size: 20px; }
+  .identity h1 { font-size: 22px; }
+  .identity p { font-size: 18px; margin-top: 4px; }
   .identity-controls, .identity-controls.social-open, .project-controls { bottom: 16px; }
 }
 

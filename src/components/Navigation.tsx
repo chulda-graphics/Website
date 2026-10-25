@@ -1,11 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'motion/react';
 import { profile, projects } from '../content';
 import { Icon } from './Icon';
 import { ViewportLayer } from './SmoothScroll';
 import { uiSound } from './uiSound';
 
-const spring = { type: 'spring' as const, stiffness: 420, damping: 38, mass: .8 };
+const spring = { type: 'spring' as const, stiffness: 220, damping: 30, mass: 1 };
+const iconSpring = { type: 'spring' as const, stiffness: 280, damping: 30, mass: .8 };
 type IconName = Parameters<typeof Icon>[0]['name'];
 type Action = {
   slot: string; label: string; icon: IconName; onClick: () => void;
@@ -13,10 +14,15 @@ type Action = {
   preview?: { src: string; title: string };
 };
 
-function NavigationControl({ action, reduced }: { action: Action; reduced: boolean }) {
+const NavigationControl = forwardRef<HTMLButtonElement, { action: Action; reduced: boolean }>(function NavigationControl({ action, reduced }, ref) {
   const [previewDismissed, setPreviewDismissed] = useState(false);
-  return <motion.button type="button" layout={reduced ? false : 'position'} initial={false}
-    transition={{ layout: spring }} style={{ borderRadius: 18 }}
+  const present = useIsPresent();
+  return <motion.button ref={ref} type="button" layout={reduced ? false : 'position'}
+    initial={reduced ? false : { scale: 0 }} animate={{ scale: 1 }}
+    exit={{ scale: reduced ? 1 : 0, transition: { duration: reduced ? 0 : .16, ease: 'easeIn' } }}
+    transition={{ layout: spring, scale: reduced ? { duration: 0 } : { duration: .26, ease: [.22, 1, .36, 1] } }}
+    style={{ borderRadius: 18, pointerEvents: present ? 'auto' : 'none' }}
+    aria-hidden={!present || undefined} tabIndex={present ? undefined : -1} disabled={!present}
     className={`control ${action.active ? 'active' : ''} ${action.success ? 'control--success' : ''} ${action.preview ? 'control--preview' : ''}`}
     data-slot={action.slot} aria-label={action.label} aria-expanded={action.expanded}
     title={action.preview ? undefined : action.label} onClick={action.onClick}
@@ -29,8 +35,8 @@ function NavigationControl({ action, reduced }: { action: Action; reduced: boole
     }}>
     <AnimatePresence initial={false}>
       <motion.span key={action.icon} className="navigation-icon"
-        initial={reduced ? false : { scale: .86, rotate: -12 }} animate={{ scale: 1, rotate: 0 }}
-        transition={reduced ? { duration: 0 } : spring}>
+        initial={reduced ? false : { scale: .94, rotate: -6 }} animate={{ scale: 1, rotate: 0 }}
+        transition={reduced ? { duration: 0 } : iconSpring}>
         <Icon name={action.icon}/>
       </motion.span>
     </AnimatePresence>
@@ -39,7 +45,7 @@ function NavigationControl({ action, reduced }: { action: Action; reduced: boole
       <span>{action.preview.title}</span>
     </span>}
   </motion.button>;
-}
+});
 
 /** Keep one live dock across route changes; only its contents and geometry change. */
 export function Navigation({ path, navigate }: { path: string; navigate: (route: string) => void }) {
@@ -105,7 +111,9 @@ export function Navigation({ path, navigate }: { path: string; navigate: (route:
       onKeyDown={event => {
         if (event.key === 'Escape' && home && socialOpen) { event.stopPropagation(); setSocialOpen(false); setStatus(''); }
       }}>
-      {actions.map(action => <NavigationControl key={action.slot} action={action} reduced={reduced}/>)}
+      <AnimatePresence initial={false} mode="popLayout">
+        {actions.map(action => <NavigationControl key={action.slot} action={action} reduced={reduced}/>)}
+      </AnimatePresence>
       <span role="status" className="contact-status">{status}</span>
     </motion.nav>
   </motion.div></ViewportLayer>;

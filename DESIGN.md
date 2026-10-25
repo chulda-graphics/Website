@@ -81,3 +81,9 @@ The video player uses a separate light control strip with rounded Phosphor play/
 Keep one persistent navigation dock outside the changing page content. Opening socials or entering About expands its shape; returning home contracts it. Use an interruptible, restrained spring for layout changes and a small rotation/scale settle when an icon changes. Preserve fixed-size icons, rounded corners, and the centered bottom anchor. Never animate dock opacity or replay the morph when moving between projects with the same controls.
 
 Reduced motion disables the layout and icon animation. Escape closes the home social menu and restores focus to its toggle. Keep next-project previews and email confirmation behaviour. On the narrowest phone layouts, use 60px buttons so all four controls retain even padding.
+
+### Softer motion and typography refinement
+
+Use a near-critically damped dock spring (stiffness 220, damping 30, mass 1). Social buttons scale in over 260ms and out over 160ms, leaving the layout immediately on exit so the dock can contract concurrently. Exiting buttons are hidden from assistive technology and disabled. Icon changes use a smaller 6-degree, 6% settle. Keep dock opacity constant and disable these transitions for reduced motion.
+
+Give identity and project headings slightly looser tracking (-.025em) and a 1.16 line height. The role is smaller than the name. About body copy uses 18px on desktop and 17px on phones, with 1.65 leading and normal tracking; the introduction stays larger. Project descriptions use 20px/18px with the same leading and a 62-character maximum reading measure. Use 13px semibold section labels, balanced heading wraps, and consistent gaps between labels, paragraphs, and discipline rows. Preserve Rethink Sans and the existing light surfaces.
