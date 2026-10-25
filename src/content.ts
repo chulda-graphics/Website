@@ -7,6 +7,16 @@ export const profile = {
   introductionLead: 'Motion Designer',
   introduction: 'focused on creating thoughtful visual experiences through motion, design, and storytelling.',
   biography: 'I’m Dhrex Cañezo, a multimedia designer specialising in motion design, with a background in graphic design, branding, and creative direction. I enjoy turning ideas into clear, engaging visuals—combining strong design with purposeful movement.',
+  experience: [
+    { organisation: 'Independent', role: 'Freelance Multimedia Designer', period: 'May 2022 – Present', description: 'Branding, marketing materials, and digital content for 20+ businesses, startups, and esports organisations.' },
+    { organisation: 'Arvor Life & Design Driven Growth', role: 'Multimedia Designer', period: 'March 2025 – June 2026', description: 'Print and digital marketing materials supporting brand consistency and campaigns for two UK-based businesses.' },
+    { organisation: 'Onmoon', role: 'Motion Designer', period: 'February – April 2026', description: 'Motion design for a range of companies.' },
+    { organisation: 'Highflier Events Management Services', role: 'Multimedia Design Intern', period: 'February – April 2026', description: 'Branding, event materials, motion graphics, and marketing assets for corporate events.' },
+  ],
+  education: { degree: 'Bachelor of Multimedia Arts', institution: 'Lyceum of the Philippines University – Cavite', period: '2022 – 2026' },
+  tools: ['After Effects', 'Premiere Pro', 'Photoshop', 'Illustrator', 'Blender', 'Canva'],
+  leadership: 'As Creative Director at Liceo Esports Cavite (2023–2025), I led a visual rebrand with 50+ brand assets. I’ve also mentored student designers and led the Imaginarium multimedia exhibit.',
+  languages: 'Filipino & English',
 };
 
 export interface Project {

@@ -125,6 +125,39 @@ function About() {
             )}
           </ul></div>
         </div>
+        <div className="about-background">
+          <section className="about-experience" aria-labelledby="experience-heading">
+            <h2 id="experience-heading">Selected experience</h2>
+            <ul className="experience-list">
+              {profile.experience.map(item => <li key={item.organisation}>
+                <h3>{item.organisation}</h3>
+                <p className="experience-role">{item.role}</p>
+                <p className="experience-period">{item.period}</p>
+                <p className="experience-description">{item.description}</p>
+              </li>)}
+            </ul>
+          </section>
+          <div className="about-background-details">
+            <section aria-labelledby="education-heading">
+              <h2 id="education-heading">Education</h2>
+              <h3>{profile.education.degree}</h3>
+              <p>{profile.education.institution}</p>
+              <p className="experience-period">{profile.education.period}</p>
+            </section>
+            <section aria-labelledby="leadership-heading">
+              <h2 id="leadership-heading">Creative leadership</h2>
+              <p>{profile.leadership}</p>
+            </section>
+            <section aria-labelledby="tools-heading">
+              <h2 id="tools-heading">Selected tools</h2>
+              <ul className="about-tools">{profile.tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
+            </section>
+            <section aria-labelledby="languages-heading">
+              <h2 id="languages-heading">Languages</h2>
+              <p>{profile.languages}</p>
+            </section>
+          </div>
+        </div>
       </div>
     </section>
   </main>;
