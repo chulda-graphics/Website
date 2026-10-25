@@ -10,7 +10,7 @@ export const profile = {
   experience: [
     { organisation: 'Independent', role: 'Freelance Multimedia Designer', period: 'May 2022 – Present', description: 'Branding, marketing materials, and digital content for 20+ businesses, startups, and esports organisations.' },
     { organisation: 'Arvor Life & Design Driven Growth', role: 'Multimedia Designer', period: 'March 2025 – June 2026', description: 'Print and digital marketing materials supporting brand consistency and campaigns for two UK-based businesses.' },
-    { organisation: 'Onmoon', role: 'Motion Designer', period: 'February – April 2026', description: 'Motion design for a range of companies.' },
+    { organisation: 'Onmoon', role: 'Motion Designer', period: 'September 2026 – Present', description: 'Motion design for a range of companies.' },
     { organisation: 'Highflier Events Management Services', role: 'Multimedia Design Intern', period: 'February – April 2026', description: 'Branding, event materials, motion graphics, and marketing assets for corporate events.' },
   ],
   education: { degree: 'Bachelor of Multimedia Arts', institution: 'Lyceum of the Philippines University – Cavite', period: '2022 – 2026' },
